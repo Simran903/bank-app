@@ -1,0 +1,19 @@
+# Ignore node_modules
+node_modules
+
+# Ignore build output directories
+dist
+
+# Ignore environment variables
+.env
+
+# Ignore logs
+logs
+*.log
+npm-debug.log*
+
+# Ignore IDE specific files
+.vscode
+.idea
+.DS_Store
+
