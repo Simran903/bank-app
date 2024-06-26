@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,86 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  name             String
+  dob              DateTime?
+  address          String?
+  city             String?
+  postalCode       String?
+  phoneNumber      String?
+  profilePictureUrl String?
+  number           String?   @unique
+  password         String
+  accounts         Account[]
+  beneficiaries    Beneficiary[]
+  notifications    Notification[]
+  transactions     Transaction[]
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Account {
+  id            Int           @id @default(autoincrement())
+  balance       Balance?      @relation(fields: [balanceId], references: [id])
+  balanceId     Int?
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  type          AccountType
+  category      AccountCategory
+  transactions  Transaction[]  @relation("AccountTransactions")
+  beneficiaries Beneficiary[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Balance {
+  id                Int        @id @default(autoincrement())
+  amount            Int
+  accountId         Int
+  account           Account    @relation(fields: [accountId], references: [id])
+  sentTransfers     Transaction[] @relation("FromUserRelation")
+  receivedTransfers Transaction[] @relation("ToUserRelation")
+  timestamp         DateTime   @default(now())
+}
+
+model Transaction {
+  id                 Int        @id @default(autoincrement())
+  amount             Int
+  timestamp          DateTime
+  fromAccountId      Int
+  toAccountId        Int
+  status             String
+  type               String
+  description        String?
+  fromAccount        Account    @relation("FromUserRelation", fields: [fromAccountId], references: [id])
+  toAccount          Account    @relation("ToUserRelation", fields: [toAccountId], references: [id])
+  user               User       @relation(fields: [fromAccountId], references: [id])
+  createdAt          DateTime   @default(now())
+}
+
+model Beneficiary {
+  id          Int      @id @default(autoincrement())
+  accountId   Int
+  name        String
+  email       String?
+  phone       String?
+  account     Account  @relation(fields: [accountId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+enum AccountType {
+  Savings
+  Current
+}
+
+enum AccountCategory {
+  ZeroBalance
+  General
+  Classic
+  Premium
+  Imperial
 }
