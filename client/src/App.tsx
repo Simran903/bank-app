@@ -1,12 +1,10 @@
-import './App.css'
+import { Button } from "../@/components/ui/button"
 
-function App() {
-
+export default function Home() {
   return (
-    <div className="text-5xl">
-      Hello World
+    <div>
+      <Button>Click me</Button>
     </div>
   )
 }
 
-export default App
