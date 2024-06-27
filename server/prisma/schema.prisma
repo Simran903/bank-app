@@ -1,14 +1,99 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model User {
+  id               Int         @id @default(autoincrement())
+  email            String      @unique
+  name             String
+  dob              DateTime?
+  address          String?
+  city             String?
+  postalCode       String?
+  phoneNumber      String?
+  profilePictureUrl String?
+  number           String?     @unique
+  password         String
+  accounts         Account[]
+  beneficiaries    Beneficiary[]
+  transactions     Transaction[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model Account {
+  id               Int             @id @default(autoincrement())
+  balanceId        Int?            @unique
+  userId           Int
+  user             User            @relation(fields: [userId], references: [id])
+  type             AccountType
+  category         AccountCategory
+  transactionsFrom Transaction[]   @relation("FromAccountRelation")
+  transactionsTo   Transaction[]   @relation("ToAccountRelation")
+  beneficiaries    Beneficiary[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  balance          Balance?
+}
+
+model Balance {
+  id                Int            @id @default(autoincrement())
+  amount            Int
+  account           Account        @relation(fields: [accountId], references: [id])
+  accountId         Int            @unique
+  sentTransfers     Transaction[]  @relation("SentTransfers")
+  receivedTransfers Transaction[]  @relation("ReceivedTransfers")
+  timestamp         DateTime       @default(now())
+}
+
+model Transaction {
+  id                 Int           @id @default(autoincrement())
+  amount             Int
+  timestamp          DateTime      @default(now())
+  status             String
+  type               String
+  description        String?
+  fromAccountId      Int
+  toAccountId        Int
+  fromAccount        Account       @relation("FromAccountRelation", fields: [fromAccountId], references: [id])
+  toAccount          Account       @relation("ToAccountRelation", fields: [toAccountId], references: [id])
+  userId             Int
+  user               User          @relation(fields: [userId], references: [id])
+  balanceId          Int?
+  sentTransfers      Balance?      @relation("SentTransfers", fields: [balanceId], references: [id], map: "Transaction_sentTransfers_fkey")
+  receivedTransfers  Balance?      @relation("ReceivedTransfers", fields: [balanceId], references: [id], map: "Transaction_receivedTransfers_fkey")
+  createdAt          DateTime      @default(now())
+}
+
+model Beneficiary {
+  id          Int      @id @default(autoincrement())
+  accountId   Int
+  userId      Int
+  name        String
+  email       String?
+  phone       String?
+  account     Account  @relation(fields: [accountId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@unique([accountId, name])
+}
+
+
+enum AccountType {
+  Savings
+  Current
+}
+
+enum AccountCategory {
+  ZeroBalance
+  General
+  Classic
+  Premium
+  Imperial
 }
