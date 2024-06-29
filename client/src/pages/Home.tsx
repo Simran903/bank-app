@@ -1,3 +1,4 @@
+import React from "react";
 import { motion, Variants } from "framer-motion";
 import { Button } from "../../@/components/ui/button";
 
@@ -14,7 +15,8 @@ const fadeInUpAnimation: Variants = {
     },
   },
 };
-const Home = () => {
+
+const Home: React.FC = () => {
   return (
     <div
       className=""
@@ -56,7 +58,7 @@ const Home = () => {
           animate="show"
         >
           <Button
-            className="mt-8 px-5 py-2 relative overflow-hidden group"
+            className="mt-8 px-5 py-2 relative overflow-hidden group rounded-lg"
             variant="outline"
             style={{
               position: "relative",

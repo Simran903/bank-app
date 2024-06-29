@@ -1,3 +1,4 @@
+import React from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -5,7 +6,7 @@ import {
 } from "../../@/components/ui/navigation-menu";
 import { motion } from "framer-motion";
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   return (
     <div className="h-14 text-[#fef9c3] flex justify-between items-center my-2 mx-8">
       <div className="logo">
