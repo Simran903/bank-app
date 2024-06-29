@@ -33,7 +33,7 @@ const cardData: CardData[] = [
 const Services: React.FC = () => {
     return (
         <div className="h-screen pt-16 flex flex-col items-center">
-            <h1 className="text-[#CCD0CF] text-5xl">Our Services</h1>
+            <h1 className="text-[#CCD0CF] text-5xl font-bold">Our Services</h1>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 items-center mt-20 mx-20">
                 {cardData.map((data, index) => (
                     <ServiceCard
