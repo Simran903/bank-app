@@ -10,58 +10,60 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 const generateAccessToken = (user: any) => {
-  return jwt.sign({
-    userId: user.id,
-    email: user.email
-  },
+  return jwt.sign(
+    {
+      userId: user.id,
+      email: user.email,
+    },
     process.env.ACCESS_TOKEN_SECRET as string,
     {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
   );
 };
 
-const encryptPassword = async function(password: string) {
-  return await bcrypt.hash(password, 10)
-}
+const encryptPassword = async (password: string) => {
+  return await bcrypt.hash(password, 10);
+};
 
-const isPasswordCorrect = async function(password: string, encryptedPassword: string) {
-  return await bcrypt.compare(encryptedPassword, password)
-}
-
+const isPasswordCorrect = async (password: string, encryptedPassword: string) => {
+  return await bcrypt.compare(password, encryptedPassword);
+};
 
 const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(18),
-  name: z.string()
+  name: z.string(),
 });
 
 const signInSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6).max(18)
+  password: z.string().min(6).max(18),
+});
+
+const updatePasswordSchema = z.object({
+  oldPassword: z.string().min(6).max(18),
+  newPassword: z.string().min(6).max(18),
 });
 
 export const signUp = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
 
-  const { success } = signUpSchema.safeParse(req.body)
-  if (!success) {
-    return res.status(411).json({
-      message: "Invalid Inputs"
+  const result = signUpSchema.safeParse(req.body);
+  if (!result.success) {
+    throw new ApiError({
+      statusCode: 411,
+      message: 'Invalid inputs',
     });
-  }
-
-  if ([name, email, password].some((field) => field.trim() === "")) {
-    throw new ApiError({ statusCode: 400, message: "All fields are required" });
   }
 
   const existingUser = await prisma.user.findFirst({
     where: {
-      email: email
-    }
-  })
+      email: email,
+    },
+  });
   if (existingUser) {
-    throw new ApiError({ statusCode: 409, message: "User already exists" });
+    throw new ApiError({ statusCode: 409, message: 'User already exists' });
   }
 
   const encryptedPassword = await encryptPassword(password);
@@ -70,105 +72,159 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
     data: {
       email: email,
       password: encryptedPassword,
-      name: name
-    }
+      name: name,
+    },
   });
-
-  const createdUser = await prisma.user.findFirst({
-    where: {
-      email: email
-    }
-  })
-  if (!createdUser) {
-    throw new ApiError({ statusCode: 500, message: "Something went wrong while signing up user" });
-  }
 
   const accessToken = generateAccessToken(user);
 
-  return res.status(200)
-    .cookie("accessToken", accessToken)
+  return res
+    .status(200)
+    .cookie('accessToken', accessToken)
     .json(
       new ApiResponse({
         statusCode: 200,
-        data: accessToken,
-        message: "user registered successfully"
+        data: { accessToken },
+        message: 'User registered successfully',
       })
-    )
-})
-
+    );
+});
 
 export const signIn = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const { success } = signInSchema.safeParse(req.body);
-  if (!success) {
+  const result = signInSchema.safeParse(req.body);
+  if (!result.success) {
     throw new ApiError({
       statusCode: 411,
-      message: "Invalid inputs"
+      message: 'Invalid inputs',
     });
-  }
-
-  if (!email || !password) {
-    throw new ApiError({
-      statusCode: 400,
-      message: "Email and password is required"
-    })
   }
 
   const user = await prisma.user.findFirst({
     where: {
-      email: email
-    }
+      email: email,
+    },
   });
 
   if (!user) {
     throw new ApiError({
       statusCode: 404,
-      message: "User does not exist"
+      message: 'User does not exist',
     });
-  };
+  }
 
   const isPasswordValid = await isPasswordCorrect(password, user.password);
 
   if (!isPasswordValid) {
     throw new ApiError({
       statusCode: 401,
-      message: "Password incorrect"
+      message: 'Password incorrect',
     });
-  };
+  }
 
   const accessToken = generateAccessToken(user);
 
-  return res.status(200)
-    .cookie("accessToken", accessToken)
+  return res
+    .status(200)
+    .cookie('accessToken', accessToken)
     .json(
       new ApiResponse({
         statusCode: 200,
-        data: accessToken,
-        message: "User logged in successfully"
+        data: { accessToken },
+        message: 'User logged in successfully',
       })
-    )
-})
-
+    );
+});
 
 export const signOut = asyncHandler(async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
   await prisma.user.update({
     where: {
-      id: userId
+      id: userId,
     },
     data: {
-      refreshToken: undefined
-    }
+      refreshToken: null,
+    },
   });
 
-  return res.status(200)
-    .clearCookie("accessToken")
+  return res
+    .status(200)
+    .clearCookie('accessToken')
     .json(
       new ApiResponse({
         statusCode: 200,
         data: {},
-        message: "User logged out"
+        message: 'User logged out',
       })
-    )
-})
+    );
+});
+
+export const updatePassword = asyncHandler(async (req: Request, res: Response) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const result = updatePasswordSchema.safeParse(req.body);
+  if (!result.success) {
+    throw new ApiError({
+      statusCode: 411,
+      message: 'Invalid inputs',
+    });
+  }
+
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'User not found',
+    });
+  }
+
+  const isOldPasswordValid = await isPasswordCorrect(oldPassword, user.password);
+
+  if (!isOldPasswordValid) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Old password is incorrect',
+    });
+  }
+
+  const encryptedNewPassword = await encryptPassword(newPassword);
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: encryptedNewPassword,
+    },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: {},
+      message: 'Password updated successfully',
+    })
+  );
+});
+
