@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { asyncHandler } from '../utils/asyncHandler';
@@ -11,39 +10,40 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 const generateAccessToken = (user: any) => {
-  return jwt.sign({
-    userId: user.id,
-    email: user.email
-  },
+  return jwt.sign(
+    {
+      userId: user.id,
+      email: user.email,
+    },
     process.env.ACCESS_TOKEN_SECRET as string,
     {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     }
   );
 };
 
-const encryptPassword = async function(password: string) {
+const encryptPassword = async (password: string) => {
   return await bcrypt.hash(password, 10);
 };
 
-const isPasswordCorrect = async function(password: string, encryptedPassword: string) {
+const isPasswordCorrect = async (password: string, encryptedPassword: string) => {
   return await bcrypt.compare(password, encryptedPassword);
 };
 
 const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(18),
-  name: z.string()
+  name: z.string(),
 });
 
 const signInSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(6).max(18)
+  password: z.string().min(6).max(18),
 });
 
 const updatePasswordSchema = z.object({
   oldPassword: z.string().min(6).max(18),
-  newPassword: z.string().min(6).max(18)
+  newPassword: z.string().min(6).max(18),
 });
 
 export const signUp = asyncHandler(async (req: Request, res: Response) => {
@@ -53,17 +53,17 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
   if (!result.success) {
     throw new ApiError({
       statusCode: 411,
-      message: "Invalid inputs"
+      message: 'Invalid inputs',
     });
   }
 
   const existingUser = await prisma.user.findFirst({
     where: {
-      email: email
-    }
+      email: email,
+    },
   });
   if (existingUser) {
-    throw new ApiError({ statusCode: 409, message: "User already exists" });
+    throw new ApiError({ statusCode: 409, message: 'User already exists' });
   }
 
   const encryptedPassword = await encryptPassword(password);
@@ -72,19 +72,20 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
     data: {
       email: email,
       password: encryptedPassword,
-      name: name
-    }
+      name: name,
+    },
   });
 
   const accessToken = generateAccessToken(user);
 
-  return res.status(200)
-    .cookie("accessToken", accessToken)
+  return res
+    .status(200)
+    .cookie('accessToken', accessToken)
     .json(
       new ApiResponse({
         statusCode: 200,
         data: { accessToken },
-        message: "User registered successfully"
+        message: 'User registered successfully',
       })
     );
 });
@@ -96,20 +97,20 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
   if (!result.success) {
     throw new ApiError({
       statusCode: 411,
-      message: "Invalid inputs"
+      message: 'Invalid inputs',
     });
   }
 
   const user = await prisma.user.findFirst({
     where: {
-      email: email
-    }
+      email: email,
+    },
   });
 
   if (!user) {
     throw new ApiError({
       statusCode: 404,
-      message: "User does not exist"
+      message: 'User does not exist',
     });
   }
 
@@ -118,41 +119,50 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
   if (!isPasswordValid) {
     throw new ApiError({
       statusCode: 401,
-      message: "Password incorrect"
+      message: 'Password incorrect',
     });
   }
 
   const accessToken = generateAccessToken(user);
 
-  return res.status(200)
-    .cookie("accessToken", accessToken)
+  return res
+    .status(200)
+    .cookie('accessToken', accessToken)
     .json(
       new ApiResponse({
         statusCode: 200,
         data: { accessToken },
-        message: "User logged in successfully"
+        message: 'User logged in successfully',
       })
     );
 });
 
 export const signOut = asyncHandler(async (req: Request, res: Response) => {
-  const { userId } = req.body;
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
   await prisma.user.update({
     where: {
-      id: userId
+      id: userId,
     },
     data: {
-      refreshToken: undefined
-    }
+      refreshToken: null,
+    },
   });
 
-  return res.status(200)
-    .clearCookie("accessToken")
+  return res
+    .status(200)
+    .clearCookie('accessToken')
     .json(
       new ApiResponse({
         statusCode: 200,
         data: {},
-        message: "User logged out"
+        message: 'User logged out',
       })
     );
 });
@@ -164,22 +174,28 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
   if (!result.success) {
     throw new ApiError({
       statusCode: 411,
-      message: "Invalid inputs"
+      message: 'Invalid inputs',
     });
   }
 
-  const userId = req.user.id;
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
 
   const user = await prisma.user.findUnique({
     where: {
-      id: userId
-    }
+      id: userId,
+    },
   });
 
   if (!user) {
     throw new ApiError({
       statusCode: 404,
-      message: "User not found"
+      message: 'User not found',
     });
   }
 
@@ -188,7 +204,7 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
   if (!isOldPasswordValid) {
     throw new ApiError({
       statusCode: 401,
-      message: "Old password is incorrect"
+      message: 'Old password is incorrect',
     });
   }
 
@@ -196,18 +212,18 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
 
   await prisma.user.update({
     where: {
-      id: userId
+      id: userId,
     },
     data: {
-      password: encryptedNewPassword
-    }
+      password: encryptedNewPassword,
+    },
   });
 
   return res.status(200).json(
     new ApiResponse({
       statusCode: 200,
       data: {},
-      message: "Password updated successfully"
+      message: 'Password updated successfully',
     })
   );
 });
