@@ -5,7 +5,7 @@ import { Button } from "../../@/components/ui/button";
 const fadeInUpAnimation: Variants = {
   hidden: {
     opacity: 0,
-    y: 100,
+    y: 200,
   },
   show: {
     opacity: 1,
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           variants={fadeInUpAnimation}
           initial="hidden"
           animate="show"
-          className="mt-24 text-5xl flex flex-col justify-center items-center font-bold"
+          className="mt-44 text-5xl flex flex-col justify-center items-center font-bold text-white"
         >
           Your Money, Your Way, Every Day
         </motion.h1>

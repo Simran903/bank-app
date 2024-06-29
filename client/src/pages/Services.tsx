@@ -9,7 +9,7 @@ interface CardData {
 
 const cardData: CardData[] = [
     {
-        title: "Overview of your account",
+        title: "Overview of your Account",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non mauris vel lectus malesuada condimentum.",
         image: "./services/overview.png"
     },
@@ -19,7 +19,7 @@ const cardData: CardData[] = [
         image: "./services/reports.png"
     },
     {
-        title: "Transfer money anytime anywhere",
+        title: "Transfer Money",
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non mauris vel lectus malesuada condimentum.",
         image: "./services/transaction.png"
     },
