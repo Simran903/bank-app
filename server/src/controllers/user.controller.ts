@@ -6,6 +6,7 @@ import { ApiResponse } from '../utils/apiResponse';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import { uploadCloudinary } from '../utils/cloudinary';
 
 const prisma = new PrismaClient();
 
@@ -228,3 +229,43 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
   );
 });
 
+export const updateProfilePicture = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.file) {
+    throw new ApiError({
+      statusCode: 400,
+      message: "Profile picture file is required"
+    });
+  }
+
+  const userId = req.user?.id;
+  const localFilePath = req.file.path;
+
+  const uploadedImage = await uploadCloudinary(localFilePath);
+
+  if (!uploadedImage) {
+    throw new ApiError({
+      statusCode: 500,
+      message: "Error uploading profile picture"
+    });
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: { profilePictureUrl: uploadedImage.url }
+  });
+
+  if (!user) {
+    throw new ApiError({
+      statusCode: 500,
+      message: "Something went wrong while updating profile picture"
+    });
+  }
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { profilePicture: uploadedImage.url },
+      message: "Profile picture updated successfully"
+    })
+  );
+});
