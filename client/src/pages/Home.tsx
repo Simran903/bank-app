@@ -58,7 +58,7 @@ const Home: React.FC = () => {
           animate="show"
         >
           <Button
-            className="mt-8 px-5 py-2 relative overflow-hidden group rounded-lg"
+            className="mt-8 px-5 py-2 relative overflow-hidden group rounded-lg border-2"
             variant="outline"
             style={{
               position: "relative",
