@@ -13,26 +13,43 @@ const motionProps = {
   whileTap: { scale: 0.9 },
 };
 
-const NavButton: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <motion.button {...motionProps}>
-    <NavigationMenuItem className={buttonClass}>
-      {children}
+const NavButton: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
+  <motion.div {...motionProps}>
+    <NavigationMenuItem>
+      <button 
+        className={buttonClass}
+        onClick={() => {
+          const element = document.getElementById(to);
+          element?.scrollIntoView({ behavior: "smooth" });
+        }}
+      >
+        {children}
+      </button>
     </NavigationMenuItem>
-  </motion.button>
+  </motion.div>
 );
 
-const navItems = ["Home", "About us", "Services"];
+const navItems = [
+  { name: "Home", to: "home" },
+  { name: "About us", to: "about" },
+  { name: "Services", to: "services" }
+];
 
 const Navbar: React.FC = () => {
   return (
     <nav className="h-14 text-[#fef9c3] flex justify-between items-center my-2 mx-8">
       <div className="logo">
-        <h1 className={buttonClass}>logo</h1>
+        <button 
+          className={buttonClass}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          logo
+        </button>
       </div>
       <NavigationMenu>
         <NavigationMenuList className="flex gap-6">
           {navItems.map((item) => (
-            <NavButton key={item}>{item}</NavButton>
+            <NavButton key={item.name} to={item.to}>{item.name}</NavButton>
           ))}
         </NavigationMenuList>
       </NavigationMenu>

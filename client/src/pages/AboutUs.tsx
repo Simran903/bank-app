@@ -9,7 +9,9 @@ const AboutUs: React.FC = () => {
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover",
       backgroundPosition: "center",
-    }}>
+    }}
+    id="about"
+    >
       <h1 className="text-[#CCD0CF] text-5xl font-bold">About us</h1>
       <div className="flex justify-center items-center mt-20 mx-20 h-2/3 w-3/5 bg-[#06141B] bg-opacity-80 shadow-2xl cursor-pointer border-none rounded-lg">
         <p className="p-10 text-white">
