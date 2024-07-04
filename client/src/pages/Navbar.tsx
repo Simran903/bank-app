@@ -5,6 +5,7 @@ import {
   NavigationMenuList,
 } from "../../@/components/ui/navigation-menu";
 import { motion } from "framer-motion";
+import { Link } from 'react-router-dom';
 
 const buttonClass = "text-[#CCD0CF] border-2 border-[#CCD0CF] hover:opacity-90 font-medium rounded-full text-sm px-5 py-2 text-center me-2 mb-2 cursor-pointer";
 
@@ -13,10 +14,10 @@ const motionProps = {
   whileTap: { scale: 0.9 },
 };
 
-const NavButton: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
+const ScrollButton: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
   <motion.div {...motionProps}>
     <NavigationMenuItem>
-      <button 
+      <button
         className={buttonClass}
         onClick={() => {
           const element = document.getElementById(to);
@@ -39,7 +40,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="h-14 text-[#fef9c3] flex justify-between items-center my-2 mx-8">
       <div className="logo">
-        <button 
+        <button
           className={buttonClass}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
@@ -49,19 +50,20 @@ const Navbar: React.FC = () => {
       <NavigationMenu>
         <NavigationMenuList className="flex gap-6">
           {navItems.map((item) => (
-            <NavButton key={item.name} to={item.to}>{item.name}</NavButton>
+            <ScrollButton key={item.name} to={item.to}>{item.name}</ScrollButton>
           ))}
         </NavigationMenuList>
       </NavigationMenu>
       <div className="flex gap-2">
         {["Sign in", "Sign up"].map((text) => (
-          <motion.button
-            key={text}
-            className={buttonClass}
-            {...motionProps}
-          >
-            {text}
-          </motion.button>
+          <Link key={text} to={`/${text.toLowerCase().replace(" ", "")}`}>
+            <motion.button
+              className={buttonClass}
+              {...motionProps}
+            >
+              {text}
+            </motion.button>
+          </Link>
         ))}
       </div>
     </nav>
