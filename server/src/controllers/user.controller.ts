@@ -269,3 +269,40 @@ export const updateProfilePicture = asyncHandler(async (req: Request, res: Respo
     })
   );
 });
+
+export const getUserBalance = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const accounts = await prisma.account.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      balance: true,
+    },
+  });
+
+  if (!accounts || accounts.length === 0) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'No accounts found for the user',
+    });
+  }
+
+  const totalBalance = accounts.reduce((sum, account) => sum + (account.balance?.amount || 0), 0);
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { totalBalance },
+      message: 'Balance fetched successfully',
+    })
+  );
+});
