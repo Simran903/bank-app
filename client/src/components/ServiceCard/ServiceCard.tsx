@@ -36,7 +36,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ image, title, description }) 
           whileHover={{ scale: 1.05, transition: { duration: 0.6 } }}
           
         >
-            <Card className="p-10 shadow-2xl hover:shadow-blue-glow hover:shadow-2xl transition-shadow duration-300 bg-[#4A5C6A] bg-opacity-10 cursor-pointer border-none">
+            <Card className="p-10 shadow-2xl hover:shadow-blue-glow transition-shadow duration-300 bg-[#4A5C6A] bg-opacity-10 cursor-pointer border-none">
                 <CardHeader>
                     <img src={image} alt="" />
                     <CardTitle className="py-2 text-white">{title}</CardTitle>
