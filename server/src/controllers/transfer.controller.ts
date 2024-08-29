@@ -72,7 +72,6 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
       fromAccountId: fromAccount.id,
       toAccountId: toAccount.id,
       userId: fromUserId,
-      balanceId: fromAccount.balance.id,
     },
   });
 
@@ -95,6 +94,56 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
   );
 });
 
+export const getAllSentTransfers = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const sentTransfers = await prisma.transaction.findMany({
+    where: { fromAccount: { userId: userId } },
+    include: { toAccount: true, fromAccount: true },
+    orderBy: { timestamp: 'desc' },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { sentTransfers },
+      message: 'Sent transfers fetched successfully',
+    })
+  );
+});
+
+export const getAllReceivedTransfers = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const receivedTransfers = await prisma.transaction.findMany({
+    where: { toAccount: { userId: userId } },
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { receivedTransfers },
+      message: 'Received transfers fetched successfully',
+    })
+  );
+});
+
 export const getAllTransfers = asyncHandler(async (req: Request, res: Response) => {
   const userId = req.user?.id;
 
@@ -105,25 +154,23 @@ export const getAllTransfers = asyncHandler(async (req: Request, res: Response) 
     });
   }
 
-  const transfers = await prisma.transaction.findMany({
+  const allTransfers = await prisma.transaction.findMany({
     where: {
       OR: [
         { fromAccount: { userId: userId } },
         { toAccount: { userId: userId } },
       ],
     },
-    include: {
-      fromAccount: true,
-      toAccount: true,
-    },
-    orderBy: { createdAt: 'desc' },
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
   });
 
   return res.status(200).json(
     new ApiResponse({
       statusCode: 200,
-      data: { transfers },
+      data: { allTransfers },
       message: 'All transfers fetched successfully',
     })
   );
 });
+
