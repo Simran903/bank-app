@@ -94,3 +94,36 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     })
   );
 });
+
+export const getAllTransfers = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const transfers = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { fromAccount: { userId: userId } },
+        { toAccount: { userId: userId } },
+      ],
+    },
+    include: {
+      fromAccount: true,
+      toAccount: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transfers },
+      message: 'All transfers fetched successfully',
+    })
+  );
+});
