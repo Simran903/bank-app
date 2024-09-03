@@ -37,3 +37,23 @@ export const addBeneficiary = asyncHandler(async (req: Request, res: Response) =
     message: 'Beneficiary added successfully',
   }));
 });
+
+export const getAllBeneficiaries = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
+  }
+
+  const beneficiaries = await prisma.beneficiary.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  return res.status(200).json(new ApiResponse({
+    statusCode: 200,
+    data: beneficiaries,
+    message: 'Beneficiaries retrieved successfully',
+  }));
+});
