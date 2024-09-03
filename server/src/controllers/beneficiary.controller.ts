@@ -57,3 +57,28 @@ export const getAllBeneficiaries = asyncHandler(async (req: Request, res: Respon
     message: 'Beneficiaries retrieved successfully',
   }));
 });
+
+export const getBeneficiaryById = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { id } = req.params;
+
+  if (!userId) {
+    throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
+  }
+
+  const beneficiary = await prisma.beneficiary.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!beneficiary || beneficiary.userId !== userId) {
+    throw new ApiError({ statusCode: 404, message: 'Beneficiary not found' });
+  }
+
+  return res.status(200).json(new ApiResponse({
+    statusCode: 200,
+    data: beneficiary,
+    message: 'Beneficiary retrieved successfully',
+  }));
+});
