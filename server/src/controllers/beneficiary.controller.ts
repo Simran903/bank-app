@@ -124,3 +124,34 @@ export const updateBeneficiary = asyncHandler(async (req: Request, res: Response
     message: 'Beneficiary updated successfully',
   }));
 });
+
+export const removeBeneficiary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { id } = req.params;
+
+  if (!userId) {
+    throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
+  }
+
+  const beneficiary = await prisma.beneficiary.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!beneficiary || beneficiary.userId !== userId) {
+    throw new ApiError({ statusCode: 404, message: 'Beneficiary not found' });
+  }
+
+  await prisma.beneficiary.delete({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  return res.status(200).json(new ApiResponse({
+    statusCode: 200,
+    data: {},
+    message: 'Beneficiary removed successfully',
+  }));
+});
