@@ -82,3 +82,45 @@ export const getBeneficiaryById = asyncHandler(async (req: Request, res: Respons
     message: 'Beneficiary retrieved successfully',
   }));
 });
+
+
+export const updateBeneficiary = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { id } = req.params;
+  const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = req.body;
+
+  if (!userId) {
+    throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
+  }
+
+  const beneficiary = await prisma.beneficiary.findUnique({
+    where: {
+      id: parseInt(id),
+    },
+  });
+
+  if (!beneficiary || beneficiary.userId !== userId) {
+    throw new ApiError({ statusCode: 404, message: 'Beneficiary not found' });
+  }
+
+  const updatedBeneficiary = await prisma.beneficiary.update({
+    where: {
+      id: parseInt(id),
+    },
+    data: {
+      name,
+      accountNumber,
+      bankName,
+      ifscCode,
+      email,
+      phone,
+      accountId,
+    },
+  });
+
+  return res.status(200).json(new ApiResponse({
+    statusCode: 200,
+    data: updatedBeneficiary,
+    message: 'Beneficiary updated successfully',
+  }));
+});
