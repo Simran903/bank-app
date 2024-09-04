@@ -3,19 +3,38 @@ import { PrismaClient } from '@prisma/client';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/apiError';
 import { ApiResponse } from '../utils/apiResponse';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
+const beneficiarySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  accountNumber: z.string().min(1, "Account number is required"),
+  bankName: z.string().min(1, "Bank name is required"),
+  ifscCode: z.string().min(1, "IFSC code is required"),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
+  accountId: z.number({ required_error: "Account ID is required" }),
+});
+
+const beneficiaryUpdateSchema = beneficiarySchema.partial();
+
+
 export const addBeneficiary = asyncHandler(async (req: Request, res: Response) => {
-  const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = req.body;
+  const validationResult = beneficiarySchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: validationResult.error.errors.map(e => e.message).join(', '),
+    });
+  }
+
+  const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = validationResult.data;
   const userId = req.user?.id;
 
   if (!userId) {
     throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
-  }
-
-  if (!accountId) {
-    throw new ApiError({ statusCode: 400, message: 'Account ID is required' });
   }
 
   const beneficiary = await prisma.beneficiary.create({
@@ -83,11 +102,19 @@ export const getBeneficiaryById = asyncHandler(async (req: Request, res: Respons
   }));
 });
 
-
 export const updateBeneficiary = asyncHandler(async (req: Request, res: Response) => {
+  const validationResult = beneficiaryUpdateSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: validationResult.error.errors.map(e => e.message).join(', '),
+    });
+  }
+
+  const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = validationResult.data;
   const userId = req.user?.id;
   const { id } = req.params;
-  const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = req.body;
 
   if (!userId) {
     throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
@@ -155,3 +182,4 @@ export const removeBeneficiary = asyncHandler(async (req: Request, res: Response
     message: 'Beneficiary removed successfully',
   }));
 });
+
