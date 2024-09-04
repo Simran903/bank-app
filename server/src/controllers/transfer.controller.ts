@@ -3,21 +3,29 @@ import { PrismaClient } from '@prisma/client';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/apiError';
 import { ApiResponse } from '../utils/apiResponse';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
-export const initiateTransfer = asyncHandler(async (req: Request, res: Response) => {
-  const { amount, toUserId, description } = req.body;
+const transferSchema = z.object({
+  amount: z.number().min(1, "Amount must be greater than zero"),
+  toUserId: z.number().positive("Recipient User ID must be a positive integer"),
+  description: z.string().optional(),
+});
 
-  const parsedAmount = parseInt(amount, 10);
-  if (isNaN(parsedAmount) || parsedAmount <= 0 || !toUserId) {
+export const initiateTransfer = asyncHandler(async (req: Request, res: Response) => {
+  const validationResult = transferSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
     throw new ApiError({
       statusCode: 400,
-      message: 'Invalid inputs',
+      message: validationResult.error.errors.map(e => e.message).join(', '),
     });
   }
 
+  const { amount, toUserId, description } = validationResult.data;
   const fromUserId = req.user?.id;
+
   if (!fromUserId) {
     throw new ApiError({
       statusCode: 401,
@@ -56,7 +64,7 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     });
   }
 
-  if (fromAccount.balance.amount < parsedAmount) {
+  if (fromAccount.balance.amount < amount) {
     throw new ApiError({
       statusCode: 400,
       message: 'Insufficient funds',
@@ -65,7 +73,7 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
 
   const transaction = await prisma.transaction.create({
     data: {
-      amount: parsedAmount,
+      amount,
       type: 'Transfer',
       status: 'Completed',
       description: description || '',
@@ -77,12 +85,12 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
 
   await prisma.balance.update({
     where: { id: fromAccount.balance.id },
-    data: { amount: { decrement: parsedAmount } },
+    data: { amount: { decrement: amount } },
   });
 
   await prisma.balance.update({
     where: { id: toAccount.balance.id },
-    data: { amount: { increment: parsedAmount } },
+    data: { amount: { increment: amount } },
   });
 
   return res.status(200).json(
