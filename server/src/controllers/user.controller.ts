@@ -59,9 +59,7 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const existingUser = await prisma.user.findFirst({
-    where: {
-      email: email,
-    },
+    where: { email: email },
   });
   if (existingUser) {
     throw new ApiError({ statusCode: 409, message: 'User already exists' });
@@ -74,6 +72,21 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
       email: email,
       password: encryptedPassword,
       name: name,
+    },
+  });
+
+  const account = await prisma.account.create({
+    data: {
+      userId: user.id,
+      type: 'Savings',
+      category: 'General',
+    },
+  });
+
+  await prisma.balance.create({
+    data: {
+      amount: 10000,
+      accountId: account.id,
     },
   });
 

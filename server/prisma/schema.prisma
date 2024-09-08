@@ -72,19 +72,19 @@ model Transaction {
 }
 
 model Beneficiary {
-  id          Int      @id @default(autoincrement())
-  accountId   Int
-  userId      Int
-  name        String
-  email       String?
-  phone       String?
-  account     Account  @relation(fields: [accountId], references: [id])
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-
-  @@unique([accountId, name])
+  id            Int      @id @default(autoincrement())
+  accountId     Int
+  userId        Int
+  name          String
+  accountNumber String
+  bankName      String
+  ifscCode      String
+  email         String?
+  phone         String?
+  account       Account  @relation(fields: [accountId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
 }
-
 
 enum AccountType {
   Savings
