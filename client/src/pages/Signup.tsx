@@ -97,7 +97,7 @@ const Signup: React.FC = () => {
         <div className="flex items-center justify-center mt-6">
           <p className="text-xs mr-1 text-gray-600">Already have an account?</p>
           <a
-            className="text-sm text-gray-800 font-bold cursor-pointer"
+            className="tex0t-sm text-gray-800 font-bold cursor-pointer"
             onClick={handleSigninClick}
           >
             SIGN IN
