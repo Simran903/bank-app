@@ -9,10 +9,9 @@ const prisma = new PrismaClient();
 
 const transferSchema = z.object({
   amount: z.number().min(1, "Amount must be greater than zero"),
-  toUserId: z.number().positive("Recipient User ID must be a positive integer"),
+  toUsername: z.string().min(3, "Recipient Username must be at least 3 characters long"),
   description: z.string().optional(),
 });
-
 
 const transactionIdSchema = z.object({
   id: z.string().transform(Number).refine((id) => !isNaN(id) && id > 0, {
@@ -30,7 +29,7 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     });
   }
 
-  const { amount, toUserId, description } = validationResult.data;
+  const { amount, toUsername, description } = validationResult.data;
   const fromUserId = req.user?.id;
 
   if (!fromUserId) {
@@ -40,7 +39,18 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     });
   }
 
-  if (fromUserId === toUserId) {
+  const toUser = await prisma.user.findUnique({
+    where: { username: toUsername },
+  });
+
+  if (!toUser) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Recipient user not found',
+    });
+  }
+
+  if (fromUserId === toUser.id) {
     throw new ApiError({
       statusCode: 400,
       message: 'Cannot transfer to the same user',
@@ -53,7 +63,7 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
   });
 
   const toAccount = await prisma.account.findFirst({
-    where: { userId: toUserId },
+    where: { userId: toUser.id },
     include: { balance: true },
   });
 
