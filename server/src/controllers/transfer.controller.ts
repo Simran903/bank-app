@@ -240,3 +240,98 @@ export const getTransferById = asyncHandler(async (req: Request, res: Response) 
   );
 });
 
+export const getFilteredTransactions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const filterSchema = z.object({
+    year: z.number().optional(),
+    month: z.number().min(1).max(12).optional(),
+    day: z.number().min(1).max(31).optional(),
+    maxAmount: z.number().optional(),
+    minAmount: z.number().optional(),
+  });
+
+  const result = filterSchema.safeParse(req.query);
+  if (!result.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: 'Invalid filters',
+    });
+  }
+
+  const { year, month, day, maxAmount, minAmount } = result.data;
+
+  const filters: any = {
+    AND: [
+      { OR: [{ fromAccount: { userId: userId } }, { toAccount: { userId: userId } }] },
+      {
+        timestamp: {
+          ...(year && { gte: new Date(`${year}-01-01T00:00:00.000Z`) }),
+          ...(year && month && { lte: new Date(`${year}-${month + 1}-01T00:00:00.000Z`) }),
+          ...(month && day && { gte: new Date(`${year}-${month}-${day}T00:00:00.000Z`) }),
+        }
+      },
+      ...(minAmount !== undefined && maxAmount !== undefined
+        ? [{ amount: { gte: minAmount, lte: maxAmount } }]
+        : minAmount !== undefined
+          ? [{ amount: { gte: minAmount } }]
+          : maxAmount !== undefined
+            ? [{ amount: { lte: maxAmount } }]
+            : []
+      ),
+    ],
+  };
+
+  const transactions = await prisma.transaction.findMany({
+    where: filters,
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transactions },
+      message: 'Filtered transactions fetched successfully',
+    })
+  );
+});
+
+export const getLast5Transactions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { fromAccount: { userId: userId } },
+        { toAccount: { userId: userId } },
+      ],
+    },
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+    take: 5,
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transactions },
+      message: 'Last 5 transactions fetched successfully',
+    })
+  );
+});
+
