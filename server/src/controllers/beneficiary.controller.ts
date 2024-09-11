@@ -8,10 +8,10 @@ import { z } from 'zod';
 const prisma = new PrismaClient();
 
 const beneficiarySchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  accountNumber: z.string().min(1, "Account number is required"),
-  bankName: z.string().min(1, "Bank name is required"),
-  ifscCode: z.string().min(1, "IFSC code is required"),
+  name: z.string().min(1),
+  accountNumber: z.string().min(1),
+  bankName: z.string().min(1),
+  ifscCode: z.string().min(1),
   email: z.string().email().optional(),
   phone: z.string().optional(),
   accountId: z.number({ required_error: "Account ID is required" }),
