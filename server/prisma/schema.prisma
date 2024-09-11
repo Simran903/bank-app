@@ -11,6 +11,7 @@ model User {
   id               Int         @id @default(autoincrement())
   email            String      @unique
   name             String
+  username         String      @unique
   dob              DateTime?
   address          String?
   city             String?
@@ -42,15 +43,6 @@ model Account {
   balance          Balance?
 }
 
-model Balance {
-  id                Int            @id @default(autoincrement())
-  amount            Int
-  account           Account        @relation(fields: [accountId], references: [id])
-  accountId         Int            @unique
-  sentTransfers     Transaction[]  @relation("SentTransfers")
-  receivedTransfers Transaction[]  @relation("ReceivedTransfers")
-  timestamp         DateTime       @default(now())
-}
 
 model Transaction {
   id                 Int           @id @default(autoincrement())
@@ -69,6 +61,16 @@ model Transaction {
   sentTransfers      Balance?      @relation("SentTransfers", fields: [balanceId], references: [id], map: "Transaction_sentTransfers_fkey")
   receivedTransfers  Balance?      @relation("ReceivedTransfers", fields: [balanceId], references: [id], map: "Transaction_receivedTransfers_fkey")
   createdAt          DateTime      @default(now())
+}
+
+model Balance {
+  id                Int            @id @default(autoincrement())
+  amount            Int
+  account           Account        @relation(fields: [accountId], references: [id])
+  accountId         Int            @unique
+  sentTransfers     Transaction[]  @relation("SentTransfers", map: "Transaction_sentTransfers_fkey")
+  receivedTransfers Transaction[]  @relation("ReceivedTransfers", map: "Transaction_receivedTransfers_fkey")
+  timestamp         DateTime       @default(now())
 }
 
 model Beneficiary {
@@ -98,3 +100,4 @@ enum AccountCategory {
   Premium
   Imperial
 }
+
