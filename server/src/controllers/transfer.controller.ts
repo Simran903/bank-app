@@ -13,13 +13,20 @@ const transferSchema = z.object({
   description: z.string().optional(),
 });
 
+
+const transactionIdSchema = z.object({
+  id: z.string().transform(Number).refine((id) => !isNaN(id) && id > 0, {
+    message: 'Transaction ID must be a positive number',
+  }),
+});
+
 export const initiateTransfer = asyncHandler(async (req: Request, res: Response) => {
   const validationResult = transferSchema.safeParse(req.body);
 
   if (!validationResult.success) {
     throw new ApiError({
       statusCode: 400,
-      message: validationResult.error.errors.map(e => e.message).join(', '),
+      message: validationResult.error.errors.map((e) => e.message).join(', '),
     });
   }
 
@@ -178,6 +185,47 @@ export const getAllTransfers = asyncHandler(async (req: Request, res: Response) 
       statusCode: 200,
       data: { allTransfers },
       message: 'All transfers fetched successfully',
+    })
+  );
+});
+
+export const getTransferById = asyncHandler(async (req: Request, res: Response) => {
+  const validationResult = transactionIdSchema.safeParse(req.params);
+
+  if (!validationResult.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: validationResult.error.errors.map((e) => e.message).join(', '),
+    });
+  }
+
+  const { id } = validationResult.data;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const transaction = await prisma.transaction.findUnique({
+    where: { id },
+    include: { fromAccount: true, toAccount: true },
+  });
+
+  if (!transaction || (transaction.fromAccount.userId !== userId && transaction.toAccount.userId !== userId)) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Transaction not found',
+    });
+  }
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transaction },
+      message: 'Transfer details retrieved successfully',
     })
   );
 });
