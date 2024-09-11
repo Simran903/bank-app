@@ -330,3 +330,106 @@ export const getUserBalance = asyncHandler(async (req: Request, res: Response) =
   );
 });
 
+export const getAccountDetails = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const account = await prisma.account.findFirst({
+    where: { userId: userId },
+    include: { balance: true },
+  });
+
+  if (!account) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Account not found',
+    });
+  }
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: {
+        accountId: account.id,
+        type: account.type,
+        category: account.category,
+        balance: account.balance?.amount || 0,
+      },
+      message: 'Account details retrieved successfully',
+    })
+  );
+});
+
+export const getAccountOverview = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const account = await prisma.account.findFirst({
+    where: { userId },
+    include: { balance: true },
+  });
+
+  if (!account || !account.balance) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Account or balance not found',
+    });
+  }
+
+  const recentTransactions = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { fromAccount: { userId } },
+        { toAccount: { userId } },
+      ],
+    },
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+    take: 5,
+  });
+
+  const totalSentAmount = await prisma.transaction.aggregate({
+    where: {
+      fromAccount: { userId },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  const totalReceivedAmount = await prisma.transaction.aggregate({
+    where: {
+      toAccount: { userId },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  const overviewData = {
+    balance: account.balance.amount,
+    recentTransactions,
+    totalSentAmount: totalSentAmount._sum.amount || 0,
+    totalReceivedAmount: totalReceivedAmount._sum.amount || 0,
+  };
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { overview: overviewData },
+      message: 'Account overview retrieved successfully',
+    })
+  );
+});
