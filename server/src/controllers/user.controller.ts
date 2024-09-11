@@ -35,10 +35,11 @@ const signUpSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(18),
   name: z.string(),
+  username: z.string().min(3).max(20),
 });
 
 const signInSchema = z.object({
-  email: z.string().email(),
+  identifier: z.string(),
   password: z.string().min(6).max(18),
 });
 
@@ -48,7 +49,7 @@ const updatePasswordSchema = z.object({
 });
 
 export const signUp = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, username } = req.body;
 
   const result = signUpSchema.safeParse(req.body);
   if (!result.success) {
@@ -59,19 +60,28 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const existingUser = await prisma.user.findFirst({
-    where: { email: email },
+    where: {
+      OR: [{ email }, { username }],
+    },
   });
+
   if (existingUser) {
-    throw new ApiError({ statusCode: 409, message: 'User already exists' });
+    if (existingUser.email === email) {
+      throw new ApiError({ statusCode: 409, message: 'Email already exists' });
+    }
+    if (existingUser.username === username) {
+      throw new ApiError({ statusCode: 409, message: 'Username already exists' });
+    }
   }
 
   const encryptedPassword = await encryptPassword(password);
 
   const user = await prisma.user.create({
     data: {
-      email: email,
+      email,
       password: encryptedPassword,
-      name: name,
+      name,
+      username,
     },
   });
 
@@ -105,7 +115,7 @@ export const signUp = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const signIn = asyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { identifier, password } = req.body;
 
   const result = signInSchema.safeParse(req.body);
   if (!result.success) {
@@ -117,7 +127,7 @@ export const signIn = asyncHandler(async (req: Request, res: Response) => {
 
   const user = await prisma.user.findFirst({
     where: {
-      email: email,
+      OR: [{ email: identifier }, { username: identifier }],
     },
   });
 
@@ -319,3 +329,4 @@ export const getUserBalance = asyncHandler(async (req: Request, res: Response) =
     })
   );
 });
+
