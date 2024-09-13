@@ -9,8 +9,14 @@ const prisma = new PrismaClient();
 
 const transferSchema = z.object({
   amount: z.number().min(1, "Amount must be greater than zero"),
-  toUserId: z.number().positive("Recipient User ID must be a positive integer"),
+  toUsername: z.string().min(3, "Recipient Username must be at least 3 characters long"),
   description: z.string().optional(),
+});
+
+const transactionIdSchema = z.object({
+  id: z.string().transform(Number).refine((id) => !isNaN(id) && id > 0, {
+    message: 'Transaction ID must be a positive number',
+  }),
 });
 
 export const initiateTransfer = asyncHandler(async (req: Request, res: Response) => {
@@ -19,11 +25,11 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
   if (!validationResult.success) {
     throw new ApiError({
       statusCode: 400,
-      message: validationResult.error.errors.map(e => e.message).join(', '),
+      message: validationResult.error.errors.map((e) => e.message).join(', '),
     });
   }
 
-  const { amount, toUserId, description } = validationResult.data;
+  const { amount, toUsername, description } = validationResult.data;
   const fromUserId = req.user?.id;
 
   if (!fromUserId) {
@@ -33,7 +39,18 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     });
   }
 
-  if (fromUserId === toUserId) {
+  const toUser = await prisma.user.findUnique({
+    where: { username: toUsername },
+  });
+
+  if (!toUser) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Recipient user not found',
+    });
+  }
+
+  if (fromUserId === toUser.id) {
     throw new ApiError({
       statusCode: 400,
       message: 'Cannot transfer to the same user',
@@ -46,7 +63,7 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
   });
 
   const toAccount = await prisma.account.findFirst({
-    where: { userId: toUserId },
+    where: { userId: toUser.id },
     include: { balance: true },
   });
 
@@ -178,6 +195,142 @@ export const getAllTransfers = asyncHandler(async (req: Request, res: Response) 
       statusCode: 200,
       data: { allTransfers },
       message: 'All transfers fetched successfully',
+    })
+  );
+});
+
+export const getTransferById = asyncHandler(async (req: Request, res: Response) => {
+  const validationResult = transactionIdSchema.safeParse(req.params);
+
+  if (!validationResult.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: validationResult.error.errors.map((e) => e.message).join(', '),
+    });
+  }
+
+  const { id } = validationResult.data;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const transaction = await prisma.transaction.findUnique({
+    where: { id },
+    include: { fromAccount: true, toAccount: true },
+  });
+
+  if (!transaction || (transaction.fromAccount.userId !== userId && transaction.toAccount.userId !== userId)) {
+    throw new ApiError({
+      statusCode: 404,
+      message: 'Transaction not found',
+    });
+  }
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transaction },
+      message: 'Transfer details retrieved successfully',
+    })
+  );
+});
+
+export const getFilteredTransactions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const filterSchema = z.object({
+    year: z.number().optional(),
+    month: z.number().min(1).max(12).optional(),
+    day: z.number().min(1).max(31).optional(),
+    maxAmount: z.number().optional(),
+    minAmount: z.number().optional(),
+  });
+
+  const result = filterSchema.safeParse(req.query);
+  if (!result.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: 'Invalid filters',
+    });
+  }
+
+  const { year, month, day, maxAmount, minAmount } = result.data;
+
+  const filters: any = {
+    AND: [
+      { OR: [{ fromAccount: { userId: userId } }, { toAccount: { userId: userId } }] },
+      {
+        timestamp: {
+          ...(year && { gte: new Date(`${year}-01-01T00:00:00.000Z`) }),
+          ...(year && month && { lte: new Date(`${year}-${month + 1}-01T00:00:00.000Z`) }),
+          ...(month && day && { gte: new Date(`${year}-${month}-${day}T00:00:00.000Z`) }),
+        }
+      },
+      ...(minAmount !== undefined && maxAmount !== undefined
+        ? [{ amount: { gte: minAmount, lte: maxAmount } }]
+        : minAmount !== undefined
+          ? [{ amount: { gte: minAmount } }]
+          : maxAmount !== undefined
+            ? [{ amount: { lte: maxAmount } }]
+            : []
+      ),
+    ],
+  };
+
+  const transactions = await prisma.transaction.findMany({
+    where: filters,
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transactions },
+      message: 'Filtered transactions fetched successfully',
+    })
+  );
+});
+
+export const getLast5Transactions = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    throw new ApiError({
+      statusCode: 401,
+      message: 'Unauthorized request',
+    });
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { fromAccount: { userId: userId } },
+        { toAccount: { userId: userId } },
+      ],
+    },
+    include: { fromAccount: true, toAccount: true },
+    orderBy: { timestamp: 'desc' },
+    take: 5,
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      statusCode: 200,
+      data: { transactions },
+      message: 'Last 5 transactions fetched successfully',
     })
   );
 });

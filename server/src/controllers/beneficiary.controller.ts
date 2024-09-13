@@ -8,10 +8,10 @@ import { z } from 'zod';
 const prisma = new PrismaClient();
 
 const beneficiarySchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  accountNumber: z.string().min(1, "Account number is required"),
-  bankName: z.string().min(1, "Bank name is required"),
-  ifscCode: z.string().min(1, "IFSC code is required"),
+  name: z.string().min(1),
+  accountNumber: z.string().min(1),
+  bankName: z.string().min(1),
+  ifscCode: z.string().min(1),
   email: z.string().email().optional(),
   phone: z.string().optional(),
   accountId: z.number({ required_error: "Account ID is required" }),
@@ -19,10 +19,12 @@ const beneficiarySchema = z.object({
 
 const beneficiaryUpdateSchema = beneficiarySchema.partial();
 
+const idParamSchema = z.object({
+  id: z.string().regex(/^\d+$/, "ID must be a valid integer"),
+});
 
 export const addBeneficiary = asyncHandler(async (req: Request, res: Response) => {
   const validationResult = beneficiarySchema.safeParse(req.body);
-
   if (!validationResult.success) {
     throw new ApiError({
       statusCode: 400,
@@ -78,8 +80,16 @@ export const getAllBeneficiaries = asyncHandler(async (req: Request, res: Respon
 });
 
 export const getBeneficiaryById = asyncHandler(async (req: Request, res: Response) => {
+  const idValidation = idParamSchema.safeParse(req.params);
+  if (!idValidation.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: idValidation.error.errors.map(e => e.message).join(', '),
+    });
+  }
+
   const userId = req.user?.id;
-  const { id } = req.params;
+  const { id } = idValidation.data;
 
   if (!userId) {
     throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
@@ -103,8 +113,15 @@ export const getBeneficiaryById = asyncHandler(async (req: Request, res: Respons
 });
 
 export const updateBeneficiary = asyncHandler(async (req: Request, res: Response) => {
-  const validationResult = beneficiaryUpdateSchema.safeParse(req.body);
+  const idValidation = idParamSchema.safeParse(req.params);
+  if (!idValidation.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: idValidation.error.errors.map(e => e.message).join(', '),
+    });
+  }
 
+  const validationResult = beneficiaryUpdateSchema.safeParse(req.body);
   if (!validationResult.success) {
     throw new ApiError({
       statusCode: 400,
@@ -114,7 +131,7 @@ export const updateBeneficiary = asyncHandler(async (req: Request, res: Response
 
   const { name, accountNumber, bankName, ifscCode, email, phone, accountId } = validationResult.data;
   const userId = req.user?.id;
-  const { id } = req.params;
+  const { id } = idValidation.data;
 
   if (!userId) {
     throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
@@ -153,8 +170,16 @@ export const updateBeneficiary = asyncHandler(async (req: Request, res: Response
 });
 
 export const removeBeneficiary = asyncHandler(async (req: Request, res: Response) => {
+  const idValidation = idParamSchema.safeParse(req.params);
+  if (!idValidation.success) {
+    throw new ApiError({
+      statusCode: 400,
+      message: idValidation.error.errors.map(e => e.message).join(', '),
+    });
+  }
+
   const userId = req.user?.id;
-  const { id } = req.params;
+  const { id } = idValidation.data;
 
   if (!userId) {
     throw new ApiError({ statusCode: 401, message: 'Unauthorized request' });
