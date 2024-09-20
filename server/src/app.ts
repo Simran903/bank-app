@@ -28,9 +28,11 @@ app.use(cookieParser())
 
 //Routes import 
 import userRouter from './routes/user.routes';
-
-
+import transferRouter from "./routes/transfer.routes";
+import beneficiaryRouter from './routes/beneficiary.routes';
 
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/transfer", transferRouter);
+app.use("/api/v1/beneficiary", beneficiaryRouter);
 
 export { app }
