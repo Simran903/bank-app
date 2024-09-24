@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import { ShimmerButton } from "./ShimmerButton";
 
 export function Hero() {
   return (
@@ -27,7 +26,6 @@ export function Hero() {
           Safe, Reliable, and Tailored to You
         </Highlight>
       </motion.h1>
-    <ShimmerButton text="Get Started" className="text-lg my-8 py-6 px-10" />
     </HeroHighlight>
     </div>
   );
