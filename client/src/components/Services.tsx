@@ -6,20 +6,22 @@ import { Heading } from "./Heading";
 
 export function Services() {
   return (
-    <div className="bg-black h-screen">
+    <div className="bg-white h-screen">
       <Heading text="What we Offer" revealText="Our Services" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 max-w-7xl mx-auto w-full px-16 lg:p-0">
         <WobbleCard
-          containerClassName="col-span-1 lg:col-span-2 h-full bg-[#14A76C] min-h-[400px] lg:min-h-[300px]"
+          containerClassName="col-span-1 lg:col-span-2 h-full bg-[#0a2351] min-h-[400px] lg:min-h-[300px]"
           className=""
         >
           <div className="max-w-xs">
             <h2 className="text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-              Gippity AI powers the entire universe
+            Send Money
             </h2>
+            <p className="text-xs tracking-wider">
+              ~Fast and Secure Money Transfers~
+            </p>
             <p className="mt-4 text-left  text-base/6 text-neutral-200">
-              With over 100,000 mothly active bot users, Gippity AI is the most
-              popular AI platform for developers.
+            Our real-time transaction system ensures your funds reach their destination securely and instantly, no matter where you are.
             </p>
           </div>
           <Image
@@ -30,23 +32,27 @@ export function Services() {
             className="absolute -right-4 lg:-right-[20%] grayscale filter -bottom-10 object-contain rounded-2xl"
           />
         </WobbleCard>
-        <WobbleCard containerClassName="col-span-1 min-h-[300px]">
+        <WobbleCard containerClassName="col-span-1 min-h-[300px] bg-[#0a2351]">
           <h2 className="max-w-80  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-            No shirt, no shoes, no weapons.
+          Account Overview
           </h2>
+          <p className="text-xs tracking-wider">
+            ~Stay in Control of Your Finances~
+          </p>
           <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
-            If someone yells “stop!”, goes limp, or taps out, the fight is over.
+          Get a comprehensive view of your account with intuitive charts and graphs.
           </p>
         </WobbleCard>
-        <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-[#FF652F] min-h-[400px] lg:min-h-[600px] xl:min-h-[300px]">
+        <WobbleCard containerClassName="col-span-1 lg:col-span-3 bg-[#0a2351] min-h-[400px] lg:min-h-[600px] xl:min-h-[300px]">
           <div className="max-w-sm">
             <h2 className="max-w-sm md:max-w-lg  text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white">
-              Signup for blazing-fast cutting-edge state of the art Gippity AI
-              wrapper today!
+            Transaction History
             </h2>
+            <p className="text-xs tracking-wider" >
+              ~Track Every Transaction~
+            </p>
             <p className="mt-4 max-w-[26rem] text-left  text-base/6 text-neutral-200">
-              With over 100,000 mothly active bot users, Gippity AI is the most
-              popular AI platform for developers.
+            Your complete financial history, right at your fingertips. Filter by date, category, or amount to easily review your past transactions and keep your spending in check.
             </p>
           </div>
           <Image

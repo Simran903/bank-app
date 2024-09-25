@@ -1,6 +1,6 @@
 import React from "react";
 import { MacbookScroll } from "../components/ui/macbook-scroll";
-import building from '../app/public/building.jpg'
+import services from '../app/public/services.png'
 
 export function MacbookScrollDemo() {
   return (
@@ -17,7 +17,7 @@ export function MacbookScrollDemo() {
               </span>
           </div>
         }
-        src={building}
+        src={services}
         showGradient={false}
       />
     </div>
