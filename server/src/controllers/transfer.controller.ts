@@ -88,35 +88,60 @@ export const initiateTransfer = asyncHandler(async (req: Request, res: Response)
     });
   }
 
-  const transaction = await prisma.transaction.create({
-    data: {
-      amount,
-      type: 'Transfer',
-      status: 'Completed',
-      description: description || '',
-      fromAccountId: fromAccount.id,
-      toAccountId: toAccount.id,
-      userId: fromUserId,
-    },
-  });
+  try {
+    const transaction = await prisma.$transaction(async (prisma) => {
+      const createdTransaction = await prisma.transaction.create({
+        data: {
+          amount,
+          type: 'Transfer',
+          status: 'Completed',
+          description: description || '',
+          fromAccountId: fromAccount.id,
+          toAccountId: toAccount.id,
+          userId: fromUserId,
+        },
+      });
 
-  await prisma.balance.update({
-    where: { id: fromAccount.balance.id },
-    data: { amount: { decrement: amount } },
-  });
+      if (fromAccount.balance) {
+        await prisma.balance.update({
+          where: { id: fromAccount.balance.id },
+          data: { amount: { decrement: amount } },
+        });
+      } else {
+        throw new ApiError({
+          statusCode: 404,
+          message: 'Sender balance not found during transfer',
+        });
+      }
 
-  await prisma.balance.update({
-    where: { id: toAccount.balance.id },
-    data: { amount: { increment: amount } },
-  });
+      if (toAccount.balance) {
+        await prisma.balance.update({
+          where: { id: toAccount.balance.id },
+          data: { amount: { increment: amount } },
+        });
+      } else {
+        throw new ApiError({
+          statusCode: 404,
+          message: 'Recipient balance not found during transfer',
+        });
+      }
 
-  return res.status(200).json(
-    new ApiResponse({
-      statusCode: 200,
-      data: { transaction },
-      message: 'Transfer initiated successfully',
-    })
-  );
+      return createdTransaction;
+    });
+
+    return res.status(200).json(
+      new ApiResponse({
+        statusCode: 200,
+        data: { transaction },
+        message: 'Transfer initiated successfully',
+      })
+    );
+  } catch (error) {
+    throw new ApiError({
+      statusCode: 500,
+      message: 'Failed to complete the transfer. Please try again later.',
+    });
+  }
 });
 
 export const getAllSentTransfers = asyncHandler(async (req: Request, res: Response) => {
