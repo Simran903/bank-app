@@ -1,10 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans&family=Vast+Shadow&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1B1B1B;
+  --foreground: #F5F5F5;
 }
 
 body {
@@ -12,6 +14,26 @@ body {
   background: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.vast-shadow-regular {
+  font-family: "Vast Shadow", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.inria-sans-regular {
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inria-sans-bold {
+  font-family: "Inria Sans", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 
 @layer utilities {
   .text-balance {

@@ -1,13 +1,9 @@
-import { ContactUs } from "@/components/ContactUs";
-import { MacbookScrollDemo } from "@/components/HeroPage";
-// import { Services } from "@/components/Services";
+import HomePage from "@/components/HomePage";
 
 export default function Home() {
   return (
     <div className="">
-      <MacbookScrollDemo />
-      {/* <Services /> */}
-      <ContactUs />
+      <HomePage />
     </div>
   );
 }
