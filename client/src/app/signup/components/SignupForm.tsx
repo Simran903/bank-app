@@ -61,9 +61,9 @@ const SignupForm = () => {
   };
 
   return (
-    <div >
-      <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-white bg-black mt-60">
-        <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+    <div className="h-screen bg-black pt-60" >
+      <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-stone-200 bg-black">
+        <h2 className="font-bold text-2xl text-black">
           Create an account with us!
         </h2>
 
