@@ -32,7 +32,7 @@ function Navbar({ className }: { className?: string }) {
             active={active}
           ></MenuItem>
         </Link>
-        <Link href={"/login"}>
+        <Link href={"/signup"}>
           <MenuItem
             item="Login"
             setActive={setActive}

@@ -1,0 +1,1 @@
+export const baseUrl = "https://bank-app-4lqa.onrender.com/api/v1"
