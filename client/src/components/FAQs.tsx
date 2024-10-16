@@ -36,24 +36,24 @@ const Accordion: React.FC = () => {
       </h1>
       <div className="w-full mt-24 max-w-6xl mx-auto">
         <AccordionItem
-          title="Is it accessible?"
-          content="Yes, the accordion is fully accessible with keyboard navigation and screen readers."
+          title="What types of accounts can I open with your bank?"
+          content="We offer savings accounts."
         />
         <AccordionItem
-          title="Is it styled?"
-          content="Yes, the accordion is styled using Tailwind CSS."
+          title="How do I check my account balance?"
+          content="You can check your account balance via online banking."
         />
         <AccordionItem
-          title="Is it animated?"
-          content="Yes, the opening and closing of the accordion have smooth animations."
+          title="How do I change my account details?"
+          content="You can update your details through online banking."
         />
         <AccordionItem
-          title="Is it animated?"
-          content="Yes, the opening and closing of the accordion have smooth animations."
+          title="How do I reset my online banking password?"
+          content="You can reset your password by clicking on the “Forgot Password” link on the login page."
         />
         <AccordionItem
-          title="Is it animated?"
-          content="Yes, the opening and closing of the accordion have smooth animations."
+          title="Is banking secure?"
+          content="Yes, our mobile banking app uses advanced encryption and security protocols to protect your information. "
         />
       </div>
     </div>

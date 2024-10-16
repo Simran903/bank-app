@@ -12,13 +12,13 @@ export function MainNav({
       {...props}
     >
       <Link
-        href="/examples/dashboard"
+        href="/dashboard"
         className="text-md font-bold transition-colors hover:text-gray-500"
       >
         Overview
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/transferfunds"
         className="text-md font-bold text-muted-foreground transition-colors hover:text-gray-500"
       >
         Transfer Funds
