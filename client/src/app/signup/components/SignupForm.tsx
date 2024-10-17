@@ -44,13 +44,11 @@ const SignupForm = () => {
       if (response.status === 200) {
         setSuccess("Account created successfully!");
         setError(null);
-        // Optionally redirect after successful signup
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message;
 
-        // Handle duplicate email or username errors
         if (errorMessage === "Email already exists") {
           setError("This email is already in use. Please try another.");
         } else if (errorMessage === "Username already taken") {
@@ -61,12 +59,12 @@ const SignupForm = () => {
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-      setSuccess(null); // Reset success message on error
+      setSuccess(null);
     }
   };
 
   const handleSignIn = () => {
-    router.push("/signin"); // Navigate to the /signin page when "Sign in" button is clicked
+    router.push("/signin");
   };
 
   return (
