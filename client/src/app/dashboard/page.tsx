@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CalendarDateRangePicker } from "./components/date-range-picker";
@@ -7,26 +8,53 @@ import { Overview } from "./components/overview";
 import { RecentTransactions } from "./components/recent-transactions";
 import { UserNav } from "./components/user-nav";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import { useEffect, useState } from "react";
+import { baseUrl } from "@/constants";
+import axiosClient from "@/constants/axiosClient";
 
 export default function DashboardPage() {
+  const [userData, setUserData] = useState(null);
+  const [balance, setBalance] = useState(0);
+  const [accountDetails, setAccountDetails] = useState(null);
+  const [recentTransfers, setRecentTransfers] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [balanceRes, accountRes, transferRes] = await Promise.all([
+          axiosClient.post(baseUrl + "/user/get-balance", {}),
+          axiosClient.post(baseUrl + "/user/account-details", {}),
+          axiosClient.get(baseUrl + "/transfer/all"),
+        ]);
+
+        console.log(balanceRes);
+
+        setBalance(balanceRes.data.balance);
+        setAccountDetails(accountRes.data);
+        setRecentTransfers(transferRes.data);
+
+        setUserData({
+          balance: balanceRes.data?.data.totalBalance,
+          accountDetails: accountRes.data,
+          recentTransfers: transferRes.data,
+        });
+
+        console.log(balance);
+        
+
+      } catch (error) {
+        console.log("Error fetching dashboard data:", error);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (!userData) {
+    console.log("User does not exists");
+  }
   return (
     <div className="h-screen bg-gray-100 inria-sans-regular">
-      <div className="md:hidden ">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div>
       <div className="hidden flex-col md:flex">
         <div className="border-b">
           <div className="flex h-20 items-center px-4">
@@ -37,7 +65,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6 mt-14">
-        <h1 className="text-5xl font-extrabold">Welcome, Joe</h1>
+          <h1 className="text-5xl font-extrabold">Hi there,</h1>
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-extrabold tracking-tight vast-shadow-regular">
               Here&apos;s your account overview
@@ -69,7 +97,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex space-x-1 text-2xl font-bold">
-                      $<AnimatedCounter amount={5550} />
+                      $<AnimatedCounter amount={balance} />
                     </div>
                   </CardContent>
                 </Card>
@@ -95,7 +123,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
-                      <AnimatedCounter amount={5550} />
+                      <AnimatedCounter amount={recentTransfers.length} />
                     </div>
                   </CardContent>
                 </Card>
@@ -163,7 +191,7 @@ export default function DashboardPage() {
                     <CardTitle>Recent Transactions</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <RecentTransactions />
+                    <RecentTransactions transactions={recentTransfers} />
                   </CardContent>
                 </Card>
               </div>

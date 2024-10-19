@@ -46,6 +46,8 @@ const SigninForm = () => {
       // Check if response indicates successful sign-in
       if (response.status === 200 && response.data.success) {
         // Successfully signed in, redirect to dashboard
+        const accessToken = response.data?.data.accessToken;
+        localStorage.setItem("accessToken", accessToken);
         router.push("/dashboard");
       } else {
         setError("Login failed. Please check your credentials.");
@@ -57,60 +59,59 @@ const SigninForm = () => {
 
   return (
     <div className="h-screen bg-black flex items-center justify-center">
-      <div className="max-w-6xl w-full mx-auto flex bg-white rounded-2xl shadow-lg overflow-hidden">
-        
-        {/* Left Side - Form */}
-        <div className="w-full md:w-1/2 p-8 md:p-12">
-          <h2 className="font-bold text-2xl text-black">Sign in</h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="max-w-6xl w-full mx-auto flex bg-white rounded-2xl shadow-lg overflow-hidden">
+      {/* Left Side - Form */}
+      <div className="w-full md:w-1/2 p-8 md:p-12">
+        <h2 className="font-bold text-2xl text-black">Sign in</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
-          <form className="my-8" onSubmit={handleSubmit}>
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="identifier">Email or Username</Label>
-              <Input
-                id="identifier"
-                placeholder="johndoe@mail.com or username"
-                type="text"
-                name="identifier"
-                value={formData.identifier}
-                required
-                onChange={handleChange}
-              />
-            </LabelInputContainer>
+        <form className="my-8" onSubmit={handleSubmit}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="identifier">Email or Username</Label>
+            <Input
+              id="identifier"
+              placeholder="johndoe@mail.com or username"
+              type="text"
+              name="identifier"
+              value={formData.identifier}
+              required
+              onChange={handleChange}
+            />
+          </LabelInputContainer>
 
-            <LabelInputContainer className="mb-4">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                placeholder="********"
-                type="password"
-                name="password"
-                value={formData.password}
-                required
-                onChange={handleChange}
-              />
-            </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              placeholder="********"
+              type="password"
+              name="password"
+              value={formData.password}
+              required
+              onChange={handleChange}
+            />
+          </LabelInputContainer>
 
-            <button
-              className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              type="submit"
-            >
-              Sign in &rarr;
-              <BottomGradient />
-            </button>
-          </form>
-        </div>
+          <button
+            className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            type="submit"
+          >
+            Sign in &rarr;
+            <BottomGradient />
+          </button>
+        </form>
+      </div>
 
-        {/* Right Side - Image */}
-        <div className="hidden md:flex w-1/2 justify-end items-center">
-          <Image
-            src={overview}
-            alt="overview dashboard"
-            className="object-cover h-full w-full rounded-r-2xl"
-          />
-        </div>
+      {/* Right Side - Image */}
+      <div className="hidden md:flex w-1/2 justify-end items-center">
+        <Image
+          src={overview}
+          alt="overview dashboard"
+          className="object-cover h-full w-full rounded-r-2xl"
+        />
       </div>
     </div>
+  </div>
   );
 };
 

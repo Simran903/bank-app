@@ -46,6 +46,9 @@ const SignupForm = () => {
       if (response.status === 200) {
         setSuccess("Account created successfully!");
         setError(null);
+        const accessToken = response.data?.data.accessToken;
+        localStorage.setItem("accessToken", accessToken);
+        router.push("/dashboard");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -70,17 +73,17 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="h-screen bg-black py-24 flex">
+    <div className="h-screen bg-black py-24 flex items-center justify-center">
       {/* Left Side: Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center">
-        <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-stone-200 bg-black">
+      <div className="max-w-6xl w-full mx-auto flex bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="w-full md:w-1/2 p-8 md:p-12">
           <h2 className="font-bold text-2xl text-black">
             Create an account with us!
           </h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           {success && <p className="text-green-500 mb-4">{success}</p>}
 
-          <form className="my-14" onSubmit={handleSubmit}>
+          <form className="my-8" onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
               <LabelInputContainer>
                 <Label htmlFor="fullname">Full name</Label>
@@ -142,24 +145,29 @@ const SignupForm = () => {
               Sign up &rarr;
               <BottomGradient />
             </button>
-            <div className="flex justify-center items-center mt-4 space-x-1">
 
-            <p className="text-sm">Already have an account?</p>
-            <button
-              className="underline font-semibold"
-              type="button"
-              onClick={handleSignIn}
-            >
-              Sign in
-              <BottomGradient />
-            </button>
+            <div className="flex justify-center items-center mt-4 space-x-1">
+              <p className="text-sm">Already have an account?</p>
+              <button
+                className="underline font-semibold"
+                type="button"
+                onClick={handleSignIn}
+              >
+                Sign in
+                <BottomGradient />
+              </button>
             </div>
           </form>
         </div>
-      </div>
 
-      <div className="hidden md:flex w-1/2 justify-end items-center">
-        <Image height="800" src={overview} alt="overview dashboard" className="rounded-s-3xl" />
+        {/* Right Side: Image */}
+        <div className="hidden md:flex w-1/2 justify-end items-center">
+          <Image
+            src={overview}
+            alt="overview dashboard"
+            className="object-cover h-full w-full rounded-r-2xl"
+          />
+        </div>
       </div>
     </div>
   );
