@@ -5,15 +5,24 @@ import HomePage from "@/components/HomePage";
 import Navbar from "@/components/Navbar";
 
 export default function Home() {
+
   return (
-    <div className="">
+    <div>
       <div className="relative w-full flex items-center justify-center">
-          <Navbar />
-        </div>
-      <HomePage />
-      <Features />
-      <Accordion />
-      <Footer />
+        <Navbar />
+      </div>
+      <section id="home">
+        <HomePage />
+      </section>
+      <section id="features">
+        <Features />
+      </section>
+      <section id="accordion">
+        <Accordion />
+      </section>
+      <section id="footer">
+        <Footer />
+      </section>
     </div>
   );
 }
