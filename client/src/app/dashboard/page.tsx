@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CalendarDateRangePicker } from "./components/date-range-picker";

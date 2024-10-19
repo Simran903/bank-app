@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+axiosClient
 import { baseUrl } from "../../../constants/index";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { Input } from "../../../components/ui/input";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import overview from "@/public/overview.png";
+import axiosClient from "@/constants/axiosClient";
 
 interface SigninForm {
   identifier: string;
@@ -32,20 +33,10 @@ const SigninForm = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        baseUrl + "/user/signin",
-        JSON.stringify(formData),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axiosClient.post(baseUrl + "/user/signin", formData, {withCredentials: true,})
 
-      // Check if response indicates successful sign-in
       if (response.status === 200 && response.data.success) {
-        // Successfully signed in, redirect to dashboard
+
         const accessToken = response.data?.data.accessToken;
         localStorage.setItem("accessToken", accessToken);
         router.push("/dashboard");

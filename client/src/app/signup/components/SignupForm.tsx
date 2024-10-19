@@ -1,4 +1,5 @@
 "use client";
+import axiosClient from "@/constants/axiosClient";
 import axios from "axios";
 import { baseUrl } from "../../../constants/index";
 import { useState } from "react";
@@ -37,11 +38,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(baseUrl + "/user/signup", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axiosClient.post(baseUrl + "/user/signin", formData, {})
 
       if (response.status === 200) {
         setSuccess("Account created successfully!");
