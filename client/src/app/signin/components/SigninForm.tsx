@@ -7,14 +7,14 @@ import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { cn } from "@/utils/cn";
 
-interface SignupForm {
-  email: string;
+interface SigninForm {
+  identifier: string;
   password: string;
 }
 
 const SigninForm = () => {
-  const [formData, setFormData] = useState<SignupForm>({
-    email: "",
+  const [formData, setFormData] = useState<SigninForm>({
+    identifier: "",
     password: "",
   });
 
@@ -28,7 +28,6 @@ const SigninForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    console.log(formData);
 
     try {
       const response = await axios.post(
@@ -38,12 +37,11 @@ const SigninForm = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 
-      console.log(formData);
-
-      const token = response.data.token;
+      const token = response.data.data.accessToken;
       localStorage.setItem("authToken", token);
       router.push("/");
     } catch (err: any) {
@@ -59,13 +57,13 @@ const SigninForm = () => {
 
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="identifier">Email or Username</Label>
             <Input
-              id="email"
-              placeholder="projectmayhem@fc.com"
-              type="email"
-              name="email"
-              value={formData.email}
+              id="identifier"
+              placeholder="johndoe@mail.com or username"
+              type="text"
+              name="identifier"
+              value={formData.identifier}
               required
               onChange={handleChange}
             />
@@ -75,7 +73,7 @@ const SigninForm = () => {
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
-              placeholder="••••••••"
+              placeholder="********"
               type="password"
               name="password"
               value={formData.password}
@@ -87,7 +85,6 @@ const SigninForm = () => {
           <button
             className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
-            onClick={() => handleSubmit}
           >
             Sign in &rarr;
             <BottomGradient />
@@ -122,3 +119,4 @@ const LabelInputContainer = ({
     </div>
   );
 };
+
