@@ -5,8 +5,8 @@ import { CalendarDateRangePicker } from "./components/date-range-picker";
 import { MainNav } from "./components/main-nav";
 import { Overview } from "./components/overview";
 import { RecentTransactions } from "./components/recent-transactions";
-import { Search } from "./components/search";
 import { UserNav } from "./components/user-nav";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 export default function DashboardPage() {
   return (
@@ -32,15 +32,15 @@ export default function DashboardPage() {
           <div className="flex h-20 items-center px-4">
             <MainNav className="mx-6" />
             <div className="ml-auto flex items-center space-x-4">
-              <Search />
               <UserNav />
             </div>
           </div>
         </div>
-        <div className="flex-1 space-y-4 p-8 pt-6 mt-16">
+        <div className="flex-1 space-y-4 p-8 pt-6 mt-14">
+        <h1 className="text-5xl font-extrabold">Welcome, Joe</h1>
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-extrabold tracking-tight vast-shadow-regular">
-              Account Overview
+              Here&apos;s your account overview
             </h2>
             <div className="flex items-center space-x-2">
               <CalendarDateRangePicker />
@@ -68,7 +68,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">₹45,231.89</div>
+                    <div className="text-2xl font-bold">
+                      <AnimatedCounter amount={5550} />
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -92,7 +94,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">2350</div>
+                    <div className="text-2xl font-bold">
+                      <AnimatedCounter amount={5550} />
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -115,7 +119,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">+12,234</div>
+                    <div className="text-2xl font-bold">
+                      <AnimatedCounter amount={5550} />
+                    </div>
                   </CardContent>
                 </Card>
                 <Card>
@@ -137,7 +143,9 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">-573</div>
+                    <div className="text-2xl font-bold">
+                      <AnimatedCounter amount={5550} />
+                    </div>
                   </CardContent>
                 </Card>
               </div>

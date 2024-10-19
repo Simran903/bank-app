@@ -32,6 +32,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "next": "^14.2.13",
     "react": "^18",
+    "react-countup": "^6.5.3",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-element-to-jsx-string": "^15.0.0",

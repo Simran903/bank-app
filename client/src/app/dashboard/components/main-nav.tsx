@@ -18,10 +18,22 @@ export function MainNav({
         Overview
       </Link>
       <Link
-        href="/transferfunds"
+        href="/mybanks"
         className="text-md font-bold text-muted-foreground transition-colors hover:text-gray-500"
       >
-        Transfer Funds
+        My Banks
+      </Link>
+      <Link
+        href="/transactionhistory"
+        className="text-md font-bold text-muted-foreground transition-colors hover:text-gray-500"
+      >
+        Transaction History
+      </Link>
+      <Link
+        href="/paymenttransfer"
+        className="text-md font-bold text-muted-foreground transition-colors hover:text-gray-500"
+      >
+        Payment Transfer
       </Link>
     </nav>
   )
