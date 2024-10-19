@@ -68,8 +68,8 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
-                      <AnimatedCounter amount={5550} />
+                    <div className="flex space-x-1 text-2xl font-bold">
+                      $<AnimatedCounter amount={5550} />
                     </div>
                   </CardContent>
                 </Card>
