@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { cn } from "@/utils/cn";
+import Image from "next/image";
+import overview from "@/public/overview.png";
 
 interface SignupForm {
   name: string;
@@ -68,86 +70,96 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="h-screen bg-black pt-60">
-      <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-stone-200 bg-black">
-        <h2 className="font-bold text-2xl text-black">
-          Create an account with us!
-        </h2>
+    <div className="h-screen bg-black py-24 flex">
+      {/* Left Side: Form */}
+      <div className="w-full md:w-1/2 flex items-center justify-center">
+        <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input dark:bg-stone-200 bg-black">
+          <h2 className="font-bold text-2xl text-black">
+            Create an account with us!
+          </h2>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {success && <p className="text-green-500 mb-4">{success}</p>}
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-500 mb-4">{success}</p>}
+          <form className="my-14" onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
+              <LabelInputContainer>
+                <Label htmlFor="fullname">Full name</Label>
+                <Input
+                  id="fullname"
+                  placeholder="Tyler Smith"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </LabelInputContainer>
 
-        <form className="my-8" onSubmit={handleSubmit}>
-          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-            <LabelInputContainer>
-              <Label htmlFor="fullname">Full name</Label>
+              <LabelInputContainer>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  placeholder="Tyler001"
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  required
+                  onChange={handleChange}
+                />
+              </LabelInputContainer>
+            </div>
+
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="email">Email Address</Label>
               <Input
-                id="fullname"
-                placeholder="Tyler Smith"
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
+                id="email"
+                placeholder="projectmayhem@fc.com"
+                type="email"
+                name="email"
+                value={formData.email}
                 required
+                onChange={handleChange}
               />
             </LabelInputContainer>
 
-            <LabelInputContainer>
-              <Label htmlFor="username">Username</Label>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="password">Password</Label>
               <Input
-                id="username"
-                placeholder="Tyler001"
-                type="text"
-                name="username"
-                value={formData.username}
+                id="password"
+                placeholder="••••••••"
+                type="password"
+                name="password"
+                value={formData.password}
                 required
                 onChange={handleChange}
               />
             </LabelInputContainer>
-          </div>
 
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              placeholder="projectmayhem@fc.com"
-              type="email"
-              name="email"
-              value={formData.email}
-              required
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
+            <button
+              className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+              type="submit"
+            >
+              Sign up &rarr;
+              <BottomGradient />
+            </button>
+            <div className="flex justify-center items-center mt-4 space-x-1">
 
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              name="password"
-              value={formData.password}
-              required
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
+            <p className="text-sm">Already have an account?</p>
+            <button
+              className="underline font-semibold"
+              type="button"
+              onClick={handleSignIn}
+            >
+              Sign in
+              <BottomGradient />
+            </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
-          <button
-            className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="submit"
-          >
-            Sign up &rarr;
-            <BottomGradient />
-          </button>
-          <button
-            className="mt-4 bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="button"
-            onClick={handleSignIn}
-          >
-            Sign in &rarr;
-            <BottomGradient />
-          </button>
-        </form>
+      <div className="hidden md:flex w-1/2 justify-end items-center">
+        <Image height="800" src={overview} alt="overview dashboard" className="rounded-s-3xl" />
       </div>
     </div>
   );
