@@ -1,4 +1,5 @@
 "use client";
+import axiosClient from "@/constants/axiosClient";
 import {
   Avatar,
   AvatarFallback,
@@ -14,29 +15,32 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { baseUrl } from "@/constants";
-import axios from "axios"; // Make sure axios is installed and imported
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function UserNav() {
-  const router = useRouter(); // To handle routing
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const handleLogout = async () => {
     try {
-      await axios.post(baseUrl+ "/user/signout", {}, { // Adjust the base URL if needed
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true, // Ensure cookies or tokens are sent (if applicable)
-      });
 
-      // On success, redirect the user to the homepage
+      await axiosClient.post(baseUrl + "/user/signout", {})
+
+      localStorage.clear();
       router.push("/");
+      
     } catch (err) {
       setError("Failed to log out. Please try again.");
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      const timeout = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [error]);
 
   return (
     <DropdownMenu>
@@ -66,7 +70,7 @@ export function UserNav() {
         <DropdownMenuItem onClick={handleLogout}>
           Log out
         </DropdownMenuItem>
-        {error && <p className="text-red-500 mt-2">{error}</p>} {/* Show error if logout fails */}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </DropdownMenuContent>
     </DropdownMenu>
   );
