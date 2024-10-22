@@ -11,35 +11,71 @@ import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
 
+interface UserData {
+  balance: number;
+  // accountDetails: AccountDetails;
+  recentTransfers: Transfer[];
+  amountSent: number;
+  amountReceived: number;
+}
+
+// interface AccountDetails {
+//   [key: string]: any;
+// }
+
+interface Transfer {
+  [key: string]: any;
+}
+
 export default function DashboardPage() {
-  const [userData, setUserData] = useState(null);
-  const [balance, setBalance] = useState(0);
-  const [accountDetails, setAccountDetails] = useState(null);
-  const [recentTransfers, setRecentTransfers] = useState([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [balance, setBalance] = useState<number>(0);
+  // const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
+  //   null
+  // );
+  const [recentTransfers, setRecentTransfers] = useState<Transfer[]>([]);
+  const [amountSent, setAmountSent] = useState<number>(0);
+  const [amountReceived, setAmountReceived] = useState<number>(0);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [balanceRes, accountRes, transferRes] = await Promise.all([
+        const [
+          balanceRes,
+          // accountRes,
+          transferRes,
+          amountSentRes,
+          amountReceivedRes,
+        ] = await Promise.all([
           axiosClient.post(baseUrl + "/user/get-balance", {}),
-          axiosClient.post(baseUrl + "/user/account-details", {}),
+          // axiosClient.post(baseUrl + "/user/account-details", {}),
           axiosClient.get(baseUrl + "/transfer/all"),
+          axiosClient.get(baseUrl + "/transfer/sent"),
+          axiosClient.get(baseUrl + "/transfer/received"),
         ]);
 
-        console.log(balanceRes);
+        setBalance(balanceRes?.data?.data?.totalBalance);
+        // setAccountDetails(accountRes?.data?.data);
+        setRecentTransfers(transferRes?.data?.data);
+        setAmountSent(amountSentRes?.data?.data);
+        setAmountReceived(amountReceivedRes?.data?.data);
 
-        setBalance(balanceRes.data.balance);
-        setAccountDetails(accountRes.data);
-        setRecentTransfers(transferRes.data);
+        // console.log(amountSentRes);
+        // console.log(amountReceivedRes);        
 
         setUserData({
-          balance: balanceRes.data?.data.totalBalance,
-          accountDetails: accountRes.data,
-          recentTransfers: transferRes.data,
+          balance: balanceRes?.data?.data?.totalBalance,
+          // accountDetails: accountRes?.data?.data,
+          recentTransfers: transferRes?.data?.data,
+          amountSent: amountSentRes?.data?.data,
+          amountReceived: amountReceivedRes?.data?.data,
         });
 
-        console.log(balance);
-        
+        // console.log(balance);
+        // console.log(accountDetails);
+        // console.log(recentTransfers);
+        // console.log(amountSent);
+        // console.log(amountReceived);
 
       } catch (error) {
         console.log("Error fetching dashboard data:", error);
@@ -50,8 +86,9 @@ export default function DashboardPage() {
   }, []);
 
   if (!userData) {
-    console.log("User does not exists");
+    return <div>Loading...</div>;
   }
+
   return (
     <div className="h-screen bg-gray-100 inria-sans-regular">
       <div className="hidden flex-col md:flex">
@@ -96,7 +133,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex space-x-1 text-2xl font-bold">
-                      $<AnimatedCounter amount={balance} />
+                      ₹<AnimatedCounter amount={balance} />
                     </div>
                   </CardContent>
                 </Card>
@@ -146,8 +183,8 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
-                      <AnimatedCounter amount={5550} />
+                    <div className="text-2xl font-bold flex">
+                      ₹<AnimatedCounter amount={amountReceived} />
                     </div>
                   </CardContent>
                 </Card>
@@ -170,8 +207,8 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">
-                      <AnimatedCounter amount={5550} />
+                    <div className="text-2xl font-bold flex">
+                      ₹<AnimatedCounter amount={amountSent} />
                     </div>
                   </CardContent>
                 </Card>
