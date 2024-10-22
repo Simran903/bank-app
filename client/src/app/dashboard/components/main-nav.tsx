@@ -18,7 +18,7 @@ export function MainNav({
         Overview
       </Link>
       <Link
-        href="/mybanks"
+        href="/beneficiaries"
         className="text-md font-bold text-muted-foreground transition-colors hover:text-gray-500"
       >
         My Banks
