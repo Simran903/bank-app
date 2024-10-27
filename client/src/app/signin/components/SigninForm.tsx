@@ -1,5 +1,4 @@
 "use client";
-axiosClient
 import { baseUrl } from "../../../constants/index";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
