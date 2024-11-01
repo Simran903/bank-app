@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axiosClient from "@/constants/axiosClient";
 import { baseUrl } from "@/constants";
 import { AxiosError } from "axios";
@@ -22,7 +22,7 @@ function UpdateBeneficiary() {
   const [loading, setLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchBeneficiary = async () => {
@@ -58,6 +58,7 @@ function UpdateBeneficiary() {
       await axiosClient.put(`${baseUrl}/beneficiary/beneficiaries/${id}`, beneficiary, {
         withCredentials: true,
       });
+      
       router.push("/beneficiaries"); // Redirect to beneficiaries list after successful update
     } catch (err: AxiosError) {
       console.error("Error updating beneficiary:", err.response);
