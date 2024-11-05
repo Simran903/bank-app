@@ -55,8 +55,11 @@ function BeneficiaryList() {
   };
 
   const handleUpdateRedirect = (beneficiaryId: number) => {
-    // Navigate to the update page with the beneficiary ID as a query parameter
     router.push(`/beneficiaries/update?id=${beneficiaryId}`);
+  };
+
+  const handleAddBeneficiaryRedirect = () => {
+    router.push("/dashboard/beneficiaries/add");
   };
 
   if (loading) return <p>Loading beneficiaries...</p>;
@@ -67,7 +70,14 @@ function BeneficiaryList() {
       <h2 className="vast-shadow-regular font-extrabold text-5xl text-black mb-8 text-center">
         Beneficiaries List
       </h2>
-      
+
+      <button
+        className="mb-6 px-4 py-2 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600"
+        onClick={handleAddBeneficiaryRedirect}
+      >
+        Add New Beneficiary
+      </button>
+
       {beneficiaries.length === 0 ? (
         <p className="text-gray-400 text-center">No beneficiaries found.</p>
       ) : (

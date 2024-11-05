@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 interface AddBeneficiaries {
   name: string;
@@ -30,6 +31,7 @@ function AddBeneficiaries() {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -51,6 +53,9 @@ function AddBeneficiaries() {
       );
       console.log("Success Response:", response.data);
       setSuccess("Beneficiary added successfully!");
+
+      router.push("/dashboard/beneficiaries/all")
+
     } catch (err: AxiosError) {
       console.error("Error Response:", err.response);
       setError(err.response?.data?.message || "Failed to add new beneficiary. Please try again.");
