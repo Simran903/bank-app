@@ -30,6 +30,8 @@ interface Transfer {
 export default function DashboardPage() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [balance, setBalance] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
   // const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
   //   null
   // );
@@ -79,6 +81,7 @@ export default function DashboardPage() {
 
       } catch (error) {
         console.log("Error fetching dashboard data:", error);
+        setLoading(false)
       }
     };
 
@@ -86,7 +89,14 @@ export default function DashboardPage() {
   }, []);
 
   if (!userData) {
-    return <div>Loading...</div>;
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center h-[80vh]">
+          <div className="w-12 h-12 border-4 border-red-500 border-dashed animate-spin"></div>
+          <p className="ml-4 text-gray-400">Loading dashboard...</p>
+        </div>
+      );
+    }
   }
 
   return (
