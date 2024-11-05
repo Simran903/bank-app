@@ -5,7 +5,7 @@ import { CalendarDateRangePicker } from "./components/date-range-picker";
 // import { MainNav } from "./components/main-nav";
 import { Overview } from "./components/overview";
 import { RecentTransactions } from "./components/recent-transactions";
-import { UserNav } from "./components/user-nav";
+// import { UserNav } from "./components/user-nav";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
@@ -92,7 +92,7 @@ export default function DashboardPage() {
     if (loading) {
       return (
         <div className="flex items-center justify-center h-[80vh]">
-          <div className="w-12 h-12 border-4 border-red-500 border-dashed animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-black-500 border-dashed animate-spin"></div>
           <p className="ml-4 text-gray-400">Loading dashboard...</p>
         </div>
       );
@@ -102,14 +102,6 @@ export default function DashboardPage() {
   return (
     <div className="h-screen bg-gray-100 inria-sans-regular">
       <div className="hidden flex-col md:flex">
-        <div className="border-b">
-          <div className="flex h-20 items-center px-4">
-            {/* <MainNav className="mx-6" /> */}
-            <div className="ml-auto flex items-center space-x-4">
-              <UserNav />
-            </div>
-          </div>
-        </div>
         <div className="flex-1 space-y-4 p-8 pt-6 mt-14">
           <h1 className="text-5xl font-extrabold">Hi there,</h1>
           <div className="flex items-center justify-between space-y-2">

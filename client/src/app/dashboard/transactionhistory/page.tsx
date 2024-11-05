@@ -40,7 +40,7 @@ function TransactionHistory() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <div className="w-12 h-12 border-4 border-red-500 border-dashed animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-black-500 border-dashed animate-spin"></div>
         <p className="ml-4 text-gray-400">Loading transactions...</p>
       </div>
     );
