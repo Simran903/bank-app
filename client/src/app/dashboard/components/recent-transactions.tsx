@@ -1,42 +1,95 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import axiosClient from "@/constants/axiosClient";
+import { baseUrl } from "@/constants";
 
 interface Transaction {
   id: string;
-  name: string;
-  email: string;
+  createdAt: string;
+  description: string;
   amount: number;
+  status: string;
   timestamp: string; // ISO date string
 }
 
-interface RecentTransactionsProps {
-  transactions: Transaction[];
-}
+export function RecentTransactions(): React.ReactElement {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-export function RecentTransactions({ transactions }: RecentTransactionsProps): React.ReactElement {
+  useEffect(() => {
+    // Fetch the transactions from the API
+    const fetchTransactions = async () => {
+      try {
+        const response = await axiosClient.get(`${baseUrl}/transfer/all`, {
+          withCredentials: true,
+        });
+        const allTransactions = response?.data?.data?.allTransfers;
 
-  // const recentTransactions = transactions
-  //   .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-  //   .slice(0, 5);
+        const recentTransactions = allTransactions
+          .sort((a: Transaction, b: Transaction) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+          .slice(0, 5);
 
-  const recentTransactions = [];
-    
+        setTransactions(recentTransactions);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+        setError("Failed to load transactions.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  if (loading) {
+    return <p className="text-sm text-muted-foreground">Loading transactions...</p>;
+  }
+
+  if (error) {
+    return <p className="text-sm text-red-500">{error}</p>;
+  }
 
   return (
-    <div className="space-y-8">
-      {recentTransactions.map((transaction) => (
-        <div key={transaction.id} className="flex items-center">
-          <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none">{transaction.name}</p>
-            <p className="text-sm text-muted-foreground">{transaction.email}</p>
-          </div>
-          <div className={`ml-auto font-medium ${transaction.amount >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {transaction.amount >= 0 ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
-          </div>
-        </div>
-      ))}
-      {recentTransactions.length === 0 && (
-        <p className="text-sm text-muted-foreground">No recent transactions.</p>
-      )}
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-white text-sm">
+        <thead>
+          <tr className="bg-zinc-900 text-left">
+            <th className="px-4 py-4">ID</th>
+            <th className="px-4 py-4">Amount</th>
+            <th className="px-4 py-4">Date/Time</th>
+            <th className="px-4 py-4">Remarks</th>
+            <th className="px-4 py-4">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id} className="border-b border-gray-600">
+              <td className="px-4 py-4">{transaction.id}</td>
+              <td className="px-4 py-4">₹{transaction.amount.toFixed(2)}</td>
+              <td className="px-4 py-4">
+                {new Date(transaction.timestamp).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                })}
+              </td>
+              <td className="px-4 py-2">{transaction.description}</td>
+              <td className="px-4 py-2">{transaction.status}</td>
+            </tr>
+          ))}
+          {transactions.length === 0 && (
+            <tr>
+              <td colSpan={5} className="px-4 py-2 text-center text-muted-foreground">
+                No recent transactions.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
