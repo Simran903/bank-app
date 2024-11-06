@@ -1,6 +1,1 @@
-{
-  "dependencies": {
-    "@headlessui/react": "^2.2.0",
-    "axios": "^1.7.7"
-  }
-}
+{}

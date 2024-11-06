@@ -24,9 +24,7 @@ export function UserNav() {
 
   const handleLogout = async () => {
     try {
-
       await axiosClient.post(baseUrl + "/user/signout", {})
-
       localStorage.clear();
       router.push("/");
       
