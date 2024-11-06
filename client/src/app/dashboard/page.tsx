@@ -2,10 +2,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CalendarDateRangePicker } from "./components/date-range-picker";
-// import { MainNav } from "./components/main-nav";
 import { Overview } from "./components/overview";
 import { RecentTransactions } from "./components/recent-transactions";
-// import { UserNav } from "./components/user-nav";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
@@ -13,15 +11,10 @@ import axiosClient from "@/constants/axiosClient";
 
 interface UserData {
   balance: number;
-  // accountDetails: AccountDetails;
   recentTransfers: Transfer[];
   amountSent: number;
-  amountReceived: number;
+  amountReceived: string;
 }
-
-// interface AccountDetails {
-//   [key: string]: any;
-// }
 
 interface Transfer {
   [key: string]: any;
@@ -32,9 +25,6 @@ export default function DashboardPage() {
   const [balance, setBalance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(
-  //   null
-  // );
   const [recentTransfers, setRecentTransfers] = useState<Transfer[]>([]);
   const [amountSent, setAmountSent] = useState<number>(0);
   const [amountReceived, setAmountReceived] = useState<number>(0);
@@ -44,49 +34,53 @@ export default function DashboardPage() {
       try {
         const [
           balanceRes,
-          // accountRes,
           transferRes,
           amountSentRes,
           amountReceivedRes,
         ] = await Promise.all([
           axiosClient.post(baseUrl + "/user/get-balance", {}),
-          // axiosClient.post(baseUrl + "/user/account-details", {}),
-          axiosClient.get(baseUrl + "/transfer/all"),
-          axiosClient.get(baseUrl + "/transfer/sent"),
-          axiosClient.get(baseUrl + "/transfer/received"),
+          axiosClient.get(`${baseUrl}/transfer/all`, {
+            withCredentials: true,
+          }),
+          axiosClient.get(`${baseUrl}/transfer/sent`, {
+            withCredentials: true,
+          }),
+          axiosClient.get(`${baseUrl}/transfer/received`, {
+            withCredentials: true,
+          }),
         ]);
-
+  
         setBalance(balanceRes?.data?.data?.totalBalance);
-        // setAccountDetails(accountRes?.data?.data);
-        setRecentTransfers(transferRes?.data?.data);
-        setAmountSent(amountSentRes?.data?.data);
-        setAmountReceived(amountReceivedRes?.data?.data);
-
-        // console.log(amountSentRes);
-        // console.log(amountReceivedRes);        
-
+        setRecentTransfers(transferRes?.data?.data?.allTransfers);
+  
+        const sentTransfers = amountSentRes?.data?.data?.sentTransfers || [];
+        const totalAmountSent = sentTransfers.reduce((acc: number, transfer: { amount: number }) => {
+          return acc + (transfer.amount || 0);
+        }, 0);
+        setAmountSent(totalAmountSent);
+  
+        const receivedTransfers = amountReceivedRes?.data?.data?.receivedTransfers || [];
+        const totalAmountReceived = receivedTransfers.reduce((acc: number, transfer: { amount: number }) => {
+          return acc + (transfer.amount || 0);
+        }, 0);
+        setAmountReceived(totalAmountReceived);
+  
         setUserData({
           balance: balanceRes?.data?.data?.totalBalance,
-          // accountDetails: accountRes?.data?.data,
-          recentTransfers: transferRes?.data?.data,
-          amountSent: amountSentRes?.data?.data,
-          amountReceived: amountReceivedRes?.data?.data,
+          recentTransfers: transferRes?.data?.data?.allTransfers,
+          amountSent: totalAmountSent,
+          amountReceived: totalAmountReceived,
         });
-
-        // console.log(balance);
-        // console.log(accountDetails);
-        // console.log(recentTransfers);
-        // console.log(amountSent);
-        // console.log(amountReceived);
-
+  
       } catch (error) {
         console.log("Error fetching dashboard data:", error);
-        setLoading(false)
+        setLoading(false);
       }
     };
-
+  
     fetchDashboardData();
   }, []);
+  
 
   if (!userData) {
     if (loading) {
@@ -100,7 +94,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="h-screen bg-gray-100 inria-sans-regular">
+    <div className="h-screen inria-sans-regular">
       <div className="hidden flex-col md:flex">
         <div className="flex-1 space-y-4 p-8 pt-6 mt-14">
           <h1 className="text-5xl font-extrabold">Hi there,</h1>

@@ -17,7 +17,6 @@ export function RecentTransactions(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch the transactions from the API
     const fetchTransactions = async () => {
       try {
         const response = await axiosClient.get(`${baseUrl}/transfer/all`, {
