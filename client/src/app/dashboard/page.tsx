@@ -2,12 +2,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { CalendarDateRangePicker } from "./components/date-range-picker";
-import { Overview } from "./components/overview";
 import { RecentTransactions } from "./components/recent-transactions";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
+import MonthlyExpenseChart from "./components/overview";
 
 interface UserData {
   balance: number;
@@ -49,7 +49,8 @@ export default function DashboardPage() {
             withCredentials: true,
           }),
         ]);
-  
+        console.log(transferRes);
+        
         setBalance(balanceRes?.data?.data?.totalBalance);
         setRecentTransfers(transferRes?.data?.data?.allTransfers);
   
@@ -215,7 +216,7 @@ export default function DashboardPage() {
                     <CardTitle>Overview</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview />
+                    <MonthlyExpenseChart />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3">
