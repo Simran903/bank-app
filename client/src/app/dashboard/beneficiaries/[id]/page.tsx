@@ -31,7 +31,7 @@ function UpdateBeneficiary() {
         const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id}`, {
           withCredentials: true,
         });
-        setBeneficiary(response.data.data);
+        setBeneficiary(response?.data?.data);
         setLoading(false);
       } catch (err: AxiosError) {
         console.error("Error fetching beneficiary:", err.response);
@@ -59,10 +59,10 @@ function UpdateBeneficiary() {
         withCredentials: true,
       });
       
-      router.push("/beneficiaries"); // Redirect to beneficiaries list after successful update
+      router.push("/beneficiaries");
     } catch (err: AxiosError) {
       console.error("Error updating beneficiary:", err.response);
-      setError(err.response?.data?.message || "Failed to update beneficiary. Please try again.");
+      setError(err?.response?.data?.message || "Failed to update beneficiary. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
