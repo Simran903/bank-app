@@ -33,6 +33,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 80%;
+  filter: grayscale(80%);
 }
 
 @layer utilities {
