@@ -57,7 +57,7 @@ const MonthlyExpenseChart: React.FC = () => {
   return (
     <div>
       <h2>Monthly Expenses Over the Year</h2>
-      <Line data={chartData} options={{ responsive: true }} />
+      {/* <Line data={chartData} options={{ responsive: true }} /> */}
     </div>
   );
 };

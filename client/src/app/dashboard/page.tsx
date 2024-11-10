@@ -49,39 +49,44 @@ export default function DashboardPage() {
             withCredentials: true,
           }),
         ]);
+
         console.log(transferRes);
-        
+
         setBalance(balanceRes?.data?.data?.totalBalance);
         setRecentTransfers(transferRes?.data?.data?.allTransfers);
-  
+
         const sentTransfers = amountSentRes?.data?.data?.sentTransfers || [];
-        const totalAmountSent = sentTransfers.reduce((acc: number, transfer: { amount: number }) => {
-          return acc + (transfer.amount || 0);
-        }, 0);
+        const totalAmountSent = sentTransfers.reduce(
+          (acc: number, transfer: { amount: number }) => {
+            return acc + (transfer.amount || 0);
+          },
+          0
+        );
         setAmountSent(totalAmountSent);
-  
+
         const receivedTransfers = amountReceivedRes?.data?.data?.receivedTransfers || [];
-        const totalAmountReceived = receivedTransfers.reduce((acc: number, transfer: { amount: number }) => {
-          return acc + (transfer.amount || 0);
-        }, 0);
+        const totalAmountReceived = receivedTransfers.reduce(
+          (acc: number, transfer: { amount: number }) => {
+            return acc + (transfer.amount || 0);
+          },
+          0
+        );
         setAmountReceived(totalAmountReceived);
-  
+
         setUserData({
           balance: balanceRes?.data?.data?.totalBalance,
           recentTransfers: transferRes?.data?.data?.allTransfers,
           amountSent: totalAmountSent,
           amountReceived: totalAmountReceived,
         });
-  
       } catch (error) {
         console.log("Error fetching dashboard data:", error);
         setLoading(false);
       }
     };
-  
+
     fetchDashboardData();
   }, []);
-  
 
   if (!userData) {
     if (loading) {
@@ -96,57 +101,49 @@ export default function DashboardPage() {
 
   return (
     <div className="h-screen inria-sans-regular">
-      <div className="hidden flex-col md:flex">
-        <div className="flex-1 space-y-4 p-8 pt-6 mt-14">
-          <h1 className="text-5xl font-extrabold">Hi there,</h1>
-          <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-3xl font-extrabold tracking-tight vast-shadow-regular">
+      <div className="flex flex-col p-4 md:p-8">
+        <div className="flex-1 space-y-4 mt-10 md:mt-14">
+          <h1 className="text-3xl font-extrabold md:text-5xl">Hi there,</h1>
+          <div className="space-y-4 md:space-y-2">
+            <h2 className="text-2xl font-extrabold tracking-tight md:text-3xl">
               Here&apos;s your account overview
             </h2>
-            <div className="flex items-center space-x-2">
+            <div className="flex justify-between items-center">
               <CalendarDateRangePicker />
             </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsContent value="overview" className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+                {/* Balance Card */}
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
                       Available Balance
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
                       className="h-4 w-4 text-muted-foreground"
                     >
                       <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex space-x-1 text-2xl font-bold">
+                    <div className="flex text-2xl font-bold">
                       ₹<AnimatedCounter amount={balance} />
                     </div>
                   </CardContent>
                 </Card>
+
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
                       Total Transactions
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
                       className="h-4 w-4 text-muted-foreground"
                     >
                       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -160,19 +157,16 @@ export default function DashboardPage() {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Amount Received Card */}
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
                       Amount Received
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
                       className="h-4 w-4 text-muted-foreground"
                     >
                       <rect width="20" height="14" x="2" y="5" rx="2" />
@@ -180,38 +174,38 @@ export default function DashboardPage() {
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold flex">
+                    <div className="flex text-2xl font-bold">
                       ₹<AnimatedCounter amount={amountReceived} />
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Amount Sent Card */}
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
                       Amount Sent
                     </CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
                       className="h-4 w-4 text-muted-foreground"
                     >
                       <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                     </svg>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold flex">
+                    <div className="flex text-2xl font-bold">
                       ₹<AnimatedCounter amount={amountSent} />
                     </div>
                   </CardContent>
                 </Card>
               </div>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
+
+              {/* Overview and Recent Transactions Section */}
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-7">
+                {/* Overview Card */}
+                <Card className="col-span-1 sm:col-span-7 lg:col-span-4">
                   <CardHeader>
                     <CardTitle>Overview</CardTitle>
                   </CardHeader>
@@ -219,7 +213,9 @@ export default function DashboardPage() {
                     <MonthlyExpenseChart />
                   </CardContent>
                 </Card>
-                <Card className="col-span-3">
+
+                {/* Recent Transactions Card */}
+                <Card className="col-span-1 sm:col-span-7 lg:col-span-3">
                   <CardHeader className="mb-5">
                     <CardTitle>Recent Transactions</CardTitle>
                   </CardHeader>
