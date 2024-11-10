@@ -49,42 +49,44 @@ function TransactionHistory() {
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
-    <div className="mx-5 p-4 text-white h-[80vh] bg-black shadow-lg rounded-lg mt-10">
-      <h2 className="text-xl font-bold mb-4">Transaction History</h2>
+    <div className="mx-4 sm:mx-6 lg:mx-10 p-4 bg-black text-white shadow-lg rounded-lg mt-10 overflow-x-auto">
+      <h2 className="text-lg sm:text-xl font-bold mb-4">Transaction History</h2>
       {transactions.length === 0 ? (
         <p>No transactions found.</p>
       ) : (
-        <table className="w-full text-left border">
-          <thead>
-            <tr className="border-b">
-              <th className="p-2">ID</th>
-              <th className="p-2">Amount</th>
-              <th className="p-2">Date/Time</th>
-              <th className="p-2">Remarks</th>
-              <th className="p-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((transaction) => (
-              <tr key={transaction.id} className="border-b">
-                <td className="p-2">{transaction.id}</td>
-                <td className="p-2">₹{transaction.amount}</td>
-                <td className="p-2">
-                  {new Date(transaction.createdAt).toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })}
-                </td>
-                <td className="p-2">{transaction.description}</td>
-                <td className="p-2">{transaction.status}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b">
+                <th className="p-2 text-left font-semibold text-sm sm:text-base">ID</th>
+                <th className="p-2 text-left font-semibold text-sm sm:text-base">Amount</th>
+                <th className="p-2 text-left font-semibold text-sm sm:text-base">Date/Time</th>
+                <th className="p-2 text-left font-semibold text-sm sm:text-base">Remarks</th>
+                <th className="p-2 text-left font-semibold text-sm sm:text-base">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {transactions.map((transaction) => (
+                <tr key={transaction.id} className="border-b last:border-none">
+                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.id}</td>
+                  <td className="p-2 text-xs sm:text-sm md:text-base">₹{transaction.amount}</td>
+                  <td className="p-2 text-xs sm:text-sm md:text-base">
+                    {new Date(transaction.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
+                  </td>
+                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.description}</td>
+                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
