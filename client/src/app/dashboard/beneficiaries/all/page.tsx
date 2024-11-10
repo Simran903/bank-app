@@ -65,22 +65,22 @@ function BeneficiaryList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[80vh]">
-        <div className="w-12 h-12 border-4 border-black-500 border-dashed animate-spin"></div>
-        <p className="ml-4 text-gray-400">Loading beneficiaries...</p>
+        <div className="w-8 h-8 border-4 border-black-500 border-dashed animate-spin md:w-12 md:h-12"></div>
+        <p className="ml-2 md:ml-4 text-gray-400">Loading beneficiaries...</p>
       </div>
     );
   }
 
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (error) return <p className="text-red-600 text-center px-4">{error}</p>;
 
   return (
-    <div className="max-w-6xl w-full mx-auto mt-10 p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="vast-shadow-regular font-extrabold text-5xl text-black">
+    <div className="max-w-4xl lg:max-w-6xl w-full mx-auto mt-6 md:mt-10 p-4 md:p-6">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 space-y-4 md:space-y-0">
+        <h2 className="vast-shadow-regular font-extrabold text-3xl md:text-5xl text-black text-center md:text-left">
           My Beneficiaries
         </h2>
         <button
-          className="px-4 py-2 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600"
+          className="px-4 py-2 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600 text-sm md:text-base"
           onClick={handleAddBeneficiaryRedirect}
         >
           Add New Beneficiary
@@ -90,16 +90,16 @@ function BeneficiaryList() {
       {beneficiaries.length === 0 ? (
         <p className="text-gray-400 text-center">No beneficiaries found.</p>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2">
           {beneficiaries.map((beneficiary) => (
             <div
               key={beneficiary.id}
-              className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-amber-500 inria-sans-regular relative"
+              className="p-4 sm:p-6 bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg border border-amber-500 text-gray-300 relative"
             >
-              <h3 className="text-xl font-semibold text-white mb-4">
+              <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-4">
                 {beneficiary.name}
               </h3>
-              <div className="grid gap-2 text-gray-300">
+              <div className="grid gap-1 sm:gap-2">
                 <p>
                   <span className="font-medium text-gray-400">Account Number:</span> {beneficiary.accountNumber}
                 </p>
@@ -119,7 +119,7 @@ function BeneficiaryList() {
                   <span className="font-medium text-gray-400">Account ID:</span> {beneficiary.accountId}
                 </p>
               </div>
-              
+
               {/* Three-dot options menu */}
               <Menu as="div" className="absolute top-4 right-4">
                 <MenuButton className="text-gray-400 hover:text-white focus:outline-none">
