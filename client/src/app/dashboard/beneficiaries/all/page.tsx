@@ -55,7 +55,7 @@ function BeneficiaryList() {
   };
 
   const handleUpdateRedirect = (beneficiaryId: number) => {
-    router.push(`/beneficiaries/update?id=${beneficiaryId}`);
+    router.push(`/dashboard/beneficiaries/id=${beneficiaryId}`);
   };
 
   const handleAddBeneficiaryRedirect = () => {

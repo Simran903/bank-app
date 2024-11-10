@@ -23,27 +23,30 @@ function UpdateBeneficiary() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { id } = useParams();
-
+  console.log(id);
+  
   useEffect(() => {
-    const fetchBeneficiary = async () => {
-      try {
-        setLoading(true);
-        const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id}`, {
-          withCredentials: true,
-        });
-        setBeneficiary(response?.data?.data);
-        setLoading(false);
-      } catch (err: AxiosError) {
-        console.error("Error fetching beneficiary:", err.response);
-        setError(err.response?.data?.message || "Failed to fetch beneficiary details.");
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchBeneficiary();
+  const fetchBeneficiary = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id}`, {
+        withCredentials: true,
+      });
+      
+      setBeneficiary(response?.data?.data);
+      setLoading(false);
+    } catch (err: AxiosError) {
+      console.error("Error fetching beneficiary:", err.response);
+      setError(err.response?.data?.message || "Failed to fetch beneficiary details.");
+      setLoading(false);
     }
-  }, [id]);
+  };
+
+  if (id) {
+    fetchBeneficiary();
+  }
+}, [id]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,7 +62,7 @@ function UpdateBeneficiary() {
         withCredentials: true,
       });
       
-      router.push("/beneficiaries");
+      router.push("/dashboard/beneficiary/beneficiaries");
     } catch (err: AxiosError) {
       console.error("Error updating beneficiary:", err.response);
       setError(err?.response?.data?.message || "Failed to update beneficiary. Please try again.");

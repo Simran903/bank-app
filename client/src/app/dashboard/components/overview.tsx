@@ -21,11 +21,8 @@ const MonthlyExpenseChart: React.FC = () => {
         })
 
         const transfers: TransferData[] = response?.data?.data?.sentTransfers;
-        // console.log(transfers);
         
         const monthlyExpenses: { [key: string]: number } = {};
-        // console.log(monthlyExpenses);
-        
 
         transfers.forEach((transfer) => {
           const date = new Date(transfer.timestamp);
