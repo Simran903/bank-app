@@ -3,13 +3,13 @@ import React from "react";
 const HomePage = () => {
   return (
     <div
-      className="min-h-screen flex justify-center items-center bg-gray-100 px-4 md:px-8 bg-image">
-      <div className="vast-shadow-regular text-center space-y-8 w-full md:w-auto">
+      className="min-h-screen flex justify-center items-center px-4 md:px-8 bg-image">
+      <div className="vast-shadow-regular text-center space-y-2 md:space-y-8 w-full md:w-auto">
         <div className="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-          <span className="text-5xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">
+          <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">
             Simplifying
           </span>
-          <span className="text-5xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">
+          <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">
             Banking
           </span>
           <video
@@ -33,7 +33,7 @@ const HomePage = () => {
             src="https://videos.pexels.com/video-files/7579959/uhd_25fps.mp4"
             preload="metadata"
           />
-          <span className="text-5xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">for the</span>
+          <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">for the</span>
           <video
             autoPlay
             loop
@@ -46,7 +46,7 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-          <span className="text-5xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">Modern</span>
+          <span className="text-7xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">Modern</span>
           <video
             autoPlay
             loop
@@ -56,7 +56,7 @@ const HomePage = () => {
             src="https://videos.pexels.com/video-files/7567651/7567651-hd_1920_1080_25fps.mp4"
             preload="metadata"
           />
-          <span className="text-5xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">World</span>
+          <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">World</span>
         </div>
       </div>
     </div>

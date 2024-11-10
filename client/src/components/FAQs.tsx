@@ -30,11 +30,11 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
 
 const Accordion: React.FC = () => {
   return (
-    <div className="h-screen bg-gray-100">
-      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-36">
+    <div className="h-screen">
+      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-56 md:pt-36">
         FAQs
       </h1>
-      <div className="w-full mt-24 max-w-6xl mx-auto">
+      <div className="w-full p-10 md:p-0 md:mt-24 max-w-6xl mx-auto">
         <AccordionItem
           title="What types of accounts can I open with your bank?"
           content="We offer savings accounts."

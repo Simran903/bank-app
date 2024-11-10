@@ -2,8 +2,8 @@ import { HoverEffect } from "../components/ui/card-hover-effect";
 
 export function Features() {
   return (
-    <div className="h-screen bg-gray-100">
-      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-60">
+    <div className="h-screen">
+      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-20 md:pt-60">
         Features
       </h1>
       <div className="max-w-5xl mx-auto px-8">
