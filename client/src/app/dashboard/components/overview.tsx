@@ -32,7 +32,7 @@ const MonthlyExpenseChart: React.FC = () => {
 
         const labels = Object.keys(monthlyExpenses)?.sort();
         const data = labels?.map((month) => monthlyExpenses[month]);
-        console.log(data);
+        // console.log(data);
 
         setChartData({
           labels,

@@ -26,7 +26,7 @@ function TransactionHistory() {
           withCredentials: true,
         });
         setTransactions(response?.data?.data?.allTransfers);
-        console.log(response?.data?.data?.allTransfers);
+        // console.log(response?.data?.data?.allTransfers);
       } catch (err) {
         setError("Failed to fetch transaction history. Please try again.");
       } finally {

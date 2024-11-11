@@ -49,7 +49,7 @@ export default function DashboardPage() {
           }),
         ]);
 
-        console.log(transferRes);
+        // console.log(transferRes);
 
         setBalance(balanceRes?.data?.data?.totalBalance);
         setRecentTransfers(transferRes?.data?.data?.allTransfers);
