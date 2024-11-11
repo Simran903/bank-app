@@ -23,13 +23,14 @@ function UpdateBeneficiary() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const router = useRouter();
   const { id } = useParams();
-  console.log(id);
+
+  const id_use = id.split('%')[1].split("D")[1];
   
   useEffect(() => {
   const fetchBeneficiary = async () => {
     try {
       setLoading(true);
-      const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id}`, {
+      const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, {
         withCredentials: true,
       });
       
@@ -42,10 +43,10 @@ function UpdateBeneficiary() {
     }
   };
 
-  if (id) {
+  if (id_use) {
     fetchBeneficiary();
   }
-}, [id]);
+}, [id_use]);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,11 +59,11 @@ function UpdateBeneficiary() {
 
     try {
       setIsSubmitting(true);
-      await axiosClient.put(`${baseUrl}/beneficiary/beneficiaries/${id}`, beneficiary, {
+      await axiosClient.put(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, beneficiary, {
         withCredentials: true,
       });
       
-      router.push("/dashboard/beneficiary/beneficiaries");
+      router.push("/dashboard/beneficiaries/all");
     } catch (err: AxiosError) {
       console.error("Error updating beneficiary:", err.response);
       setError(err?.response?.data?.message || "Failed to update beneficiary. Please try again.");
