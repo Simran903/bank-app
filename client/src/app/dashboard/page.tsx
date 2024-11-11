@@ -1,7 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "./components/date-range-picker";
 import { RecentTransactions } from "./components/recent-transactions";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { useEffect, useState } from "react";
@@ -108,9 +107,6 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-extrabold tracking-tight md:text-3xl">
               Here&apos;s your account overview
             </h2>
-            <div className="flex justify-between items-center">
-              <CalendarDateRangePicker />
-            </div>
           </div>
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsContent value="overview" className="space-y-4">
