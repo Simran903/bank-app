@@ -11,16 +11,27 @@ interface TransferData {
 }
 
 const MonthlyExpenseChart: React.FC = () => {
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    labels: [] as string[],
+    datasets: [
+      {
+        label: 'Monthly Expenses',
+        data: [] as number[],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+    ],
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosClient.get(`${baseUrl}/transfer/sent`, {
           withCredentials: true,
-        })
+        });
 
-        const transfers: TransferData[] = response?.data?.data?.sentTransfers;
+        const transfers: TransferData[] = response?.data?.data?.sentTransfers || [];
         
         const monthlyExpenses: { [key: string]: number } = {};
 
@@ -30,9 +41,8 @@ const MonthlyExpenseChart: React.FC = () => {
           monthlyExpenses[month] = (monthlyExpenses[month] || 0) + transfer.amount;
         });
 
-        const labels = Object.keys(monthlyExpenses)?.sort();
-        const data = labels?.map((month) => monthlyExpenses[month]);
-        // console.log(data);
+        const labels = Object.keys(monthlyExpenses).sort();
+        const data = labels.map((month) => monthlyExpenses[month]);
 
         setChartData({
           labels,
@@ -57,7 +67,11 @@ const MonthlyExpenseChart: React.FC = () => {
   return (
     <div>
       <h2>Monthly Expenses Over the Year</h2>
-      {/* <Line data={chartData} options={{ responsive: true }} /> */}
+      {chartData.labels.length > 0 ? (
+        <Line data={chartData} options={{ responsive: true }} />
+      ) : (
+        <p>Loading data...</p>
+      )}
     </div>
   );
 };
