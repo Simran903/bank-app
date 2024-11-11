@@ -3,7 +3,7 @@ import React from "react";
 const HomePage = () => {
   return (
     <div
-      className="min-h-screen flex justify-center items-center px-4 md:px-8 bg-image">
+      className="min-h-screen flex justify-center items-center px-4 md:px-8 bg-image md:bg-none">
       <div className="vast-shadow-regular text-center space-y-2 md:space-y-8 w-full md:w-auto">
         <div className="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
           <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">
@@ -46,7 +46,7 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-          <span className="text-7xl md:text-3xl lg:text-6xl xl:text-8xl font-extrabold">Modern</span>
+          <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">Modern</span>
           <video
             autoPlay
             loop
