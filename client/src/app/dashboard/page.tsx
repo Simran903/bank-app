@@ -111,7 +111,6 @@ export default function DashboardPage() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-                {/* Balance Card */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -154,7 +153,6 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                {/* Amount Received Card */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -176,7 +174,6 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                {/* Amount Sent Card */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
                     <CardTitle className="text-sm font-medium">
@@ -198,9 +195,7 @@ export default function DashboardPage() {
                 </Card>
               </div>
 
-              {/* Overview and Recent Transactions Section */}
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-7">
-                {/* Overview Card */}
                 <Card className="col-span-1 sm:col-span-7 lg:col-span-4">
                   <CardHeader>
                     <CardTitle>Overview</CardTitle>
@@ -210,13 +205,12 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
-                {/* Recent Transactions Card */}
                 <Card className="col-span-1 sm:col-span-7 lg:col-span-3">
                   <CardHeader className="mb-5">
                     <CardTitle>Recent Transactions</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <RecentTransactions transactions={recentTransfers} />
+                   {/* <RecentTransactions transactions={recentTransfers} /> */}
                   </CardContent>
                 </Card>
               </div>

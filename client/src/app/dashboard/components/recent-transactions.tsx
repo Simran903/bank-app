@@ -8,7 +8,7 @@ interface Transaction {
   description: string;
   amount: number;
   status: string;
-  timestamp: string; // ISO date string
+  timestamp: string;
 }
 
 export function RecentTransactions(): React.ReactElement {
