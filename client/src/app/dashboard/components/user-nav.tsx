@@ -12,18 +12,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { baseUrl } from "@/constants";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
+
+type AccountDetails = {
+  account_number: string;
+  account_type: string;
+};
 
 export function UserNav() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [accountDetails, setAccountDetails] = useState<{
-    account_number: string;
-    account_type: string;
-  } | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [accountDetails, setAccountDetails] = useState<AccountDetails | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
 
   const handleLogout = async () => {
     try {
@@ -43,7 +45,7 @@ export function UserNav() {
         return;
       }
 
-      const response = await axiosClient.post(`${baseUrl}/user/account-details`, {
+      const response = await axiosClient.post<{ data: AccountDetails }>(`${baseUrl}/user/account-details`, {
         user_id: userId,
       });
       setAccountDetails(response?.data?.data);
@@ -55,18 +57,18 @@ export function UserNav() {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await axiosClient.post(`${baseUrl}/user/update-password`, {
+      const response = await axiosClient.post<{ data: { success: boolean; message?: string } }>(`${baseUrl}/user/update-password`, {
         oldPassword,
         newPassword,
       });
-      
-      if (response.data.success) {
+
+      if (response?.data?.data?.success) {
         alert("Password updated successfully.");
         setIsModalOpen(false);
         setOldPassword("");
         setNewPassword("");
       } else {
-        setError(response.data.message || "Failed to update password.");
+        setError(response?.data?.data?.message || "Failed to update password.");
       }
     } catch (err) {
       setError("Failed to update password. Please try again.");
@@ -82,7 +84,7 @@ export function UserNav() {
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(open) => open && fetchAccountDetails()}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full text-white">
             <Avatar className="h-8 w-8">
@@ -90,18 +92,13 @@ export function UserNav() {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-56"
-          align="end"
-          forceMount
-          onOpenAutoFocus={fetchAccountDetails}
-        >
+        <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               {accountDetails && (
                 <div className="mt-2 text-xs leading-none text-muted-foreground">
-                  <p>Account Id: {accountDetails?.accountId}</p>
-                  <p>Account Type: {accountDetails?.type}</p>
+                  <p>Account Id: {accountDetails?.account_number}</p>
+                  <p>Account Type: {accountDetails?.account_type}</p>
                 </div>
               )}
             </div>
@@ -126,7 +123,7 @@ export function UserNav() {
                 type="password"
                 className="w-full mt-1 p-2 border rounded-md"
                 value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -135,7 +132,7 @@ export function UserNav() {
                 type="password"
                 className="w-full mt-1 p-2 border rounded-md"
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
               />
             </div>
             <div className="flex justify-end space-x-2">

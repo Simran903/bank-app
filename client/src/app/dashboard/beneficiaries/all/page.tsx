@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios"; // Ensure AxiosError is imported from 'axios'
 import axiosClient from "@/constants/axiosClient";
 import { baseUrl } from "@/constants";
-import { AxiosError } from "axios";
 import { Menu, MenuItem, MenuButton } from "@headlessui/react";
 
 interface Beneficiary {
@@ -20,6 +20,7 @@ interface Beneficiary {
 function BeneficiaryList() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
@@ -31,10 +32,16 @@ function BeneficiaryList() {
           withCredentials: true,
         });
         setBeneficiaries(response?.data?.data);
-        setLoading(false);
-      } catch (err: AxiosError) {
-        console.error("Error fetching beneficiaries:", err.response);
-        setError(err.response?.data?.message || "Failed to fetch beneficiaries. Please try again.");
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          // Check if error is an instance of AxiosError
+          console.error("Error fetching beneficiaries:", error.response);
+          setError(error.response?.data?.message || "Failed to fetch beneficiaries. Please try again.");
+        } else {
+          console.error("Unexpected error:", error);
+          setError("An unexpected error occurred. Please try again.");
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -43,14 +50,23 @@ function BeneficiaryList() {
   }, []);
 
   const handleDelete = async (beneficiaryId: number) => {
+    setError(null);
+    setSuccess(null);
     try {
       await axiosClient.delete(`${baseUrl}/beneficiary/beneficiaries/${beneficiaryId}`, {
         withCredentials: true,
       });
       setBeneficiaries((prev) => prev.filter((b) => b.id !== beneficiaryId));
-    } catch (err: AxiosError) {
-      console.error("Error deleting beneficiary:", err.response);
-      setError(err.response?.data?.message || "Failed to delete beneficiary. Please try again.");
+      setSuccess("Beneficiary deleted successfully!");
+      setTimeout(() => setSuccess(null), 3000); // Clear success message after 3 seconds
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error deleting beneficiary:", error.response);
+        setError(error.response?.data?.message || "Failed to delete beneficiary. Please try again.");
+      } else {
+        console.error("Unexpected error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -71,8 +87,6 @@ function BeneficiaryList() {
     );
   }
 
-  if (error) return <p className="text-red-600 text-center px-4">{error}</p>;
-
   return (
     <div className="max-w-4xl lg:max-w-6xl w-full mx-auto mt-6 md:mt-10 p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 space-y-4 md:space-y-0">
@@ -86,6 +100,9 @@ function BeneficiaryList() {
           Add New Beneficiary
         </button>
       </div>
+
+      {error && <p className="text-red-600 text-center px-4">{error}</p>}
+      {success && <p className="text-green-600 text-center px-4">{success}</p>}
 
       {beneficiaries.length === 0 ? (
         <p className="text-gray-400 text-center">No beneficiaries found.</p>

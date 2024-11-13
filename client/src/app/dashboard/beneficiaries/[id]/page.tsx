@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axiosClient from "@/constants/axiosClient";
 import { baseUrl } from "@/constants";
-import { AxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 
 interface Beneficiary {
   id: number;
@@ -24,34 +24,40 @@ function UpdateBeneficiary() {
   const router = useRouter();
   const { id } = useParams();
 
-  const id_use = id.split('%')[1].split("D")[1];
-  
-  useEffect(() => {
-  const fetchBeneficiary = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, {
-        withCredentials: true,
-      });
-      
-      setBeneficiary(response?.data?.data);
-      setLoading(false);
-    } catch (err: AxiosError) {
-      console.error("Error fetching beneficiary:", err.response);
-      setError(err.response?.data?.message || "Failed to fetch beneficiary details.");
-      setLoading(false);
-    }
-  };
-
-  if (id_use) {
-    fetchBeneficiary();
+  let id_use: string | undefined;
+  if (typeof id === "string") {
+    id_use = id.split("%")[1]?.split("D")[1];
   }
-}, [id_use]);
 
+  useEffect(() => {
+    const fetchBeneficiary = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, {
+          withCredentials: true,
+        });
+        setBeneficiary(response?.data?.data);
+      } catch (err: unknown) {
+        if (isAxiosError(err)) {
+          console.error("Error fetching beneficiary:", err.response);
+          setError(err.response?.data?.message || "Failed to fetch beneficiary details.");
+        } else {
+          console.error("Unexpected error:", err);
+          setError("An unexpected error occurred while fetching beneficiary details.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id_use) {
+      fetchBeneficiary();
+    }
+  }, [id_use]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBeneficiary((prev) => prev ? { ...prev, [name]: value } : null);
+    setBeneficiary((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
   const handleUpdate = async () => {
@@ -62,11 +68,15 @@ function UpdateBeneficiary() {
       await axiosClient.put(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, beneficiary, {
         withCredentials: true,
       });
-      
       router.push("/dashboard/beneficiaries/all");
-    } catch (err: AxiosError) {
-      console.error("Error updating beneficiary:", err.response);
-      setError(err?.response?.data?.message || "Failed to update beneficiary. Please try again.");
+    } catch (err: unknown) {
+      if (isAxiosError(err)) {
+        console.error("Error updating beneficiary:", err.response);
+        setError(err.response?.data?.message || "Failed to update beneficiary. Please try again.");
+      } else {
+        console.error("Unexpected error:", err);
+        setError("An unexpected error occurred while updating the beneficiary.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -78,7 +88,7 @@ function UpdateBeneficiary() {
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
       <h2 className="text-4xl font-bold text-black mb-6 text-center">Update Beneficiary</h2>
-      
+
       {beneficiary && (
         <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
           <div className="space-y-4">
