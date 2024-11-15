@@ -37,19 +37,19 @@ const Accordion: React.FC = () => {
       <div className="w-full p-10 md:p-0 md:mt-24 max-w-6xl mx-auto">
         <AccordionItem
           title="What types of accounts can I open with your bank?"
-          content="We offer savings accounts."
+          content="We offer Savings account."
         />
         <AccordionItem
           title="How do I check my account balance?"
-          content="You can check your account balance via online banking."
+          content="You can check your account balance after you Signin."
         />
         <AccordionItem
           title="How do I change my account details?"
-          content="You can update your details through online banking."
+          content="You can update your details after you Signin."
         />
         <AccordionItem
           title="How do I reset my online banking password?"
-          content="You can reset your password by clicking on the “Forgot Password” link on the login page."
+          content="SignIn &rarr; Click on '+' icon &rarr; Update Password."
         />
         <AccordionItem
           title="Is banking secure?"
