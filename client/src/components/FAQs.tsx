@@ -31,7 +31,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
 const Accordion: React.FC = () => {
   return (
     <div className="h-screen">
-      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-56 md:pt-36">
+      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-[30rem] md:pt-36">
         FAQs
       </h1>
       <div className="w-full p-10 md:p-0 md:mt-24 max-w-6xl mx-auto">

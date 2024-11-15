@@ -130,7 +130,7 @@ const SignupForm = () => {
             </LabelInputContainer>
 
             <button
-              className="bg-gradient-to-br from-black to-gray-700 w-full text-white rounded-md py-2 font-medium shadow-md"
+              className="bg-gradient-to-br relative group from-black to-neutral-600 w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200"
               type="submit"
             >
               Sign up &rarr;

@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { RecentTransactions } from "./components/recent-transactions";
-import AnimatedCounter from "@/components/AnimatedCounter";
+import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";

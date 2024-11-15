@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -14,7 +14,7 @@ export function MainNav({
       className={cn("flex items-center justify-between lg:justify-start", className)}
       {...props}
     >
-      {/* Hamburger Icon for Mobile Menu */}
+
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         className="lg:hidden p-2 focus:outline-none"
@@ -35,7 +35,7 @@ export function MainNav({
         </svg>
       </button>
 
-      {/* Desktop Menu */}
+      {/* Desktop Menu Links */}
       <div className="hidden lg:flex items-center space-x-4 lg:space-x-6">
         <Link href="/dashboard" className="text-md font-bold transition-colors hover:text-gray-500">
           Overview
