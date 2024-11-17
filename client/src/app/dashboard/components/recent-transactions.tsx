@@ -15,22 +15,22 @@ interface RecentTransactionsProps {
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full text-left text-sm border-collapse border border-gray-700">
+      <table className="min-w-full text-white text-sm">
         <thead>
-          <tr className="bg-gray-900 text-white">
-            <th className="px-4 py-2 border border-gray-700">ID</th>
-            <th className="px-4 py-2 border border-gray-700">Amount</th>
-            <th className="px-4 py-2 border border-gray-700">Date/Time</th>
-            <th className="px-4 py-2 border border-gray-700">Description</th>
-            <th className="px-4 py-2 border border-gray-700">Status</th>
+          <tr className="bg-zinc-900 text-left">
+            <th className="px-4 py-4">ID</th>
+            <th className="px-4 py-4">Amount</th>
+            <th className="px-4 py-4">Date/Time</th>
+            <th className="px-4 py-4">Description</th>
+            <th className="px-4 py-4">Status</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id} className="hover:bg-gray-800">
-              <td className="px-4 py-2 border border-gray-700">{transaction.id}</td>
-              <td className="px-4 py-2 border border-gray-700">₹{transaction.amount.toFixed(2)}</td>
-              <td className="px-4 py-2 border border-gray-700">
+              <td className="px-4 py-4">{transaction.id}</td>
+              <td className="px-4 py-4">₹{transaction.amount.toFixed(2)}</td>
+              <td className="px-4 py-4">
                 {new Date(transaction.timestamp).toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
@@ -41,8 +41,8 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                   hour12: true,
                 })}
               </td>
-              <td className="px-4 py-2 border border-gray-700">{transaction.description}</td>
-              <td className="px-4 py-2 border border-gray-700">{transaction.status}</td>
+              <td className="px-4 py-4">{transaction.description}</td>
+              <td className="px-4 py-4">{transaction.status}</td>
             </tr>
           ))}
           {transactions.length === 0 && (
