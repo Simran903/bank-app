@@ -97,8 +97,8 @@ export function UserNav() {
             <div className="flex flex-col space-y-1">
               {accountDetails && (
                 <div className="mt-2 text-xs leading-none text-muted-foreground">
-                  <p>Account Id: {accountDetails?.accountId}</p>
-                  <p>Account Type: {accountDetails?.type}</p>
+                  <p className="font-bold">Account Id: {accountDetails?.accountId}</p>
+                  <p className="font-bold">Account Type: {accountDetails?.type}</p>
                 </div>
               )}
             </div>
