@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, ChangeEvent } from "react";
 
 type AccountDetails = {
-  account_number: string;
-  account_type: string;
+  accountId: string;
+  type: string;
 };
 
 export function UserNav() {
@@ -97,8 +97,8 @@ export function UserNav() {
             <div className="flex flex-col space-y-1">
               {accountDetails && (
                 <div className="mt-2 text-xs leading-none text-muted-foreground">
-                  <p>Account Id: {accountDetails?.account_number}</p>
-                  <p>Account Type: {accountDetails?.account_type}</p>
+                  <p>Account Id: {accountDetails?.accountId}</p>
+                  <p>Account Type: {accountDetails?.type}</p>
                 </div>
               )}
             </div>
