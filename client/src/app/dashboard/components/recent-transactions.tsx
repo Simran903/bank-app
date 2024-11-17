@@ -13,6 +13,11 @@ interface RecentTransactionsProps {
 }
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+  // Sort transactions by timestamp in descending order and take the first 5
+  const recentTransactions = transactions
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 5);
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-white text-sm">
@@ -26,7 +31,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
+          {recentTransactions.map((transaction) => (
             <tr key={transaction.id} className="hover:bg-gray-800">
               <td className="px-4 py-4">{transaction.id}</td>
               <td className="px-4 py-4">₹{transaction.amount.toFixed(2)}</td>
@@ -45,7 +50,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
               <td className="px-4 py-4">{transaction.status}</td>
             </tr>
           ))}
-          {transactions.length === 0 && (
+          {recentTransactions.length === 0 && (
             <tr>
               <td colSpan={5} className="text-center py-4">
                 No recent transactions.
