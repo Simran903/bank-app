@@ -1,4 +1,3 @@
-// RecentTransactions.tsx
 import React from "react";
 
 interface Transfer {
@@ -15,14 +14,46 @@ interface RecentTransactionsProps {
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
   return (
-    <div>
-      {transactions.map((transaction) => (
-        <div key={transaction.id} className="transaction-item">
-          <p>Amount: ₹{transaction.amount}</p>
-          <p>Description: {transaction.description}</p>
-          <p>Date: {new Date(transaction.timestamp).toLocaleDateString()}</p>
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-left text-sm border-collapse border border-gray-700">
+        <thead>
+          <tr className="bg-gray-900 text-white">
+            <th className="px-4 py-2 border border-gray-700">ID</th>
+            <th className="px-4 py-2 border border-gray-700">Amount</th>
+            <th className="px-4 py-2 border border-gray-700">Date/Time</th>
+            <th className="px-4 py-2 border border-gray-700">Description</th>
+            <th className="px-4 py-2 border border-gray-700">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((transaction) => (
+            <tr key={transaction.id} className="hover:bg-gray-800">
+              <td className="px-4 py-2 border border-gray-700">{transaction.id}</td>
+              <td className="px-4 py-2 border border-gray-700">₹{transaction.amount.toFixed(2)}</td>
+              <td className="px-4 py-2 border border-gray-700">
+                {new Date(transaction.timestamp).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                })}
+              </td>
+              <td className="px-4 py-2 border border-gray-700">{transaction.description}</td>
+              <td className="px-4 py-2 border border-gray-700">{transaction.status}</td>
+            </tr>
+          ))}
+          {transactions.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-center py-4">
+                No recent transactions.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };
