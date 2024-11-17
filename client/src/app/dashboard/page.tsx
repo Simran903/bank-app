@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { RecentTransactions } from "./components/recent-transactions";
+import RecentTransactions from "./components/recent-transactions";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useEffect, useState } from "react";
 import { baseUrl } from "@/constants";
@@ -12,14 +12,18 @@ interface UserData {
   balance: number;
   recentTransfers: Transfer[];
   amountSent: number;
-  amountReceived: string;
+  amountReceived: number;
 }
 
 interface Transfer {
-  [key: string]: any;
+  id: string;
+  amount: number;
+  description: string;
+  timestamp: string;
+  status: string;
 }
 
-export default function DashboardPage() {
+export default function DashboardPage(): React.ReactElement {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [balance, setBalance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -29,7 +33,7 @@ export default function DashboardPage() {
   const [amountReceived, setAmountReceived] = useState<number>(0);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = async (): Promise<void> => {
       try {
         const [
           balanceRes,
@@ -37,49 +41,46 @@ export default function DashboardPage() {
           amountSentRes,
           amountReceivedRes,
         ] = await Promise.all([
-          axiosClient.post(baseUrl + "/user/get-balance", {}),
-          axiosClient.get(`${baseUrl}/transfer/all`, {
-            withCredentials: true,
-          }),
-          axiosClient.get(`${baseUrl}/transfer/sent`, {
-            withCredentials: true,
-          }),
-          axiosClient.get(`${baseUrl}/transfer/received`, {
-            withCredentials: true,
-          }),
+          axiosClient.post(`${baseUrl}/user/get-balance`, {}),
+          axiosClient.get(`${baseUrl}/transfer/all`, { withCredentials: true }),
+          axiosClient.get(`${baseUrl}/transfer/sent`, { withCredentials: true }),
+          axiosClient.get(`${baseUrl}/transfer/received`, { withCredentials: true }),
         ]);
 
-        // console.log(transferRes);
+        // Balance data
+        const fetchedBalance = balanceRes?.data?.data?.totalBalance || 0;
+        setBalance(fetchedBalance);
 
-        setBalance(balanceRes?.data?.data?.totalBalance);
-        setRecentTransfers(transferRes?.data?.data?.allTransfers);
+        // Recent transfers
+        const fetchedTransfers: Transfer[] = transferRes?.data?.data?.allTransfers || [];
+        setRecentTransfers(fetchedTransfers);
 
+        // Amount Sent
         const sentTransfers = amountSentRes?.data?.data?.sentTransfers || [];
         const totalAmountSent = sentTransfers.reduce(
-          (acc: number, transfer: { amount: number }) => {
-            return acc + (transfer.amount || 0);
-          },
+          (acc: number, transfer: { amount: number }) => acc + (transfer.amount || 0),
           0
         );
         setAmountSent(totalAmountSent);
 
+        // Amount Received
         const receivedTransfers = amountReceivedRes?.data?.data?.receivedTransfers || [];
         const totalAmountReceived = receivedTransfers.reduce(
-          (acc: number, transfer: { amount: number }) => {
-            return acc + (transfer.amount || 0);
-          },
+          (acc: number, transfer: { amount: number }) => acc + (transfer.amount || 0),
           0
         );
         setAmountReceived(totalAmountReceived);
 
+        // Consolidate user data
         setUserData({
-          balance: balanceRes?.data?.data?.totalBalance,
-          recentTransfers: transferRes?.data?.data?.allTransfers,
+          balance: fetchedBalance,
+          recentTransfers: fetchedTransfers,
           amountSent: totalAmountSent,
           amountReceived: totalAmountReceived,
         });
       } catch (error) {
-        console.log("Error fetching dashboard data:", error);
+        console.error("Error fetching dashboard data:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -87,15 +88,21 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <div className="w-12 h-12 border-4 border-black-500 border-dashed animate-spin"></div>
+        <p className="ml-4 text-gray-400">Loading dashboard...</p>
+      </div>
+    );
+  }
+
   if (!userData) {
-    if (loading) {
-      return (
-        <div className="flex items-center justify-center h-[80vh]">
-          <div className="w-12 h-12 border-4 border-black-500 border-dashed animate-spin"></div>
-          <p className="ml-4 text-gray-400">Loading dashboard...</p>
-        </div>
-      );
-    }
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <p className="text-gray-400">Failed to load dashboard data.</p>
+      </div>
+    );
   }
 
   return (
@@ -111,18 +118,10 @@ export default function DashboardPage() {
           <Tabs defaultValue="overview" className="space-y-4">
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+                {/* Card for Balance */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Available Balance
-                    </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
+                    <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex text-2xl font-bold">
@@ -131,20 +130,10 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
+                {/* Card for Total Transactions */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Total Transactions
-                    </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
+                    <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">
@@ -153,19 +142,10 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
+                {/* Card for Amount Received */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Amount Received
-                    </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <rect width="20" height="14" x="2" y="5" rx="2" />
-                      <path d="M2 10h20" />
-                    </svg>
+                    <CardTitle className="text-sm font-medium">Amount Received</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex text-2xl font-bold">
@@ -174,18 +154,10 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
+                {/* Card for Amount Sent */}
                 <Card>
                   <CardHeader className="flex justify-between pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      Amount Sent
-                    </CardTitle>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4 text-muted-foreground"
-                    >
-                      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                    </svg>
+                    <CardTitle className="text-sm font-medium">Amount Sent</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex text-2xl font-bold">
@@ -196,6 +168,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-7">
+                {/* Overview Chart */}
                 <Card className="col-span-1 sm:col-span-7 lg:col-span-4">
                   <CardHeader>
                     <CardTitle>Overview</CardTitle>
@@ -205,12 +178,13 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
 
+                {/* Recent Transactions */}
                 <Card className="col-span-1 sm:col-span-7 lg:col-span-3">
                   <CardHeader className="mb-5">
                     <CardTitle>Recent Transactions</CardTitle>
                   </CardHeader>
                   <CardContent>
-                   {/* <RecentTransactions transactions={recentTransfers} /> */}
+                    <RecentTransactions transactions={recentTransfers} />
                   </CardContent>
                 </Card>
               </div>
