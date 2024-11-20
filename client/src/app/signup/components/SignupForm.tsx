@@ -80,7 +80,7 @@ const SignupForm = () => {
                 <Label htmlFor="fullname">Full name</Label>
                 <Input
                   id="fullname"
-                  placeholder="Tyler Smith"
+                  placeholder="Enter your fullname"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -93,7 +93,7 @@ const SignupForm = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Tyler001"
+                  placeholder="Enter your username"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -107,7 +107,7 @@ const SignupForm = () => {
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
-                placeholder="projectmayhem@fc.com"
+                placeholder="Enter your Email"
                 type="email"
                 name="email"
                 value={formData.email}

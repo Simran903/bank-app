@@ -59,7 +59,7 @@ const SigninForm = () => {
               <Label htmlFor="identifier">Email or Username</Label>
               <Input
                 id="identifier"
-                placeholder="johndoe@mail.com or username"
+                placeholder="Enter your email or username"
                 type="text"
                 name="identifier"
                 value={formData.identifier}
