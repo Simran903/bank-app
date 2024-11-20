@@ -28,7 +28,7 @@ const SignupForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const router = useRouter();
+  const router = useRouter(); // Use the router hook
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,7 +38,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axiosClient.post(baseUrl + "/user/signin", formData);
+      const response = await axiosClient.post(baseUrl + "/user/signin", formData, {})
 
       if (response.status === 200) {
         setSuccess("Account created successfully!");
@@ -50,7 +50,14 @@ const SignupForm = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message;
-        setError(errorMessage || "Failed to create account. Please try again.");
+
+        if (errorMessage === "Email already exists") {
+          setError("This email is already in use. Please try another.");
+        } else if (errorMessage === "Username already taken") {
+          setError("This username is already taken. Please choose another.");
+        } else {
+          setError(errorMessage || "Failed to create account. Please try again.");
+        }
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
@@ -63,19 +70,18 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black py-12 flex items-center justify-center">
-      <div className="max-w-6xl w-full md:mx-auto flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden mx-5">
-        
-        {/* Left Side: Form */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col items-center">
-          <h2 className="font-bold text-2xl md:text-3xl text-black text-center mb-4">
+    <div className="h-screen bg-black py-24 flex items-center justify-center">
+      {/* Left Side: Form */}
+      <div className="max-w-6xl w-full mx-auto flex bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="w-full md:w-1/2 p-8 md:p-12">
+          <h2 className="font-bold text-2xl text-black">
             Create an account with us!
           </h2>
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {success && <p className="text-green-500 mb-4">{success}</p>}
 
-          <form className="w-full space-y-4" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+          <form className="my-8" onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
               <LabelInputContainer>
                 <Label htmlFor="fullname">Full name</Label>
                 <Input
@@ -130,7 +136,7 @@ const SignupForm = () => {
             </LabelInputContainer>
 
             <button
-              className="bg-gradient-to-br from-black to-gray-700 w-full text-white rounded-md py-2 font-medium shadow-md"
+              className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
               type="submit"
             >
               Sign up &rarr;
@@ -140,7 +146,7 @@ const SignupForm = () => {
             <div className="flex justify-center items-center mt-4 space-x-1">
               <p className="text-sm">Already have an account?</p>
               <button
-                className="underline font-semibold text-sm"
+                className="underline font-semibold"
                 type="button"
                 onClick={handleSignIn}
               >
@@ -152,11 +158,11 @@ const SignupForm = () => {
         </div>
 
         {/* Right Side: Image */}
-        <div className="hidden md:flex w-full md:w-1/2 items-center justify-center p-8">
+        <div className="hidden md:flex w-1/2 justify-end items-center">
           <Image
             src={overview}
             alt="overview dashboard"
-            className="object-cover w-full h-full rounded-r-2xl"
+            className="object-cover h-full w-full rounded-r-2xl"
           />
         </div>
       </div>
@@ -166,12 +172,14 @@ const SignupForm = () => {
 
 export default SignupForm;
 
-const BottomGradient = () => (
-  <>
-    <span className="group-hover:opacity-100 block transition-opacity duration-500 opacity-0 absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-    <span className="group-hover:opacity-100 block transition-opacity duration-500 opacity-0 absolute inset-x-10 bottom-0 h-px w-1/2 mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent blur-sm" />
-  </>
-);
+const BottomGradient = () => {
+  return (
+    <>
+      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+    </>
+  );
+};
 
 const LabelInputContainer = ({
   children,
@@ -179,8 +187,10 @@ const LabelInputContainer = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => (
-  <div className={cn("flex flex-col space-y-2 w-full", className)}>
-    {children}
-  </div>
-);
+}) => {
+  return (
+    <div className={cn("flex flex-col space-y-2 w-full", className)}>
+      {children}
+    </div>
+  );
+};
