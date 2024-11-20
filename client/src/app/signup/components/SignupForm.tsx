@@ -80,7 +80,7 @@ const SignupForm = () => {
                 <Label htmlFor="fullname">Full name</Label>
                 <Input
                   id="fullname"
-                  placeholder="Enter your fullname"
+                  placeholder="Tyler Smith"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -93,7 +93,7 @@ const SignupForm = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Enter your username"
+                  placeholder="Tyler001"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -107,7 +107,7 @@ const SignupForm = () => {
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
-                placeholder="Enter your Email"
+                placeholder="projectmayhem@fc.com"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -130,7 +130,7 @@ const SignupForm = () => {
             </LabelInputContainer>
 
             <button
-              className="bg-gradient-to-br relative group from-black to-neutral-600 w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200"
+              className="bg-gradient-to-br from-black to-gray-700 w-full text-white rounded-md py-2 font-medium shadow-md"
               type="submit"
             >
               Sign up &rarr;
