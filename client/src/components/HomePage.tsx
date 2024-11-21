@@ -1,6 +1,15 @@
+"use client"
 import React from "react";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
+  const router = useRouter();
+
+  const handleSignIn = (): void => {
+    router.push('/signup');
+  };
+
   return (
     <div
       className="min-h-screen flex justify-center items-center px-4 md:px-8 bg-image md:bg-none">
@@ -58,6 +67,7 @@ const HomePage = () => {
           />
           <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">World</span>
         </div>
+        <Button onClick={handleSignIn} className="bg-black text-white hover:bg-zinc-900 text-lg border border-double border-amber-500">Create an account with us!</Button>
       </div>
     </div>
   );
