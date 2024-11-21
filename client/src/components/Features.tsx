@@ -32,6 +32,26 @@ export const projects = [
     "View, search, and filter your entire transaction history at a glance.",
   },
   {
+    title: "Link Multiple Accounts",
+    description:
+    "Link multiple bank accounts seamlessly for unified management and convenience.",
+  },
+  {
+    title: "Update Linked Account Details",
+    description:
+    "Easily update your linked bank account details anytime to keep your information accurate and up-to-date.",
+  },
+  {
+    title: "Real-Time Transaction Tracking",
+    description:
+    "Monitor your transactions in real-time with detailed insights for better financial control.",
+  },
+  {
+    title: "Secure Password Management",
+    description:
+    "Update your password anytime to ensure your account stays protected and secure.",
+  },
+  {
     title: "Security",
     description:
     "Ensure your account is protected with the latest security features.",
