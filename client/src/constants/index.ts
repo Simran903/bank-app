@@ -1,1 +1,1 @@
-export const baseUrl = "https://bank-app-4lqa.onrender.com/api/v1"
+export const baseUrl = "https://transsacto.sincerelyyyash.com/api/v1"
