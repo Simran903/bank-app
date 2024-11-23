@@ -72,8 +72,8 @@ function AddBeneficiaries() {
   };
 
   return (
-    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white mt-20">
-      <h2 className="font-bold text-xl text-neutral-800">
+    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black mt-20">
+      <h2 className="font-bold text-xl text-white">
         Add New Beneficiary
       </h2>
 

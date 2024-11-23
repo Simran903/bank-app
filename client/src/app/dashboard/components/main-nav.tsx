@@ -93,7 +93,7 @@ export function MainNav() {
       >
         <div className="p-10 space-y-4 mt-16">
           <Link
-            href="#"
+            href="/dashboard"
             className="block text-lg font-semibold text-white hover:text-gray-300"
             onClick={() => setIsSidebarOpen(false)}
           >
