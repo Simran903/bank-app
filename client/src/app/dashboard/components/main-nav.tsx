@@ -1,10 +1,8 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-// Hamburger/Cross Toggle Animation
 const Path = (props: any) => (
   <motion.path
     fill="transparent"
@@ -54,7 +52,6 @@ const MenuToggle = ({
   </button>
 );
 
-// Sidebar Animation Variants
 const sidebarVariants = {
   open: (height = 1000) => ({
     clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
@@ -75,25 +72,20 @@ const sidebarVariants = {
   },
 };
 
-// Sidebar Component
-export default function MainNav() {
+export function MainNav() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="relative">
-      {/* Navbar */}
       <nav className="p-8 flex items-center justify-between">
-        {/* Hamburger Menu */}
         <MenuToggle
           toggle={() => setIsSidebarOpen(!isSidebarOpen)}
           isOpen={isSidebarOpen}
         />
 
-        {/* Logo or Brand */}
         <h1 className="text-lg font-bold">Transsacto</h1>
       </nav>
 
-      {/* Sidebar */}
       <motion.div
         className="fixed top-0 left-0 w-1/3 h-full bg-white z-40"
         variants={sidebarVariants}
@@ -138,7 +130,6 @@ export default function MainNav() {
         </div>
       </motion.div>
 
-      {/* Overlay */}
       {isSidebarOpen && (
         <motion.div
           initial={{ opacity: 0 }}
