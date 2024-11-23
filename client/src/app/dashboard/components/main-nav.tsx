@@ -1,8 +1,10 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import axiosClient from "@/constants/axiosClient";
+import { baseUrl } from "@/constants";
 
 const Path = (props: any) => (
   <motion.path
@@ -74,7 +76,19 @@ const sidebarVariants = {
 };
 
 export function MainNav() {
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLogout = async () => {
+    try {
+      await axiosClient.post(`${baseUrl}/user/signout`, {});
+      localStorage.clear();
+      router.push("/");
+    } catch (err) {
+      setError("Failed to log out. Please try again.");
+    }
+  };
 
   return (
     <div className="relative">
@@ -86,7 +100,7 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 w-1/5 h-full bg-black z-40"
+        className="fixed top-0 left-0 w-1/5 h-full bg-black z-40 flex flex-col justify-between"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}
@@ -120,6 +134,18 @@ export function MainNav() {
           >
             Payment Transfer
           </Link>
+          <div className="p-10">
+          <button
+            className="block w-full text-lg bg-red-700 px-10 py-2 font-semibold text-white hover:bg-red-800"
+            onClick={() => {
+              setIsSidebarOpen(false);
+              handleLogout();
+            }}
+          >
+            Log Out
+          </button>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+          </div>
         </div>
       </motion.div>
 
