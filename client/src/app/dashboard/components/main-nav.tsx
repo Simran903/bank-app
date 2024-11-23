@@ -76,7 +76,7 @@ const sidebarVariants = {
 };
 
 // Sidebar Component
-export default function Home() {
+export default function MainNav() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
