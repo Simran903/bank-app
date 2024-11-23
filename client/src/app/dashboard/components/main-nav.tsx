@@ -86,7 +86,7 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 w-1/3 h-full bg-black z-40"
+        className="fixed top-0 left-0 w-1/5 h-full bg-black z-40"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}
