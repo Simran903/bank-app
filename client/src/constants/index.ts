@@ -1,1 +1,0 @@
-export const baseUrl = "https://transsacto.sincerelyyyash.com/api/v1"
