@@ -104,7 +104,6 @@ const SignupForm = () => {
                 <Label htmlFor="fullname">Full Name</Label>
                 <Input
                   id="fullname"
-                  placeholder="Enter your full name"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -117,7 +116,6 @@ const SignupForm = () => {
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="Enter your username"
                   type="text"
                   name="username"
                   value={formData.username}
@@ -131,7 +129,6 @@ const SignupForm = () => {
               <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
-                placeholder="Enter your email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -144,7 +141,6 @@ const SignupForm = () => {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                placeholder="Enter your password"
                 type="password"
                 name="password"
                 value={formData.password}

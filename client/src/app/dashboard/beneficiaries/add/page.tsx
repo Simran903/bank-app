@@ -83,7 +83,6 @@ function AddBeneficiaries() {
           <Input
             id="name"
             name="name"
-            placeholder="Enter your fullname"
             type="text"
             required
             value={formData.name}
@@ -96,7 +95,6 @@ function AddBeneficiaries() {
           <Input
             id="accountNumber"
             name="accountNumber"
-            placeholder="XXXX XXXX XXXX"
             type="text"
             required
             value={formData.accountNumber}
@@ -110,7 +108,6 @@ function AddBeneficiaries() {
             <Input
               id="bankName"
               name="bankName"
-              placeholder="ABC Bank"
               type="text"
               required
               value={formData.bankName}
@@ -122,7 +119,6 @@ function AddBeneficiaries() {
             <Input
               id="ifscCode"
               name="ifscCode"
-              placeholder="ABC000XX"
               type="text"
               required
               value={formData.ifscCode}
@@ -137,7 +133,6 @@ function AddBeneficiaries() {
             <Input
               id="email"
               name="email"
-              placeholder="abc.exaample.com"
               type="email"
               required
               value={formData.email}
@@ -149,7 +144,6 @@ function AddBeneficiaries() {
             <Input
               id="phone"
               name="phone"
-              placeholder="+91 84XXX 69XXX"
               type="text"
               required
               value={formData.phone}
@@ -163,7 +157,6 @@ function AddBeneficiaries() {
           <Input
             id="accountId"
             name="accountId"
-            placeholder="25478XXXXX"
             type="text"
             required
             value={formData.accountId}

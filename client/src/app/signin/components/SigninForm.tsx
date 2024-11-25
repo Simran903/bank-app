@@ -59,7 +59,6 @@ const SigninForm = () => {
               <Label htmlFor="identifier">Email or Username</Label>
               <Input
                 id="identifier"
-                placeholder="Enter your email or username"
                 type="text"
                 name="identifier"
                 value={formData.identifier}
@@ -72,7 +71,6 @@ const SigninForm = () => {
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                placeholder="********"
                 type="password"
                 name="password"
                 value={formData.password}

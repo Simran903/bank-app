@@ -51,7 +51,6 @@ const TransferMoney: React.FC = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              placeholder="Enter amount"
               required
             />
           </div>
@@ -65,7 +64,6 @@ const TransferMoney: React.FC = () => {
               value={toUsername}
               onChange={(e) => setToUsername(e.target.value)}
               className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              placeholder="Username of recipient"
               required
             />
           </div>
@@ -77,7 +75,6 @@ const TransferMoney: React.FC = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              placeholder="Add a note"
             />
           </div>
 
