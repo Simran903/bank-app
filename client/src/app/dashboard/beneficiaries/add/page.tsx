@@ -77,7 +77,7 @@ function AddBeneficiaries() {
         Add New Beneficiary
       </h2>
 
-      <form className="my-8" onSubmit={handleSubmit}>
+      <form className="my-8 text-white" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-6">
           <Label htmlFor="name">Full Name</Label>
           <Input
