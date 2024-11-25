@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -47,14 +46,13 @@ function AddBeneficiaries() {
 
     try {
       const response = await axiosClient.post(
-        baseUrl + "/beneficiary/beneficiaries",
+        process.env.NEXT_PUBLIC_BASE_URL + "/beneficiary/beneficiaries",
         formData,
         { withCredentials: true }
       );
       console.log("Success Response:", response.data);
       setSuccess("Beneficiary added successfully!");
 
-      // Redirect after a short delay to allow the user to read the success message
       setTimeout(() => {
         router.push("/dashboard/beneficiaries/all");
       }, 1500);
@@ -72,12 +70,12 @@ function AddBeneficiaries() {
   };
 
   return (
-    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black mt-20">
+    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black mt-20 text-white">
       <h2 className="font-bold text-xl text-white">
         Add New Beneficiary
       </h2>
 
-      <form className="my-8 text-white" onSubmit={handleSubmit}>
+      <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-6">
           <Label htmlFor="name">Full Name</Label>
           <Input

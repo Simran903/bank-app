@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { baseUrl } from "@/constants";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, ChangeEvent } from "react";
 
@@ -29,7 +28,7 @@ export function UserNav() {
 
   const handleLogout = async () => {
     try {
-      await axiosClient.post(`${baseUrl}/user/signout`, {});
+      await axiosClient.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/signout`, {});
       localStorage.clear();
       router.push("/");
     } catch (err) {
@@ -45,7 +44,7 @@ export function UserNav() {
         return;
       }
 
-      const response = await axiosClient.post<{ data: AccountDetails }>(`${baseUrl}/user/account-details`, {
+      const response = await axiosClient.post<{ data: AccountDetails }>(`${process.env.NEXT_PUBLIC_BASE_URL}/user/account-details`, {
         user_id: userId,
       });
       setAccountDetails(response?.data?.data);
@@ -57,7 +56,7 @@ export function UserNav() {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await axiosClient.post<{ data: { success: boolean; message?: string } }>(`${baseUrl}/user/update-password`, {
+      const response = await axiosClient.post<{ data: { success: boolean; message?: string } }>(`${process.env.NEXT_PUBLIC_BASE_URL}/user/update-password`, {
         oldPassword,
         newPassword,
       });

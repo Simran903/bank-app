@@ -1,5 +1,4 @@
 "use client";
-import { baseUrl } from "../../../constants/index";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Label } from "../../../components/ui/label";
@@ -32,7 +31,7 @@ const SigninForm = () => {
     setError(null);
 
     try {
-      const response = await axiosClient.post(baseUrl + "/user/signin", formData, { withCredentials: true });
+      const response = await axiosClient.post(process.env.NEXT_PUBLIC_BASE_URL + "/user/signin", formData, { withCredentials: true });
 
       if (response.status === 200 && response.data.success) {
         const accessToken = response.data?.data.accessToken;
@@ -47,14 +46,14 @@ const SigninForm = () => {
   };
 
   return (
-    <div className="h-screen bg-black flex items-center justify-center p-4 sm:p-8">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="min-h-screen bg-black flex items-center justify-center py-4 sm:p-8">
+      <div className="max-w-6xl w-full flex flex-col md:flex-row bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Left Side - Form */}
         <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-12">
-          <h2 className="font-bold text-xl sm:text-2xl text-black">Sign in</h2>
+          <h2 className="font-bold text-2xl md:text-3xl text-black text-center mb-4">Sign in</h2>
           {error && <p className="text-red-500 mt-2 mb-4">{error}</p>}
 
-          <form className="my-6" onSubmit={handleSubmit}>
+          <form className="w-full space-y-6" onSubmit={handleSubmit}>
             <LabelInputContainer className="mb-4">
               <Label htmlFor="identifier">Email or Username</Label>
               <Input
@@ -90,11 +89,11 @@ const SigninForm = () => {
         </div>
 
         {/* Right Side - Image */}
-        <div className="hidden md:flex md:w-1/2 justify-end items-center bg-gray-100">
+        <div className="hidden md:flex w-full md:w-1/2 items-center justify-center p-8">
           <Image
             src={overview}
             alt="Overview Dashboard"
-            className="object-cover h-full w-full rounded-r-lg"
+            className="object-cover h-full w-full rounded-r-2xl"
             priority
           />
         </div>

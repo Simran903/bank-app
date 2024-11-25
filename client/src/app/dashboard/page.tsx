@@ -4,7 +4,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import RecentTransactions from "./components/recent-transactions";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { useEffect, useState } from "react";
-import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
 import MonthlyExpenseChart from "./components/overview";
 
@@ -41,10 +40,10 @@ export default function DashboardPage(): React.ReactElement {
           amountSentRes,
           amountReceivedRes,
         ] = await Promise.all([
-          axiosClient.post(`${baseUrl}/user/get-balance`, {}),
-          axiosClient.get(`${baseUrl}/transfer/all`, { withCredentials: true }),
-          axiosClient.get(`${baseUrl}/transfer/sent`, { withCredentials: true }),
-          axiosClient.get(`${baseUrl}/transfer/received`, { withCredentials: true }),
+          axiosClient.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/get-balance`, {}),
+          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`, { withCredentials: true }),
+          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/sent`, { withCredentials: true }),
+          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/received`, { withCredentials: true }),
         ]);
 
         // Balance data

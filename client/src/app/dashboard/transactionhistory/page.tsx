@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axiosClient from "@/constants/axiosClient"; // Assuming you have this set up
-import { baseUrl } from "@/constants"; // Adjust this if needed
 
 interface Transaction {
   id: string;
@@ -22,7 +21,7 @@ function TransactionHistory() {
       setError(null);
 
       try {
-        const response = await axiosClient.get(`${baseUrl}/transfer/all`, {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`, {
           withCredentials: true,
         });
         setTransactions(response?.data?.data?.allTransfers);

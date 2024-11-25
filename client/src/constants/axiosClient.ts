@@ -1,8 +1,7 @@
 import axios from 'axios';
-import {baseUrl} from './index'
 
 const axiosClient = axios.create({
-  baseURL: baseUrl,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

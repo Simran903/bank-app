@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axiosClient from "@/constants/axiosClient";
-import { baseUrl } from "@/constants";
 import { AxiosError, isAxiosError } from "axios";
 
 interface Beneficiary {
@@ -33,7 +32,7 @@ function UpdateBeneficiary() {
     const fetchBeneficiary = async () => {
       try {
         setLoading(true);
-        const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${id_use}`, {
           withCredentials: true,
         });
         setBeneficiary(response?.data?.data);
@@ -65,7 +64,7 @@ function UpdateBeneficiary() {
 
     try {
       setIsSubmitting(true);
-      await axiosClient.put(`${baseUrl}/beneficiary/beneficiaries/${id_use}`, beneficiary, {
+      await axiosClient.put(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${id_use}`, beneficiary, {
         withCredentials: true,
       });
       router.push("/dashboard/beneficiaries/all");

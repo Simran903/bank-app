@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, FormEvent } from "react";
-import { baseUrl } from "@/constants";
 import axiosClient from "@/constants/axiosClient";
 
 const TransferMoney: React.FC = () => {
@@ -17,7 +16,7 @@ const TransferMoney: React.FC = () => {
 
     try {
       const response = await axiosClient.post(
-        `${baseUrl}/transfer/transfer`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/transfer/transfer`,
         {
           amount: Number(amount),
           toUsername,

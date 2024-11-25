@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import { baseUrl } from '@/constants';
 import axiosClient from '@/constants/axiosClient';
 
 interface TransferData {
@@ -27,7 +26,7 @@ const MonthlyExpenseChart: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosClient.get(`${baseUrl}/transfer/sent`, {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/sent`, {
           withCredentials: true,
         });
 

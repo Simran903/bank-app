@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import axiosClient from "@/constants/axiosClient";
-import { baseUrl } from "@/constants";
 import { Menu, MenuItem, MenuButton } from "@headlessui/react";
 
 interface Beneficiary {
@@ -28,7 +27,7 @@ function BeneficiaryList() {
     const fetchBeneficiaries = async () => {
       try {
         setLoading(true);
-        const response = await axiosClient.get(`${baseUrl}/beneficiary/beneficiaries`, {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries`, {
           withCredentials: true,
         });
         setBeneficiaries(response?.data?.data);
@@ -53,7 +52,7 @@ function BeneficiaryList() {
     setError(null);
     setSuccess(null);
     try {
-      await axiosClient.delete(`${baseUrl}/beneficiary/beneficiaries/${beneficiaryId}`, {
+      await axiosClient.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${beneficiaryId}`, {
         withCredentials: true,
       });
       setBeneficiaries((prev) => prev.filter((b) => b.id !== beneficiaryId));

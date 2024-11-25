@@ -1,7 +1,5 @@
 "use client";
-
 import axiosClient from "@/constants/axiosClient";
-import { baseUrl } from "../../../constants/index";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "../../../components/ui/label";
@@ -61,7 +59,7 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await axiosClient.post(baseUrl + "/user/signup", formData);
+      const response = await axiosClient.post(process.env.NEXT_PUBLIC_BASE_URL + "/user/signup", formData);
 
       if (response.status === 200) {
         setSuccess("Account created successfully!");

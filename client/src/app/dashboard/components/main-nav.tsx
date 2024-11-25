@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/constants/axiosClient";
-import { baseUrl } from "@/constants";
 
 const Path = (props: any) => (
   <motion.path
@@ -82,7 +81,7 @@ export function MainNav() {
 
   const handleLogout = async () => {
     try {
-      await axiosClient.post(`${baseUrl}/user/signout`, {});
+      await axiosClient.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/signout`, {});
       localStorage.clear();
       router.push("/");
     } catch (err) {
