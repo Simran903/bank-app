@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/constants/axiosClient";
+import { Button } from "@/components/ui/button";
 
 const Path = (props: any) => (
   <motion.path
@@ -77,6 +78,9 @@ const sidebarVariants = {
 export function MainNav() {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const handleLogout = async () => {
@@ -89,9 +93,27 @@ export function MainNav() {
     }
   };
 
-  const handleUpdatePassword = () => {
-    setIsSidebarOpen(false);
-    router.push("/dashboard/update-password");
+  const handleUpdatePassword = async () => {
+    try {
+      const response = await axiosClient.post<{ data: { success: boolean; message?: string } }>(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/update-password`,
+        {
+          oldPassword,
+          newPassword,
+        }
+      );
+
+      if (response?.data?.data?.success) {
+        alert("Password updated successfully.");
+        setIsModalOpen(false);
+        setOldPassword("");
+        setNewPassword("");
+      } else {
+        setError(response?.data?.data?.message || "Failed to update password.");
+      }
+    } catch (err) {
+      setError("Failed to update password. Please try again.");
+    }
   };
 
   return (
@@ -143,7 +165,7 @@ export function MainNav() {
         <div className="p-10 mt-auto space-y-4">
           <button
             className="block w-full text-lg bg-blue-700 px-10 py-2 font-semibold text-white hover:bg-blue-800"
-            onClick={handleUpdatePassword}
+            onClick={() => setIsModalOpen(true)} // Open modal for password change
           >
             Update Password
           </button>
@@ -169,6 +191,38 @@ export function MainNav() {
           className="fixed inset-0 bg-black z-30"
           onClick={() => setIsSidebarOpen(false)}
         />
+      )}
+
+      {/* Modal for password update */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-md shadow-md w-80">
+            <h2 className="text-lg font-semibold mb-4">Update Password</h2>
+            <div className="mb-3">
+              <label className="block text-sm font-medium">Current Password</label>
+              <input
+                type="password"
+                className="w-full mt-1 p-2 border rounded-md"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium">New Password</label>
+              <input
+                type="password"
+                className="w-full mt-1 p-2 border rounded-md"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+              <Button onClick={handleUpdatePassword}>Update</Button>
+            </div>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
+          </div>
+        </div>
       )}
     </div>
   );

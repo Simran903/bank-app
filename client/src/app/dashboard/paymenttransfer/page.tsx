@@ -7,7 +7,10 @@ const TransferMoney: React.FC = () => {
   const [toUsername, setToUsername] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [message, setMessage] = useState<{
+    text: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
@@ -29,7 +32,8 @@ const TransferMoney: React.FC = () => {
     } catch (error: any) {
       console.error("Transfer failed:", error);
       setMessage({
-        text: error.response?.data?.message || "Transfer failed. Please try again.",
+        text:
+          error.response?.data?.message || "Transfer failed. Please try again.",
         type: "error",
       });
     } finally {
@@ -40,23 +44,14 @@ const TransferMoney: React.FC = () => {
   return (
     <div className="flex justify-center items-center min-h-[90vh] px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md sm:max-w-lg p-6 sm:p-10 bg-black shadow-lg rounded-lg text-white">
-        <h2 className="text-lg sm:text-xl font-semibold mb-2">Transfer Money</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-2">
+          Transfer Money
+        </h2>
         <p className="text-sm sm:text-base text-gray-400 mb-6">
           Initiate a money transfer in one click.
         </p>
 
         <form onSubmit={handleTransfer} className="space-y-4">
-          <div>
-            <label className="block text-gray-400 text-sm sm:text-base">Amount</label>
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              required
-            />
-          </div>
-
           <div>
             <label className="block text-gray-400 text-sm sm:text-base">
               Recipient Username
@@ -71,7 +66,22 @@ const TransferMoney: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-gray-400 text-sm sm:text-base">Description</label>
+            <label className="block text-gray-400 text-sm sm:text-base">
+              Amount
+            </label>
+            <input
+              type="text"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-400 text-sm sm:text-base">
+              Description
+            </label>
             <input
               type="text"
               value={description}
