@@ -13,7 +13,6 @@ interface RecentTransactionsProps {
 }
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
-  // Sort transactions by timestamp in descending order and take the first 5
   const recentTransactions = transactions
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
@@ -34,7 +33,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
           {recentTransactions.map((transaction) => (
             <tr key={transaction.id} className="hover:bg-gray-800">
               <td className="px-4 py-4">{transaction.id}</td>
-              <td className="px-4 py-4">₹{transaction.amount.toFixed(2)}</td>
+              <td
+                className={`px-4 py-4 font-medium ${transaction.status === "Received" ? "text-green-500" : "text-red-500"
+                  }`}
+              >
+                ₹{transaction.amount.toFixed(2)}
+              </td>
               <td className="px-4 py-4">
                 {new Date(transaction.timestamp).toLocaleString("en-US", {
                   month: "short",
