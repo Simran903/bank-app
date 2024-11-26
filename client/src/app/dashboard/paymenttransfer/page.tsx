@@ -7,12 +7,12 @@ const TransferMoney: React.FC = () => {
   const [toUsername, setToUsername] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+    setMessage(null);
 
     try {
       const response = await axiosClient.post(
@@ -25,10 +25,13 @@ const TransferMoney: React.FC = () => {
         { withCredentials: true }
       );
 
-      setMessage("Transfer successful!");
+      setMessage({ text: "Transfer successful!", type: "success" });
     } catch (error: any) {
       console.error("Transfer failed:", error);
-      setMessage(error.response?.data?.message || "Transfer failed. Please try again.");
+      setMessage({
+        text: error.response?.data?.message || "Transfer failed. Please try again.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -84,7 +87,7 @@ const TransferMoney: React.FC = () => {
                 setAmount("");
                 setToUsername("");
                 setDescription("");
-                setMessage("");
+                setMessage(null);
               }}
               className="w-24 py-2 bg-zinc-900 text-sm sm:text-base text-gray-300 rounded-md hover:bg-gray-600 transition"
             >
@@ -101,7 +104,15 @@ const TransferMoney: React.FC = () => {
           </div>
         </form>
 
-        {message && <p className="mt-4 text-center text-green-400">{message}</p>}
+        {message && (
+          <p
+            className={`mt-4 text-center ${
+              message.type === "success" ? "text-green-400" : "text-red-400"
+            }`}
+          >
+            {message.text}
+          </p>
+        )}
       </div>
     </div>
   );

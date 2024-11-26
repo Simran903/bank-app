@@ -107,7 +107,7 @@ export default function DashboardPage(): React.ReactElement {
   return (
     <div className="h-screen inria-sans-regular">
       <div className="flex flex-col p-4 md:p-8">
-        <div className="flex-1 space-y-4 mt-10 md:mt-14">
+        <div className="flex-1 space-y-4 mt-8 md:mt-4">
           <h1 className="text-3xl font-extrabold md:text-5xl">Hi there,</h1>
           <div className="space-y-4 md:space-y-2">
             <h2 className="text-2xl font-extrabold tracking-tight md:text-3xl">

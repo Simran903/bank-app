@@ -23,7 +23,7 @@ const MenuToggle = ({
   isOpen: boolean;
 }) => (
   <button onClick={toggle} className="focus:outline-none z-50 relative">
-    <svg width="23" height="23" viewBox="0 0 23 23">
+    <svg width="23" height="25" viewBox="0 0 23 23" color="white">
       <Path
         variants={{
           closed: { d: "M 2 2.5 L 20 2.5" },
@@ -74,7 +74,7 @@ const sidebarVariants = {
   },
 };
 
-export function MainNav() {
+export default function Home() {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -89,6 +89,11 @@ export function MainNav() {
     }
   };
 
+  const handleUpdatePassword = () => {
+    setIsSidebarOpen(false);
+    router.push("/dashboard/update-password");
+  };
+
   return (
     <div className="relative">
       <nav className="p-4 flex items-center justify-between">
@@ -99,12 +104,12 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 w-1/5 h-full bg-black z-40 flex flex-col justify-between"
+        className="fixed top-0 left-0 w-2/6 h-full bg-black z-40 flex flex-col"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}
       >
-        <div className="p-10 space-y-4 mt-16">
+        <div className="p-10 space-y-4 mt-16 flex-1">
           <Link
             href="/dashboard"
             className="block text-lg font-semibold text-white hover:text-gray-300"
@@ -117,7 +122,7 @@ export function MainNav() {
             className="block text-lg font-semibold text-white hover:text-gray-300"
             onClick={() => setIsSidebarOpen(false)}
           >
-            My Banks
+            My Beneficiaries
           </Link>
           <Link
             href="/dashboard/transactionhistory"
@@ -133,7 +138,15 @@ export function MainNav() {
           >
             Payment Transfer
           </Link>
-          <div className="p-10">
+        </div>
+
+        <div className="p-10 mt-auto space-y-4">
+          <button
+            className="block w-full text-lg bg-blue-700 px-10 py-2 font-semibold text-white hover:bg-blue-800"
+            onClick={handleUpdatePassword}
+          >
+            Update Password
+          </button>
           <button
             className="block w-full text-lg bg-red-700 px-10 py-2 font-semibold text-white hover:bg-red-800"
             onClick={() => {
@@ -144,7 +157,6 @@ export function MainNav() {
             Log Out
           </button>
           {error && <p className="text-red-500 mt-2">{error}</p>}
-          </div>
         </div>
       </motion.div>
 
