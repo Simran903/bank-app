@@ -74,7 +74,7 @@ const sidebarVariants = {
   },
 };
 
-export default function Home() {
+export function MainNav() {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
