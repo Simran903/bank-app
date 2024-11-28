@@ -74,8 +74,6 @@ const sidebarVariants = {
       stiffness: 400,
       damping: 40,
     },
-    width: "100px",
-    height: "100px",
   },
 };
 
