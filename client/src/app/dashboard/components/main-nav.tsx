@@ -63,6 +63,7 @@ const sidebarVariants = {
       stiffness: 20,
       restDelta: 2,
     },
+    width: "100vw",
   }),
   closed: {
     clipPath: "circle(30px at 40px 40px)",
@@ -72,6 +73,7 @@ const sidebarVariants = {
       stiffness: 400,
       damping: 40,
     },
+    width: "30px",
   },
 };
 
@@ -126,7 +128,7 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 w-2/6 h-full bg-black z-40 flex flex-col"
+        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}
@@ -193,7 +195,6 @@ export function MainNav() {
         />
       )}
 
-      {/* Modal for password update */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded-md shadow-md w-80">
