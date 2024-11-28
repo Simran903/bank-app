@@ -1,10 +1,9 @@
-"use client";
-import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import axiosClient from "@/constants/axiosClient";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Path = (props: any) => (
   <motion.path
@@ -73,7 +72,7 @@ const sidebarVariants = {
       stiffness: 400,
       damping: 40,
     },
-    width: "30px",
+    width: "60px",
   },
 };
 
@@ -128,7 +127,7 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col"
+        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col sidebar"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}

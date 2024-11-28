@@ -34,8 +34,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
             <tr key={transaction.id} className="hover:bg-gray-800">
               <td className="px-4 py-4">{transaction.id}</td>
               <td
-                className={`px-4 py-4 font-medium ${transaction.status === "Received" ? "text-green-500" : "text-red-500"
-                  }`}
+                className="px-4 py-4 font-medium"
               >
                 ₹{transaction.amount.toFixed(2)}
               </td>
