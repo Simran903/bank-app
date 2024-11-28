@@ -63,7 +63,6 @@ const sidebarVariants = {
       stiffness: 20,
       restDelta: 2,
     },
-    width: "100vw",
   }),
   closed: {
     clipPath: "circle(30px at 40px 40px)",
@@ -73,7 +72,7 @@ const sidebarVariants = {
       stiffness: 400,
       damping: 40,
     },
-    width: "60px",
+    width: "100px",
   },
 };
 
@@ -128,7 +127,7 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col sidebar"
+        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col w-full md:w-2/5 sidebar"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}

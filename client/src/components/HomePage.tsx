@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
           />
           <span className="text-7xl lg:text-6xl xl:text-8xl font-extrabold">World</span>
         </div>
-        <Button onClick={handleSignIn} className="bg-black text-white hover:bg-zinc-900 text-lg border border-double border-amber-500">Create an account with us!</Button>
+        <Button onClick={handleSignIn} className="bg-black text-white hover:bg-zinc-900 text-xl border border-double border-amber-500 p-5">Create an account with us!</Button>
       </div>
     </div>
   );

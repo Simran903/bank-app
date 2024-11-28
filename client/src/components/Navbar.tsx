@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="text-3xl font-bold text-gray-800">
-            <Link href="/" className="border-b vast-shadow-regular">Transsacto</Link>
+            <Link href="/" className="vast-shadow-regular">Transsacto</Link>
           </div>
 
           <div className="hidden md:flex space-x-6">
