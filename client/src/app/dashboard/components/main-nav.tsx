@@ -56,18 +56,16 @@ const MenuToggle = ({
 );
 
 const sidebarVariants = {
-  open: (height = 1000) => ({
-    clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
+  open: {
+    clipPath: `circle(150% at 40px 40px)`,
     transition: {
       type: "spring",
       stiffness: 20,
       restDelta: 2,
-      position: "fixed",
-      top: 0,
-      left: 0,
     },
-    width: "50wh"
-  }),
+    width: "100vw",
+    height: "100vh",
+  },
   closed: {
     clipPath: "circle(30px at 40px 40px)",
     transition: {
@@ -75,13 +73,12 @@ const sidebarVariants = {
       type: "spring",
       stiffness: 400,
       damping: 40,
-      position: "fixed",
-      top: 0,
-      left: 0,
     },
     width: "100px",
+    height: "100px",
   },
 };
+
 
 export function MainNav() {
   const router = useRouter();
