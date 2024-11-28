@@ -167,7 +167,7 @@ export function MainNav() {
         <div className="p-10 mt-auto space-y-4">
           <button
             className="block w-full text-lg bg-blue-700 px-10 py-2 font-semibold text-white hover:bg-blue-800"
-            onClick={() => setIsModalOpen(true)} // Open modal for password change
+            onClick={() => setIsModalOpen(true)}
           >
             Update Password
           </button>
