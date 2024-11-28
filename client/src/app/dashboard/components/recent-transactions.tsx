@@ -9,10 +9,10 @@ interface Transfer {
 }
 
 interface RecentTransactionsProps {
-  transactions: Transfer[];
+  transactions?: Transfer[];
 }
 
-const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions = [] }) => {
   const recentTransactions = transactions
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
@@ -22,24 +22,20 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
       <table className="min-w-full text-white text-sm">
         <thead>
           <tr className="bg-zinc-900 text-left">
-            <th className="px-4 py-4">ID</th>
-            <th className="px-4 py-4">Amount</th>
-            <th className="px-4 py-4">Date/Time</th>
-            <th className="px-4 py-4">Description</th>
-            <th className="px-4 py-4">Status</th>
+            <th className="px-4 py-4" scope="col">ID</th>
+            <th className="px-4 py-4" scope="col">Amount</th>
+            <th className="px-4 py-4" scope="col">Date/Time</th>
+            <th className="px-4 py-4" scope="col">Description</th>
+            <th className="px-4 py-4" scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
           {recentTransactions.map((transaction) => (
             <tr key={transaction.id} className="hover:bg-gray-800">
               <td className="px-4 py-4">{transaction.id}</td>
-              <td
-                className="px-4 py-4 font-medium"
-              >
-                ₹{transaction.amount.toFixed(2)}
-              </td>
+              <td className="px-4 py-4 font-medium">₹{transaction.amount?.toFixed(2) || "0.00"}</td>
               <td className="px-4 py-4">
-                {new Date(transaction.timestamp).toLocaleString("en-US", {
+                {new Date(transaction.timestamp).toLocaleString("en-IN", {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
@@ -50,7 +46,11 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                 })}
               </td>
               <td className="px-4 py-4">{transaction.description}</td>
-              <td className="px-4 py-4">{transaction.status}</td>
+              <td
+                className="px-4 py-4"
+              >
+                {transaction.status}
+              </td>
             </tr>
           ))}
           {recentTransactions.length === 0 && (
