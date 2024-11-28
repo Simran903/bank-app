@@ -62,7 +62,10 @@ const sidebarVariants = {
       type: "spring",
       stiffness: 20,
       restDelta: 2,
-    },
+      position: "fixed",
+      top: 0,
+      left: 0,
+    }
   }),
   closed: {
     clipPath: "circle(30px at 40px 40px)",
@@ -71,6 +74,9 @@ const sidebarVariants = {
       type: "spring",
       stiffness: 400,
       damping: 40,
+      position: "fixed",
+      top: 0,
+      left: 0,
     },
     width: "100px",
   },
@@ -119,7 +125,7 @@ export function MainNav() {
 
   return (
     <div className="relative">
-      <nav className="p-4 flex items-center justify-between">
+      <nav className="relative p-4 flex items-center justify-between">
         <MenuToggle
           toggle={() => setIsSidebarOpen(!isSidebarOpen)}
           isOpen={isSidebarOpen}
@@ -127,11 +133,13 @@ export function MainNav() {
       </nav>
 
       <motion.div
-        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col w-full md:w-2/5 sidebar"
+        className="fixed top-0 left-0 h-full bg-black z-40 flex flex-col sidebar"
         variants={sidebarVariants}
         initial="closed"
         animate={isSidebarOpen ? "open" : "closed"}
+        style={{ overflow: "hidden" }}
       >
+
         <div className="p-10 space-y-4 mt-16 flex-1">
           <Link
             href="/dashboard"
