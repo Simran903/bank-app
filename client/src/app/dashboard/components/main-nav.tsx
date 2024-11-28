@@ -65,7 +65,8 @@ const sidebarVariants = {
       position: "fixed",
       top: 0,
       left: 0,
-    }
+    },
+    width: "50wh"
   }),
   closed: {
     clipPath: "circle(30px at 40px 40px)",

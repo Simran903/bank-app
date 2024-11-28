@@ -46,16 +46,6 @@ const TransferMoney: React.FC = () => {
         </p>
 
         <form onSubmit={handleTransfer} className="space-y-4">
-          <div>
-            <label className="block text-gray-400 text-sm sm:text-base">Amount</label>
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              required
-            />
-          </div>
 
           <div>
             <label className="block text-gray-400 text-sm sm:text-base">
@@ -69,6 +59,17 @@ const TransferMoney: React.FC = () => {
               required
             />
           </div>
+          <div>
+            <label className="block text-gray-400 text-sm sm:text-base">Amount</label>
+            <input
+              type="text"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
+              required
+            />
+          </div>
+
 
           <div>
             <label className="block text-gray-400 text-sm sm:text-base">Description</label>

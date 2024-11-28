@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 import Image from "next/image";
 import overview from "@/public/overview.png";
 import axiosClient from "@/constants/axiosClient";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 interface SigninForm {
   identifier: string;
@@ -19,8 +20,9 @@ const SigninForm = () => {
     password: "",
   });
 
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +33,11 @@ const SigninForm = () => {
     setError(null);
 
     try {
-      const response = await axiosClient.post(process.env.NEXT_PUBLIC_BASE_URL + "/user/signin", formData, { withCredentials: true });
+      const response = await axiosClient.post(
+        process.env.NEXT_PUBLIC_BASE_URL + "/user/signin",
+        formData,
+        { withCredentials: true }
+      );
 
       if (response.status === 200 && response.data.success) {
         const accessToken = response.data?.data.accessToken;
@@ -68,14 +74,23 @@ const SigninForm = () => {
 
             <LabelInputContainer className="mb-4">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                value={formData.password}
-                required
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  required
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                </button>
+              </div>
             </LabelInputContainer>
 
             <button

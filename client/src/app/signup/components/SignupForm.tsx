@@ -8,6 +8,7 @@ import { cn } from "@/utils/cn";
 import Image from "next/image";
 import overview from "@/public/overview.png";
 import axios from "axios";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // Import eye icons from react-icons
 
 interface SignupForm {
   name: string;
@@ -26,15 +27,13 @@ const SignupForm = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const router = useRouter();
 
-  // Input change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Client-side validation
   const validateForm = () => {
     const { name, username, email, password } = formData;
     if (!name || !username || !email || !password) {
@@ -49,7 +48,6 @@ const SignupForm = () => {
     return null;
   };
 
-  // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationError = validateForm();
@@ -79,7 +77,6 @@ const SignupForm = () => {
     }
   };
 
-  // Navigate to sign-in
   const handleSignIn = () => {
     router.push("/signin");
   };
@@ -137,14 +134,23 @@ const SignupForm = () => {
 
             <LabelInputContainer>
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                value={formData.password}
-                required
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"} // Toggle password visibility
+                  name="password"
+                  value={formData.password}
+                  required
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                >
+                  {showPassword ? <FiEyeOff /> : <FiEye />} {/* Toggle eye icon */}
+                </button>
+              </div>
             </LabelInputContainer>
 
             <button
