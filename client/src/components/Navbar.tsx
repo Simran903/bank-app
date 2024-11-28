@@ -9,12 +9,10 @@ const Navbar = () => {
     <nav className="fixed top-0 inset-x-0 bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <div className="text-2xl font-bold text-gray-800">
+          <div className="text-3xl font-bold text-gray-800">
             <Link href="/" className="border-b vast-shadow-regular">Transsacto</Link>
           </div>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
             <Link href="#home" className="text-zinc-800 font-semibold hover:text-gray-900">
               Home
@@ -25,12 +23,11 @@ const Navbar = () => {
             <Link href="#accordion" className="text-zinc-800 font-semibold hover:text-gray-900">
               FAQs
             </Link>
-            <Link href="/signup" className="text-zinc-800 font-semibold hover:text-gray-900">
-              Sign Up
+            <Link href="/signin" className="text-zinc-800 font-semibold hover:text-gray-900">
+              Sign In
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -73,7 +70,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-md">
           <div className="space-y-1 px-4 pt-2 pb-3">
