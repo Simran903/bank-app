@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import axiosClient from "@/constants/axiosClient"; // Assuming you have this set up
+import axiosClient from "@/constants/axiosClient";
 
 interface Transaction {
   id: string;
@@ -10,7 +11,7 @@ interface Transaction {
   createdAt: string;
 }
 
-function TransactionHistory() {
+const TransactionHistory: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,12 +22,14 @@ function TransactionHistory() {
       setError(null);
 
       try {
-        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`, {
-          withCredentials: true,
-        });
-        setTransactions(response?.data?.data?.allTransfers);
-        // console.log(response?.data?.data?.allTransfers);
+        const response = await axiosClient.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`,
+          { withCredentials: true }
+        );
+        const fetchedTransactions = response?.data?.data?.allTransfers || [];
+        setTransactions(fetchedTransactions);
       } catch (err) {
+        console.error("Error fetching transaction history:", err);
         setError("Failed to fetch transaction history. Please try again.");
       } finally {
         setLoading(false);
@@ -45,13 +48,15 @@ function TransactionHistory() {
     );
   }
 
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (error) {
+    return <p className="text-red-600 text-center mt-4">{error}</p>;
+  }
 
   return (
     <div className="mx-4 sm:mx-6 lg:mx-10 p-4 bg-black text-white shadow-lg rounded-lg mt-10 overflow-x-auto">
       <h2 className="text-lg sm:text-xl font-bold mb-4">Transaction History</h2>
       {transactions.length === 0 ? (
-        <p>No transactions found.</p>
+        <p className="text-center text-gray-400">No transactions found.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
@@ -65,30 +70,34 @@ function TransactionHistory() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b last:border-none">
-                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.id}</td>
-                  <td className="p-2 text-xs sm:text-sm md:text-base">₹{transaction.amount}</td>
-                  <td className="p-2 text-xs sm:text-sm md:text-base">
-                    {new Date(transaction.createdAt).toLocaleString("en-US", {
+              {transactions.map((transaction) => {
+                const date = new Date(transaction.createdAt);
+                const formattedDate = isNaN(date.getTime())
+                  ? "Invalid Date"
+                  : date.toLocaleString("en-US", {
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                       hour: "2-digit",
                       minute: "2-digit",
                       second: "2-digit",
-                    })}
-                  </td>
-                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.description}</td>
-                  <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.status}</td>
-                </tr>
-              ))}
+                    });
+                return (
+                  <tr key={transaction.id} className="border-b last:border-none">
+                    <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.id}</td>
+                    <td className="p-2 text-xs sm:text-sm md:text-base">₹{transaction.amount}</td>
+                    <td className="p-2 text-xs sm:text-sm md:text-base">{formattedDate}</td>
+                    <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.description}</td>
+                    <td className="p-2 text-xs sm:text-sm md:text-base">{transaction.status}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default TransactionHistory;
