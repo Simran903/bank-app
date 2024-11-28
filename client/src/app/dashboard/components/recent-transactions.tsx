@@ -13,6 +13,7 @@ interface RecentTransactionsProps {
 }
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+  // Sort transactions by timestamp in descending order and take the first 5
   const recentTransactions = transactions
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, 5);
