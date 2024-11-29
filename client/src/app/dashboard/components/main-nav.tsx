@@ -98,26 +98,28 @@ export function MainNav() {
 
   const handleUpdatePassword = async () => {
     try {
-      const response = await axiosClient.post<{ data: { success: boolean; message?: string } }>(
+      const response = await axiosClient.post<{ success: boolean; message: string }>(
         `${process.env.NEXT_PUBLIC_BASE_URL}/user/update-password`,
         {
           oldPassword,
           newPassword,
         }
       );
-
-      if (response?.data?.data?.success) {
-        alert("Password updated successfully.");
+  
+      if (response?.data?.success) {
+        alert(response?.data?.message);
         setIsModalOpen(false);
         setOldPassword("");
         setNewPassword("");
+        setError(null);
       } else {
-        setError(response?.data?.data?.message || "Failed to update password.");
+        setError(response?.data?.message || "Failed to update password.");
       }
     } catch (err) {
       setError("Failed to update password. Please try again.");
     }
   };
+  
 
   return (
     <div className="relative">

@@ -11,10 +11,12 @@ const TransferMoney: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
+
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
 
     try {
       const response = await axiosClient.post(
@@ -28,6 +30,8 @@ const TransferMoney: React.FC = () => {
       );
 
       setMessage({ text: "Transfer successful!", type: "success" });
+
+      router.push("/dashboard");
     } catch (error: any) {
       console.error("Transfer failed:", error);
       setMessage({
@@ -38,6 +42,7 @@ const TransferMoney: React.FC = () => {
       setLoading(false);
     }
   };
+
 
   const handleCancel = () => {
     setAmount("");
