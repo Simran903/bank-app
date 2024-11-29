@@ -90,26 +90,27 @@ const TransferMoney: React.FC = () => {
                 setDescription("");
                 setMessage(null);
               }}
-              className="w-24 py-2 bg-zinc-900 text-sm sm:text-base text-gray-300 rounded-md hover:bg-gray-600 transition"
+              className="w-24 py-2 bg-red-500 text-sm sm:text-base text-white rounded-md hover:bg-red-600 transition"
             >
               Cancel
             </button>
 
+
             <button
               type="submit"
-              className="w-24 py-2 bg-red-700 text-sm sm:text-base text-white rounded-md hover:bg-red-600 transition"
+              className="w-24 py-2 bg-blue-700 text-sm sm:text-base text-white rounded-md hover:bg-blue-600 transition"
               disabled={loading}
             >
               {loading ? "Sending..." : "Transfer"}
             </button>
+
           </div>
         </form>
 
         {message && (
           <p
-            className={`mt-4 text-center ${
-              message.type === "success" ? "text-green-400" : "text-red-400"
-            }`}
+            className={`mt-4 text-center ${message.type === "success" ? "text-green-400" : "text-red-400"
+              }`}
           >
             {message.text}
           </p>

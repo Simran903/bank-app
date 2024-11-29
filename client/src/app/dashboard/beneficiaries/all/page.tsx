@@ -93,11 +93,12 @@ function BeneficiaryList() {
           My Beneficiaries
         </h2>
         <button
-          className="px-4 py-2 bg-amber-500 text-white font-semibold rounded-md hover:bg-amber-600 text-sm md:text-base"
+          className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 text-sm md:text-base"
           onClick={handleAddBeneficiaryRedirect}
         >
           Add New Beneficiary
         </button>
+
       </div>
 
       {error && <p className="text-red-600 text-center px-4">{error}</p>}
@@ -110,7 +111,10 @@ function BeneficiaryList() {
           {beneficiaries.map((beneficiary) => (
             <div
               key={beneficiary.id}
-              className="p-4 sm:p-6 bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg border border-amber-500 text-gray-300 relative"
+              className="p-4 sm:p-6 bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg border-[3px] border-transparent bg-clip-padding text-gray-300 relative"
+              style={{
+                borderImage: "linear-gradient(45deg, #d4af37, #ffd700, #e5e4e2) 1",
+              }}
             >
               <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-4">
                 {beneficiary.name}
@@ -146,9 +150,8 @@ function BeneficiaryList() {
                     <MenuItem>
                       {({ active }) => (
                         <button
-                          className={`${
-                            active ? "bg-gray-700" : ""
-                          } block w-full px-4 py-2 text-sm text-gray-300`}
+                          className={`${active ? "bg-gray-700" : ""
+                            } block w-full px-4 py-2 text-sm text-gray-300`}
                           onClick={() => handleUpdateRedirect(beneficiary.id)}
                         >
                           Update
@@ -158,9 +161,8 @@ function BeneficiaryList() {
                     <MenuItem>
                       {({ active }) => (
                         <button
-                          className={`${
-                            active ? "bg-red-600" : ""
-                          } block w-full px-4 py-2 text-sm text-gray-300`}
+                          className={`${active ? "bg-red-600" : ""
+                            } block w-full px-4 py-2 text-sm text-gray-300`}
                           onClick={() => handleDelete(beneficiary.id)}
                         >
                           Delete

@@ -221,8 +221,19 @@ export function MainNav() {
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button onClick={handleUpdatePassword}>Update</Button>
+              <Button
+                className="bg-red-500 text-white hover:bg-red-600 px-4 py-2 rounded-md"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md"
+                onClick={handleUpdatePassword}
+              >
+                Update
+              </Button>
+
             </div>
             {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>

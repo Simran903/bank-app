@@ -48,7 +48,12 @@ function TransactionHistory() {
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
-    <div className="mx-4 sm:mx-6 lg:mx-10 p-4 bg-black text-white shadow-lg rounded-lg mt-10 overflow-x-auto">
+    <div
+      className="mx-4 sm:mx-6 lg:mx-10 p-4 bg-black text-white shadow-lg rounded-lg mt-10 overflow-x-auto border-[3px] border-transparent bg-clip-padding"
+      style={{
+        borderImage: "linear-gradient(45deg, #d4af37, #ffd700, #e5e4e2) 1",
+      }}
+    >
       <h2 className="text-lg sm:text-xl font-bold mb-4">Transaction History</h2>
       {transactions.length === 0 ? (
         <p>No transactions found.</p>

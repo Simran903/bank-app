@@ -70,14 +70,14 @@ function AddBeneficiaries() {
   };
 
   return (
-    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-black mt-20 text-white">
+    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-8 shadow-input bg-black mt-20 text-white">
       <h2 className="font-bold text-xl text-white">
         Add New Beneficiary
       </h2>
 
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-6">
-          <Label htmlFor="name">Full Name</Label>
+          <Label className="text-white" htmlFor="name">Full Name</Label>
           <Input
             id="name"
             name="name"
@@ -89,7 +89,7 @@ function AddBeneficiaries() {
         </LabelInputContainer>
 
         <LabelInputContainer className="mb-6">
-          <Label htmlFor="accountNumber">Account Number</Label>
+          <Label className="text-white" htmlFor="accountNumber">Account Number</Label>
           <Input
             id="accountNumber"
             name="accountNumber"
@@ -102,7 +102,7 @@ function AddBeneficiaries() {
 
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
           <LabelInputContainer>
-            <Label htmlFor="bankName">Bank Name</Label>
+            <Label className="text-white" htmlFor="bankName">Bank Name</Label>
             <Input
               id="bankName"
               name="bankName"
@@ -113,7 +113,7 @@ function AddBeneficiaries() {
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="ifscCode">IFSC Code</Label>
+            <Label className="text-white" htmlFor="ifscCode">IFSC Code</Label>
             <Input
               id="ifscCode"
               name="ifscCode"
@@ -127,7 +127,7 @@ function AddBeneficiaries() {
 
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
           <LabelInputContainer>
-            <Label htmlFor="email">Email Address</Label>
+            <Label className="text-white" htmlFor="email">Email Address</Label>
             <Input
               id="email"
               name="email"
@@ -138,7 +138,7 @@ function AddBeneficiaries() {
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="phone">Contact Number</Label>
+            <Label className="text-white" htmlFor="phone">Contact Number</Label>
             <Input
               id="phone"
               name="phone"
@@ -151,7 +151,7 @@ function AddBeneficiaries() {
         </div>
 
         <LabelInputContainer className="mb-6">
-          <Label htmlFor="accountId">Account Id</Label>
+          <Label className="text-white" htmlFor="accountId">Account Id</Label>
           <Input
             id="accountId"
             name="accountId"
@@ -166,12 +166,13 @@ function AddBeneficiaries() {
         {success && <p className="text-green-600 mb-4">{success}</p>}
 
         <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-          type="submit"
-        >
-          Add Beneficiary &rarr;
-          <BottomGradient />
-        </button>
+  className="bg-gradient-to-br relative group/btn from-blue-500 to-blue-700 block w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+  type="submit"
+>
+  Add Beneficiary &rarr;
+  <BottomGradient />
+</button>
+
       </form>
     </div>
   );
