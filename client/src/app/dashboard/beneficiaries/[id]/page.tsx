@@ -81,7 +81,14 @@ function UpdateBeneficiary() {
     }
   };
 
-  if (loading) return <p>Loading beneficiary details...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[80vh]">
+        <div className="w-8 h-8 border-4 border-black-500 border-dashed animate-spin md:w-12 md:h-12"></div>
+        <p className="ml-2 md:ml-4 text-gray-400">Loading beneficiary details...</p>
+      </div>
+    );
+  }
   if (error) return <p className="text-red-600">{error}</p>;
 
   return (
