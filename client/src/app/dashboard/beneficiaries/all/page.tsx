@@ -111,10 +111,7 @@ function BeneficiaryList() {
           {beneficiaries.map((beneficiary) => (
             <div
               key={beneficiary.id}
-              className="p-4 sm:p-6 bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg border-[3px] border-transparent bg-clip-padding text-gray-300 relative"
-              style={{
-                borderImage: "linear-gradient(45deg, #d4af37, #ffd700, #e5e4e2) 1",
-              }}
+              className="p-4 sm:p-6 bg-neutral-900 rounded-lg sm:rounded-xl shadow-lg text-gray-300 relative"
             >
               <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-4">
                 {beneficiary.name}

@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, FormEvent } from "react";
 import axiosClient from "@/constants/axiosClient";
+import { useRouter } from "next/navigation";
 
 const TransferMoney: React.FC = () => {
+  const router = useRouter();
   const [amount, setAmount] = useState<string>("");
   const [toUsername, setToUsername] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -37,6 +39,14 @@ const TransferMoney: React.FC = () => {
     }
   };
 
+  const handleCancel = () => {
+    setAmount("");
+    setToUsername("");
+    setDescription("");
+    setMessage(null);
+    router.push("/dashboard/beneficiaries/all"); // Redirect to the beneficiaries page
+  };
+
   return (
     <div className="flex justify-center items-center min-h-[90vh] px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md sm:max-w-lg p-6 sm:p-10 bg-black shadow-lg rounded-lg text-white">
@@ -48,7 +58,7 @@ const TransferMoney: React.FC = () => {
         <form onSubmit={handleTransfer} className="space-y-4">
 
           <div>
-            <label className="block text-gray-400 text-sm sm:text-base">
+            <label className="block text-gray-400 text-xs sm:text-base">
               Recipient Username
             </label>
             <input
@@ -60,7 +70,7 @@ const TransferMoney: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm sm:text-base">Amount</label>
+            <label className="block text-gray-400 text-xs sm:text-base">Amount</label>
             <input
               type="text"
               value={amount}
@@ -72,7 +82,7 @@ const TransferMoney: React.FC = () => {
 
 
           <div>
-            <label className="block text-gray-400 text-sm sm:text-base">Description</label>
+            <label className="block text-gray-400 text-xs sm:text-base">Description</label>
             <input
               type="text"
               value={description}
@@ -82,19 +92,14 @@ const TransferMoney: React.FC = () => {
           </div>
 
           <div className="flex justify-between mt-6">
+
             <button
               type="button"
-              onClick={() => {
-                setAmount("");
-                setToUsername("");
-                setDescription("");
-                setMessage(null);
-              }}
+              onClick={handleCancel}
               className="w-24 py-2 bg-red-500 text-sm sm:text-base text-white rounded-md hover:bg-red-600 transition"
             >
               Cancel
             </button>
-
 
             <button
               type="submit"
