@@ -15,33 +15,30 @@ interface Beneficiary {
   accountId: number;
 }
 
-function UpdateBeneficiary() {
+const UpdateBeneficiary: React.FC = () => {
   const [beneficiary, setBeneficiary] = useState<Beneficiary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   const router = useRouter();
   const { id } = useParams();
 
-  let id_use: string | undefined;
-  if (typeof id === "string") {
-    id_use = id.split("%")[1]?.split("D")[1];
-  }
+  const id_use = typeof id === "string" ? id.split("%")[1]?.split("D")[1] : undefined;
 
   useEffect(() => {
     const fetchBeneficiary = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
         const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${id_use}`, {
           withCredentials: true,
         });
         setBeneficiary(response?.data?.data);
       } catch (err: unknown) {
         if (isAxiosError(err)) {
-          console.error("Error fetching beneficiary:", err.response);
           setError(err.response?.data?.message || "Failed to fetch beneficiary details.");
         } else {
-          console.error("Unexpected error:", err);
           setError("An unexpected error occurred while fetching beneficiary details.");
         }
       } finally {
@@ -49,9 +46,7 @@ function UpdateBeneficiary() {
       }
     };
 
-    if (id_use) {
-      fetchBeneficiary();
-    }
+    if (id_use) fetchBeneficiary();
   }, [id_use]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,18 +57,19 @@ function UpdateBeneficiary() {
   const handleUpdate = async () => {
     if (!beneficiary) return;
 
+    setIsSubmitting(true);
+    setError(null);
     try {
-      setIsSubmitting(true);
-      await axiosClient.put(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${id_use}`, beneficiary, {
-        withCredentials: true,
-      });
+      await axiosClient.put(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries/${id_use}`,
+        beneficiary,
+        { withCredentials: true }
+      );
       router.push("/dashboard/beneficiaries/all");
     } catch (err: unknown) {
       if (isAxiosError(err)) {
-        console.error("Error updating beneficiary:", err.response);
         setError(err.response?.data?.message || "Failed to update beneficiary. Please try again.");
       } else {
-        console.error("Unexpected error:", err);
         setError("An unexpected error occurred while updating the beneficiary.");
       }
     } finally {
@@ -89,96 +85,48 @@ function UpdateBeneficiary() {
       </div>
     );
   }
-  if (error) return <p className="text-red-600">{error}</p>;
+
+  if (error) {
+    return <p className="text-red-600">{error}</p>;
+  }
 
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
       <h2 className="text-4xl font-bold text-black mb-6 text-center">Update Beneficiary</h2>
 
       {beneficiary && (
-        <form onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpdate();
+          }}
+        >
           <div className="space-y-4">
-            <div>
-              <label className="block font-medium">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={beneficiary.name}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">Account Number</label>
-              <input
-                type="text"
-                name="accountNumber"
-                value={beneficiary.accountNumber}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">Bank Name</label>
-              <input
-                type="text"
-                name="bankName"
-                value={beneficiary.bankName}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">IFSC Code</label>
-              <input
-                type="text"
-                name="ifscCode"
-                value={beneficiary.ifscCode}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={beneficiary.email}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                value={beneficiary.phone}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium">Account ID</label>
-              <input
-                type="number"
-                name="accountId"
-                value={beneficiary.accountId}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
+            {[
+              { label: "Name", type: "text", name: "name", value: beneficiary.name },
+              { label: "Account Number", type: "text", name: "accountNumber", value: beneficiary.accountNumber },
+              { label: "Bank Name", type: "text", name: "bankName", value: beneficiary.bankName },
+              { label: "IFSC Code", type: "text", name: "ifscCode", value: beneficiary.ifscCode },
+              { label: "Email", type: "email", name: "email", value: beneficiary.email },
+              { label: "Phone", type: "tel", name: "phone", value: beneficiary.phone },
+              { label: "Account ID", type: "number", name: "accountId", value: beneficiary.accountId },
+            ].map(({ label, ...inputProps }) => (
+              <div key={inputProps.name}>
+                <label className="block text-xs font-medium">{label}</label>
+                <input
+                  {...inputProps}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+            ))}
           </div>
 
           <button
             type="submit"
-            className={`w-full mt-6 p-2 text-white font-bold rounded-md ${isSubmitting ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-700"}`}
+            className={` w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${isSubmitting ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"
+              }`}
+
             disabled={isSubmitting}
           >
             {isSubmitting ? "Updating..." : "Update Beneficiary"}
@@ -187,6 +135,6 @@ function UpdateBeneficiary() {
       )}
     </div>
   );
-}
+};
 
 export default UpdateBeneficiary;

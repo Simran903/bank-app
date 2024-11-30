@@ -11,15 +11,13 @@ const TransferMoney: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-
   const handleTransfer = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
-
     try {
-      const response = await axiosClient.post(
+      await axiosClient.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/transfer/transfer`,
         {
           amount: Number(amount),
@@ -28,9 +26,7 @@ const TransferMoney: React.FC = () => {
         },
         { withCredentials: true }
       );
-
       setMessage({ text: "Transfer successful!", type: "success" });
-
       router.push("/dashboard");
     } catch (error: any) {
       console.error("Transfer failed:", error);
@@ -43,89 +39,83 @@ const TransferMoney: React.FC = () => {
     }
   };
 
-
   const handleCancel = () => {
     setAmount("");
     setToUsername("");
     setDescription("");
     setMessage(null);
-    router.push("/dashboard/beneficiaries/all"); // Redirect to the beneficiaries page
+    router.push("/dashboard/beneficiaries/all");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[90vh] px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md sm:max-w-lg p-6 sm:p-10 bg-black shadow-lg rounded-lg text-white">
-        <h2 className="text-lg sm:text-xl font-semibold mb-2">Transfer Money</h2>
-        <p className="text-sm sm:text-base text-gray-400 mb-6">
-          Initiate a money transfer in one click.
-        </p>
+    <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
+      <h2 className="text-4xl font-bold text-black mb-6 text-center">Transfer Money</h2>
+      <p className="text-sm sm:text-base text-gray-500 mb-6 text-center">
+        Initiate a money transfer in one click.
+      </p>
 
-        <form onSubmit={handleTransfer} className="space-y-4">
+      <form
+        onSubmit={handleTransfer}
+        className="space-y-4"
+      >
+        <div>
+          <label className="block text-xs font-medium">Recipient Username</label>
+          <input
+            type="text"
+            value={toUsername}
+            onChange={(e) => setToUsername(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
 
-          <div>
-            <label className="block text-gray-400 text-xs sm:text-base">
-              Recipient Username
-            </label>
-            <input
-              type="text"
-              value={toUsername}
-              onChange={(e) => setToUsername(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-gray-400 text-xs sm:text-base">Amount</label>
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-              required
-            />
-          </div>
+        <div>
+          <label className="block text-xs font-medium">Amount</label>
+          <input
+            type="text"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>
 
+        <div>
+          <label className="block text-xs font-medium">Description</label>
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-          <div>
-            <label className="block text-gray-400 text-xs sm:text-base">Description</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2 mt-1 text-sm sm:text-base text-gray-200 bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
-            />
-          </div>
-
-          <div className="flex justify-between mt-6">
-
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="w-24 py-2 bg-red-500 text-sm sm:text-base text-white rounded-md hover:bg-red-600 transition"
-            >
-              Cancel
-            </button>
-
-            <button
-              type="submit"
-              className="w-24 py-2 bg-blue-700 text-sm sm:text-base text-white rounded-md hover:bg-blue-600 transition"
-              disabled={loading}
-            >
-              {loading ? "Sending..." : "Transfer"}
-            </button>
-
-          </div>
-        </form>
-
-        {message && (
-          <p
-            className={`mt-4 text-center ${message.type === "success" ? "text-green-400" : "text-red-400"
-              }`}
+        <div className="flex justify-between mt-6">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="w-24 py-2 text-white font-medium rounded-md bg-red-500 hover:bg-red-600 transition"
           >
-            {message.text}
-          </p>
-        )}
-      </div>
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className={`w-24 py-2 text-white font-medium rounded-md ${loading ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"}`}
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Transfer"}
+          </button>
+        </div>
+      </form>
+
+      {message && (
+        <p
+          className={`mt-4 text-center ${message.type === "success" ? "text-green-500" : "text-red-500"}`}
+        >
+          {message.text}
+        </p>
+      )}
     </div>
   );
 };
