@@ -74,7 +74,7 @@ function AddBeneficiaries() {
 
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6">
-      <div className="shadow-2xl p-6 bg-white rounded-md">
+      <div className="shadow-2xl mt-10 p-6 bg-white rounded-md">
         <h2 className="text-4xl font-bold text-black mb-6 text-center">Add New Beneficiary</h2>
 
         <form onSubmit={handleSubmit}>

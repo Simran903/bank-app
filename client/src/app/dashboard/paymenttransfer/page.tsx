@@ -49,7 +49,7 @@ const TransferMoney: React.FC = () => {
 
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
-      <div className="shadow-2xl p-6 bg-white rounded-md">
+      <div className="shadow-2xl mt-14 p-6 bg-white rounded-md">
       <h2 className="text-4xl font-bold text-black mb-6 text-center">Transfer Money</h2>
       <p className="text-sm sm:text-base text-gray-500 mb-6 text-center">
         Initiate a money transfer in one click.
