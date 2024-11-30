@@ -78,7 +78,6 @@ const MonthlyExpenseChart: React.FC = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-center mb-4">Monthly Expenses Over the Year</h2>
       {loading ? (
         <p className="text-center text-gray-500">Loading data...</p>
       ) : hasData ? (

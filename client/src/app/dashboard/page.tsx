@@ -170,7 +170,7 @@ export default function DashboardPage(): React.ReactElement {
                 {/* Overview Chart */}
                 <Card className="col-span-1 sm:col-span-7 lg:col-span-4">
                   <CardHeader>
-                    <CardTitle>Overview</CardTitle>
+                    <CardTitle>Monthly Expenses Over the Year</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
                     <MonthlyExpenseChart />
