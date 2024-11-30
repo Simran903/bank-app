@@ -104,7 +104,7 @@ function AddBeneficiaries() {
 
           <button
             type="submit"
-            className={`w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${
+            className={`w-full mt-4 text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${
               isSubmitting ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"
             }`}
             disabled={isSubmitting}
