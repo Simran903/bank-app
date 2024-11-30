@@ -92,7 +92,7 @@ const UpdateBeneficiary: React.FC = () => {
 
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
-  <div className="shadow-xl p-6 bg-white rounded-md">
+  <div className="shadow-2xl p-6 bg-white rounded-md">
     <h2 className="text-4xl font-bold text-black mb-6 text-center">Update Beneficiary</h2>
 
     {beneficiary && (

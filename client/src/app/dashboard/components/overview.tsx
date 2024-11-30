@@ -23,15 +23,24 @@ const MonthlyExpenseChart: React.FC = () => {
     ],
   });
 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasData, setHasData] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/sent`, {
           withCredentials: true,
         });
 
         const transfers: TransferData[] = response?.data?.data?.sentTransfers || [];
-        
+
+        if (transfers.length === 0) {
+          setHasData(false);
+          return;
+        }
+
         const monthlyExpenses: { [key: string]: number } = {};
 
         transfers.forEach((transfer) => {
@@ -55,8 +64,12 @@ const MonthlyExpenseChart: React.FC = () => {
             },
           ],
         });
+        setHasData(true);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setHasData(false);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -65,11 +78,13 @@ const MonthlyExpenseChart: React.FC = () => {
 
   return (
     <div>
-      <h2>Monthly Expenses Over the Year</h2>
-      {chartData.labels.length > 0 ? (
+      <h2 className="text-2xl font-bold text-center mb-4">Monthly Expenses Over the Year</h2>
+      {loading ? (
+        <p className="text-center text-gray-500">Loading data...</p>
+      ) : hasData ? (
         <Line data={chartData} options={{ responsive: true }} />
       ) : (
-        <p>Loading data...</p>
+        <p className="text-center text-gray-500">No data available</p>
       )}
     </div>
   );

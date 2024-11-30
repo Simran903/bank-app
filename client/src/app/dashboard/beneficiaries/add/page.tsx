@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import axiosClient from "@/constants/axiosClient";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
 interface AddBeneficiaries {
   name: string;
   accountNumber: string;
@@ -30,6 +29,7 @@ function AddBeneficiaries() {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +41,7 @@ function AddBeneficiaries() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setError(null);
     setSuccess(null);
 
@@ -66,125 +67,64 @@ function AddBeneficiaries() {
 
       console.error("Error Response:", err);
       setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-2xl w-full mx-auto rounded-none md:rounded-2xl p-8 shadow-input bg-black mt-20 text-white">
-      <h2 className="font-bold text-xl text-white">
-        Add New Beneficiary
-      </h2>
+    <div className="max-w-2xl w-full mx-auto mt-10 p-6">
+      <div className="shadow-2xl p-6 bg-white rounded-md">
+        <h2 className="text-4xl font-bold text-black mb-6 text-center">Add New Beneficiary</h2>
 
-      <form className="my-8" onSubmit={handleSubmit}>
-        <LabelInputContainer className="mb-6">
-          <Label className="text-white" htmlFor="name">Full Name</Label>
-          <Input
-            id="name"
-            name="name"
-            type="text"
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </LabelInputContainer>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            {[
+              { label: "Full Name", type: "text", name: "name", value: formData.name },
+              { label: "Account Number", type: "text", name: "accountNumber", value: formData.accountNumber },
+              { label: "Bank Name", type: "text", name: "bankName", value: formData.bankName },
+              { label: "IFSC Code", type: "text", name: "ifscCode", value: formData.ifscCode },
+              { label: "Email", type: "email", name: "email", value: formData.email },
+              { label: "Phone", type: "tel", name: "phone", value: formData.phone },
+              { label: "Account ID", type: "number", name: "accountId", value: formData.accountId },
+            ].map(({ label, ...inputProps }) => (
+              <div key={inputProps.name}>
+                <label className="block text-xs font-medium">{label}</label>
+                <input
+                  {...inputProps}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                />
+              </div>
+            ))}
+          </div>
 
-        <LabelInputContainer className="mb-6">
-          <Label className="text-white" htmlFor="accountNumber">Account Number</Label>
-          <Input
-            id="accountNumber"
-            name="accountNumber"
-            type="text"
-            required
-            value={formData.accountNumber}
-            onChange={handleChange}
-          />
-        </LabelInputContainer>
+          {error && <p className="text-red-600 mb-4">{error}</p>}
+          {success && <p className="text-green-600 mb-4">{success}</p>}
 
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
-          <LabelInputContainer>
-            <Label className="text-white" htmlFor="bankName">Bank Name</Label>
-            <Input
-              id="bankName"
-              name="bankName"
-              type="text"
-              required
-              value={formData.bankName}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label className="text-white" htmlFor="ifscCode">IFSC Code</Label>
-            <Input
-              id="ifscCode"
-              name="ifscCode"
-              type="text"
-              required
-              value={formData.ifscCode}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-        </div>
-
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-6">
-          <LabelInputContainer>
-            <Label className="text-white" htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label className="text-white" htmlFor="phone">Contact Number</Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="text"
-              required
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </LabelInputContainer>
-        </div>
-
-        <LabelInputContainer className="mb-6">
-          <Label className="text-white" htmlFor="accountId">Account Id</Label>
-          <Input
-            id="accountId"
-            name="accountId"
-            type="text"
-            required
-            value={formData.accountId}
-            onChange={handleChange}
-          />
-        </LabelInputContainer>
-
-        {error && <p className="text-red-600 mb-4">{error}</p>}
-        {success && <p className="text-green-600 mb-4">{success}</p>}
-
-        <button
-  className="bg-gradient-to-br relative group/btn from-blue-500 to-blue-700 block w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
-  type="submit"
->
-  Add Beneficiary &rarr;
-  <BottomGradient />
-</button>
-
-      </form>
+          <button
+            type="submit"
+            className={`w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${
+              isSubmitting ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"
+            }`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Adding..." : "Add Beneficiary"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
 export default AddBeneficiaries;
 
+
 const BottomGradient = () => {
   return (
     <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-zinc-500 to-transparent" />
+      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
     </>
   );
 };
