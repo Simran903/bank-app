@@ -92,48 +92,51 @@ const UpdateBeneficiary: React.FC = () => {
 
   return (
     <div className="max-w-2xl w-full mx-auto mt-10 p-6 rounded-lg">
-      <h2 className="text-4xl font-bold text-black mb-6 text-center">Update Beneficiary</h2>
+  <div className="shadow-xl p-6 bg-white rounded-md">
+    <h2 className="text-4xl font-bold text-black mb-6 text-center">Update Beneficiary</h2>
 
-      {beneficiary && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleUpdate();
-          }}
+    {beneficiary && (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate();
+        }}
+      >
+        <div className="space-y-4">
+          {[
+            { label: "Name", type: "text", name: "name", value: beneficiary.name },
+            { label: "Account Number", type: "text", name: "accountNumber", value: beneficiary.accountNumber },
+            { label: "Bank Name", type: "text", name: "bankName", value: beneficiary.bankName },
+            { label: "IFSC Code", type: "text", name: "ifscCode", value: beneficiary.ifscCode },
+            { label: "Email", type: "email", name: "email", value: beneficiary.email },
+            { label: "Phone", type: "tel", name: "phone", value: beneficiary.phone },
+            { label: "Account ID", type: "number", name: "accountId", value: beneficiary.accountId },
+          ].map(({ label, ...inputProps }) => (
+            <div key={inputProps.name}>
+              <label className="block text-xs font-medium">{label}</label>
+              <input
+                {...inputProps}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="submit"
+          className={`w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${
+            isSubmitting ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"
+          }`}
+          disabled={isSubmitting}
         >
-          <div className="space-y-4">
-            {[
-              { label: "Name", type: "text", name: "name", value: beneficiary.name },
-              { label: "Account Number", type: "text", name: "accountNumber", value: beneficiary.accountNumber },
-              { label: "Bank Name", type: "text", name: "bankName", value: beneficiary.bankName },
-              { label: "IFSC Code", type: "text", name: "ifscCode", value: beneficiary.ifscCode },
-              { label: "Email", type: "email", name: "email", value: beneficiary.email },
-              { label: "Phone", type: "tel", name: "phone", value: beneficiary.phone },
-              { label: "Account ID", type: "number", name: "accountId", value: beneficiary.accountId },
-            ].map(({ label, ...inputProps }) => (
-              <div key={inputProps.name}>
-                <label className="block text-xs font-medium">{label}</label>
-                <input
-                  {...inputProps}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-            ))}
-          </div>
+          {isSubmitting ? "Updating..." : "Update Beneficiary"}
+        </button>
+      </form>
+    )}
+  </div>
+</div>
 
-          <button
-            type="submit"
-            className={` w-full text-white rounded-md h-10 font-medium shadow-md hover:shadow-lg transition-shadow duration-200 ${isSubmitting ? "bg-gray-500" : "bg-gradient-to-br from-black to-neutral-800"
-              }`}
-
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Updating..." : "Update Beneficiary"}
-          </button>
-        </form>
-      )}
-    </div>
   );
 };
 
