@@ -62,10 +62,16 @@
 - **Prisma CLI**  
 - **Cloudinary Account** (optional, for image uploads)  
 
-### Backend Setup  
-1. Clone the repository:  
-   ```bash  
+## Repository Setup
+
+Clone the repository
+```bash  
    git clone https://github.com/Simran903/bank-app.git
+   ```  
+
+### Backend Setup  
+1. Navigate to the backend directory:  
+   ```bash  
    cd bank-app/server  
    ```  
 
@@ -96,7 +102,7 @@
 ### Frontend Setup  
 1. Navigate to the frontend directory:  
    ```bash  
-   cd ../client  
+   cd bank-app/client   
    ```  
 
 2. Install dependencies:  
