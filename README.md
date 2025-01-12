@@ -66,8 +66,8 @@
 
 Clone the repository
 ```bash  
-   git clone https://github.com/Simran903/bank-app.git
-   ```  
+git clone https://github.com/Simran903/bank-app.git
+```  
 
 ### Backend Setup  
 1. Navigate to the backend directory:  
