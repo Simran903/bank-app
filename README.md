@@ -65,7 +65,7 @@
 ### Backend Setup  
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/sincerelyyyash/bank-app.git  
+   git clone https://github.com/Simran903/bank-app.git
    cd bank-app/server  
    ```  
 
