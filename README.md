@@ -1,7 +1,7 @@
 11.24 1:37 PM
 # Transsacto  
 
-**Transsacto** is a modern banking application built using the MERN stack. This repository contains both the backend and frontend code.  
+**Transsacto** is a modern banking application built using the PERN stack. This repository contains both the backend and frontend code.  
 
 - **Frontend:** Developed by [@simran903](https://github.com/simran903), it features a dynamic, responsive user interface for managing accounts, transactions, and financial data visualization.  
 - **Backend:** Developed by [@sincerelyyyash](https://github.com/sincerelyyyash), it provides a robust and secure RESTful API for handling user authentication, transfers, account management, and transaction history.  
