@@ -8,7 +8,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link href="/">
           <span className="text-sm px-4 py-2 border border-white text-white rounded-md font-medium hover:bg-white/10 transition">
-            LOGO
+            Transsacto
           </span>
         </Link>
         <Link href="/signup">
