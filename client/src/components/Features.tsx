@@ -1,6 +1,6 @@
 export function Features() {
   return (
-    <div className="min-h-screen bg-white py-20 px-6">
+    <div className="min-h-screen bg-white py-24 px-6 lg:pt-36">
       <h1 className="text-5xl md:text-7xl vast-shadow-regular font-extrabold text-center mb-16">
         Features
       </h1>
@@ -40,19 +40,9 @@ export const features = [
       "View, search, and filter your entire transaction history at a glance.",
   },
   {
-    title: "Link Multiple Accounts",
-    description:
-      "Link multiple bank accounts seamlessly for unified management and convenience.",
-  },
-  {
     title: "Update Linked Account Details",
     description:
       "Easily update your linked bank account details anytime to keep your information accurate and up-to-date.",
-  },
-  {
-    title: "Real-Time Transaction Tracking",
-    description:
-      "Monitor your transactions in real-time with detailed insights for better financial control.",
   },
   {
     title: "Secure Password Management",
