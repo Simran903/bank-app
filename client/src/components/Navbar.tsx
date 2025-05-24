@@ -1,47 +1,24 @@
 "use client";
-import React, { useState } from "react";
-import { Menu, MenuItem } from "@/components/ui/navbar-menu";
-import { cn } from "@/utils/cn";
+import React from "react";
 import Link from "next/link";
 
-function Navbar({ className }: { className?: string }) {
-  const [active, setActive] = useState<string | null>(null);
+const Navbar = () => {
   return (
-    <div
-      className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50 scroll-smooth", className)}
-    >
-      <Menu setActive={setActive}>
-        <Link href="#home">
-          <MenuItem
-            item="Home"
-            setActive={setActive}
-            active={active}
-          ></MenuItem>
+    <nav className="fixed top-0 inset-x-0 bg-transparent z-50 px-4 py-2 mt-8">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <Link href="/">
+          <span className="text-sm px-4 py-2 border border-white text-white rounded-md font-medium hover:bg-white/10 transition">
+            Transsacto
+          </span>
         </Link>
-        <Link href="#features">
-          <MenuItem
-            item="Features"
-            setActive={setActive}
-            active={active}
-          ></MenuItem>
+        <Link href="/signup">
+          <span className="text-sm px-4 py-2 border border-white text-white rounded-md font-medium hover:bg-white/10 transition">
+            Open Account
+          </span>
         </Link>
-        <Link href="#accordion">
-          <MenuItem
-            item="FAQs"
-            setActive={setActive}
-            active={active}
-          ></MenuItem>
-        </Link>
-        <Link href={"/signup"}>
-          <MenuItem
-            item="Login"
-            setActive={setActive}
-            active={active}
-          ></MenuItem>
-        </Link>
-      </Menu>
-    </div>
+      </div>
+    </nav>
   );
-}
+};
 
 export default Navbar;

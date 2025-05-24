@@ -1,68 +1,49 @@
+"use client";
 import React from "react";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
+  const router = useRouter();
+
+  const handleGetStarted = (): void => {
+    router.push("/signup");
+  };
+
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="vast-shadow-regular text-center space-y-8">
-        {/* First row */}
-        <div className="flex justify-center items-center space-x-4">
-          <span className="text-6xl lg:text-8xl font-extrabold">
-            Simplifying
-          </span>
-          <span className="text-6xl lg:text-8xl font-extrabold">
-            Banking
-          </span>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            width="170px"
-            className="grayscale rounded-lg"
-            src="https://videos.pexels.com/video-files/3255275/3255275-uhd_2560_1440_25fps.mp4"
-            preload="metadata"
-          />
-        </div>
+    <div className="relative min-h-screen w-full overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div
+          className="w-full h-full bg-fixed bg-center bg-cover grayscale blur-md"
+          style={{
+            backgroundImage:
+              'url("https://i.pinimg.com/736x/ed/56/dc/ed56dcb806758db908121d76697d9655.jpg")',
+          }}
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      </div>
 
-        {/* Second row */}
-        <div className="flex justify-center items-center space-x-4">
-        <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            width="190px"
-            className="grayscale rounded-lg"
-            src="https://videos.pexels.com/video-files/7579959/uhd_25fps.mp4"
-            preload="metadata"
-          />
-          <span className="text-6xl lg:text-8xl font-extrabold">for the</span>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            width="170px"
-            className="grayscale rounded-lg"
-            src="https://videos.pexels.com/video-files/5699999/5699999-uhd_2560_1440_24fps.mp4"
-            preload="metadata"
-          />
-        </div>
-
-        {/* Third row */}
-        <div className="flex justify-center items-center space-x-4">
-          <span className="text-6xl lg:text-8xl font-extrabold">Modern</span>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            width="190px"
-            className="grayscale rounded-lg"
-            src="https://videos.pexels.com/video-files/7567651/7567651-hd_1920_1080_25fps.mp4"
-            preload="metadata"
-          />
-          <span className="text-6xl lg:text-8xl font-extrabold">World</span>
+      <div className="relative z-10 min-h-screen flex items-center justify-center px-6">
+        <div className="max-w-3xl text-center space-y-6 text-white">
+          <div className="inline-block px-3 py-1 bg-white/20 rounded-full text-sm font-medium mb-2">
+            Financial Freedom
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            Manage your money with ease
+          </h1>
+          <p className="text-lg max-w-xl mx-auto text-white/80">
+            Smart budgeting, seamless transactions, and personalized insights to help you take control of your finances.
+          </p>
+          <div className="pt-4 flex justify-center">
+            <Button
+              onClick={handleGetStarted}
+              className="bg-white text-black hover:bg-white/90 font-medium px-8 py-6 rounded-lg text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center group"
+            >
+              Get Started
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

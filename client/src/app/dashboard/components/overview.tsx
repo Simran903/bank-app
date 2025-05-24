@@ -1,83 +1,92 @@
-"use client"
+import React, { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
+import axiosClient from '@/constants/axiosClient';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
-
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
-
-export function Overview() {
-  return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
-        <XAxis
-          dataKey="name"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => `$${value}`}
-        />
-        <Bar
-          dataKey="total"
-          fill="currentColor"
-          radius={[4, 4, 0, 0]}
-          className="fill-primary"
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  )
+interface TransferData {
+  id: number;
+  amount: number;
+  timestamp: string;
 }
+
+const MonthlyExpenseChart: React.FC = () => {
+  const [chartData, setChartData] = useState({
+    labels: [] as string[],
+    datasets: [
+      {
+        label: 'Monthly Expenses',
+        data: [] as number[],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+      },
+    ],
+  });
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hasData, setHasData] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/sent`, {
+          withCredentials: true,
+        });
+
+        const transfers: TransferData[] = response?.data?.data?.sentTransfers || [];
+
+        if (transfers.length === 0) {
+          setHasData(false);
+          return;
+        }
+
+        const monthlyExpenses: { [key: string]: number } = {};
+
+        transfers.forEach((transfer) => {
+          const date = new Date(transfer.timestamp);
+          const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+          monthlyExpenses[month] = (monthlyExpenses[month] || 0) + transfer.amount;
+        });
+
+        const labels = Object.keys(monthlyExpenses).sort();
+        const data = labels.map((month) => monthlyExpenses[month]);
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: 'Monthly Expenses',
+              data,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: true,
+            },
+          ],
+        });
+        setHasData(true);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setHasData(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        <p className="text-center text-gray-500">Loading data...</p>
+      ) : hasData ? (
+        <Line data={chartData} options={{ responsive: true }} />
+      ) : (
+        <p className="text-center text-gray-500">No data available</p>
+      )}
+    </div>
+  );
+};
+
+export default MonthlyExpenseChart;

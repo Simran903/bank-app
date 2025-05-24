@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AccordionItemProps {
   title: string;
@@ -10,50 +11,71 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-gray-700 mb-5">
+    <div className="border-b border-gray-300 dark:border-gray-700">
       <button
-        className="flex justify-between w-full py-4 text-2xl font-semibold text-left text-black focus:outline-none"
         onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
+        className="flex items-center justify-between w-full py-4 text-lg md:text-xl font-semibold text-left text-black dark:text-white focus:outline-none"
       >
-        <span>{title}</span>
-        <span>{isOpen ? "▲" : "▼"}</span>
+        <span className="text-zinc-900">{title}</span>
+        <svg
+          className={`w-5 h-5 transform transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
-      {isOpen && (
-        <div className="py-2 text-gray-800 transition-all duration-500 ease-out text-lg">
-          <p>{content}</p>
-        </div>
-      )}
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            <p className="pb-4 text-gray-500 text-base md:text-lg">
+              {content}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 const Accordion: React.FC = () => {
   return (
-    <div className="h-screen bg-gray-100">
-      <h1 className="text-7xl vast-shadow-regular font-extrabold flex justify-center items-center pt-36">
+    <div className="px-4">
+      <h1 className="text-5xl md:text-7xl vast-shadow-regular font-extrabold text-center mb-16">
         FAQs
       </h1>
-      <div className="w-full mt-24 max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto space-y-6">
         <AccordionItem
           title="What types of accounts can I open with your bank?"
-          content="We offer savings accounts."
+          content="We offer Savings account."
         />
         <AccordionItem
           title="How do I check my account balance?"
-          content="You can check your account balance via online banking."
+          content="You can check your account balance after you Sign in."
         />
         <AccordionItem
           title="How do I change my account details?"
-          content="You can update your details through online banking."
+          content="You can update your details after you Signin."
         />
         <AccordionItem
           title="How do I reset my online banking password?"
-          content="You can reset your password by clicking on the “Forgot Password” link on the login page."
+          content="SignIn → Click on '+' icon → Update Password."
         />
         <AccordionItem
           title="Is banking secure?"
-          content="Yes, our mobile banking app uses advanced encryption and security protocols to protect your information. "
+          content="Yes, our mobile banking app uses advanced encryption and security protocols to protect your information."
         />
       </div>
     </div>

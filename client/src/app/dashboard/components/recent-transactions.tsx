@@ -1,42 +1,65 @@
-import React from 'react';
+import React from "react";
 
-interface Transaction {
+interface Transfer {
   id: string;
-  name: string;
-  email: string;
   amount: number;
-  timestamp: string; // ISO date string
+  description: string;
+  timestamp: string;
+  status: string;
 }
 
 interface RecentTransactionsProps {
-  transactions: Transaction[];
+  transactions: Transfer[];
 }
 
-export function RecentTransactions({ transactions }: RecentTransactionsProps): React.ReactElement {
-
-  // const recentTransactions = transactions
-  //   .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-  //   .slice(0, 5);
-
-  const recentTransactions = [];
-    
+const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+  const recentTransactions = transactions
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 5);
 
   return (
-    <div className="space-y-8">
-      {recentTransactions.map((transaction) => (
-        <div key={transaction.id} className="flex items-center">
-          <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none">{transaction.name}</p>
-            <p className="text-sm text-muted-foreground">{transaction.email}</p>
-          </div>
-          <div className={`ml-auto font-medium ${transaction.amount >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {transaction.amount >= 0 ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
-          </div>
-        </div>
-      ))}
-      {recentTransactions.length === 0 && (
-        <p className="text-sm text-muted-foreground">No recent transactions.</p>
-      )}
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-white text-sm">
+        <thead>
+          <tr className="bg-zinc-900 text-left">
+            <th className="px-4 py-4">ID</th>
+            <th className="px-4 py-4">Amount</th>
+            <th className="px-4 py-4">Date/Time</th>
+            <th className="px-4 py-4">Description</th>
+            <th className="px-4 py-4">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {recentTransactions.map((transaction) => (
+            <tr key={transaction.id} className="hover:bg-gray-800">
+              <td className="px-4 py-4">{transaction.id}</td>
+              <td className="px-4 py-4 font-medium">₹{transaction.amount.toFixed(2)}</td>
+              <td className="px-4 py-4">
+                {new Date(transaction.timestamp).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                })}
+              </td>
+              <td className="px-4 py-4">{transaction.description}</td>
+              <td className="px-4 py-4">{transaction.status}</td>
+            </tr>
+          ))}
+          {recentTransactions.length === 0 && (
+            <tr>
+              <td colSpan={5} className="text-center py-4">
+                No recent transactions.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+export default RecentTransactions;
