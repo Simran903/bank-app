@@ -85,7 +85,7 @@ const SigninForm = () => {
                     value={formData.identifier}
                     required
                     onChange={handleChange}
-                    className="pl-10 py-2 border-gray-200 focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50 rounded-lg transition-all duration-200"
+                    className="pl-10 py-2 text-white border-gray-200 focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50 rounded-lg transition-all duration-200"
                   />
                 </div>
               </LabelInputContainer>
@@ -107,7 +107,7 @@ const SigninForm = () => {
                     value={formData.password}
                     required
                     onChange={handleChange}
-                    className="pl-10 py-2 border-gray-200 focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50 rounded-lg transition-all duration-200"
+                    className="pl-10 py-2 text-white border-gray-200 focus:border-black focus:ring focus:ring-gray-200 focus:ring-opacity-50 rounded-lg transition-all duration-200"
                   />
                   <button
                     type="button"
