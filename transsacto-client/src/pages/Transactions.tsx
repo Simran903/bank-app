@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,8 +9,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import axiosClient from "axios";
+
+
+interface Transaction {
+  id: string;
+  amount: number;
+  status: string;
+  description: string;
+  createdAt: string;
+}
 
 export default function Transactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+
+
+      try {
+        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`, {
+          withCredentials: true,
+        });
+        setTransactions(response?.data?.data?.allTransfers);
+      } catch (err) {
+        toast.error("Failed to fetch transaction history. Please try again.");
+      } 
+    };
+
+    fetchTransactions();
+  }, []);
+
+
   const [filters, setFilters] = useState({
     year: "",
     month: "",
@@ -19,38 +51,7 @@ export default function Transactions() {
     maxAmount: "",
   });
 
-  const [transactions] = useState([
-    {
-      id: "TXN001",
-      type: "sent",
-      amount: 250.00,
-      recipient: "Alice Smith",
-      recipientUsername: "alice_smith",
-      description: "Dinner split",
-      date: "2024-01-20T14:30:00Z",
-      status: "completed"
-    },
-    {
-      id: "TXN002",
-      type: "received",
-      amount: 1500.00,
-      sender: "Bob Johnson",
-      senderUsername: "bob_j",
-      description: "Freelance payment",
-      date: "2024-01-19T16:15:00Z",
-      status: "completed"
-    },
-    {
-      id: "TXN003",
-      type: "sent",
-      amount: 75.00,
-      recipient: "Carol Wilson",
-      recipientUsername: "carol_w",
-      description: "Book purchase",
-      date: "2024-01-18T10:22:00Z",
-      status: "pending"
-    },
-  ]);
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -72,7 +73,7 @@ export default function Transactions() {
   };
 
   const TransactionList = ({ transactions, title }: { transactions: any[], title: string }) => (
-    <div className="space-y-4">
+    <div className="space-y-4 p-6">
       {transactions.length === 0 ? (
         <Card className="text-center py-8 dark-card">
           <CardContent>
@@ -120,7 +121,7 @@ export default function Transactions() {
               <div className="mt-3 flex justify-end">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="dark:border-slate-700 dark:hover:bg-slate-800">View Details</Button>
+                    <Button variant="outline" size="sm" className="dark:border-slate-700 dark:hover:bg-slate-800 text-white bg-blue-500">View Details</Button>
                   </DialogTrigger>
                   <DialogContent className="bg-slate-800 border-slate-700">
                     <DialogHeader>
@@ -181,7 +182,7 @@ export default function Transactions() {
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
@@ -191,15 +192,15 @@ export default function Transactions() {
 
           {/* Filters Dialog */}
           <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="dark:border-slate-700 dark:hover:bg-slate-800">Filters</Button>
-            </DialogTrigger>
+            {/* <DialogTrigger asChild>
+              <Button variant="outline" className="dark:border-slate-700 dark:hover:bg-slate-800 text-white bg-blue-500">Filters</Button>
+            </DialogTrigger> */}
             <DialogContent className="bg-slate-800 border-slate-700">
               <DialogHeader>
                 <DialogTitle className="text-slate-100">Filter Transactions</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 text-white">
                   <div>
                     <Label htmlFor="year" className="text-slate-300">Year</Label>
                     <Select value={filters.year} onValueChange={(value) => setFilters({...filters, year: value})}>
@@ -273,8 +274,8 @@ export default function Transactions() {
         </div>
 
         {/* Transaction Tabs */}
-        <Tabs defaultValue="all" className="space-y-6 p-6">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
+        <Tabs defaultValue="all" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800 text-white">
             <TabsTrigger value="all" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">All Transactions</TabsTrigger>
             <TabsTrigger value="sent" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">Sent</TabsTrigger>
             <TabsTrigger value="received" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">Received</TabsTrigger>
@@ -285,7 +286,7 @@ export default function Transactions() {
             <TransactionList transactions={transactions} title="transactions" />
           </TabsContent>
 
-          <TabsContent value="sent">
+          {/* <TabsContent value="sent">
             <TransactionList 
               transactions={transactions.filter(t => t.type === 'sent')} 
               title="sent transactions" 
@@ -297,7 +298,7 @@ export default function Transactions() {
               transactions={transactions.filter(t => t.type === 'received')} 
               title="received transactions" 
             />
-          </TabsContent>
+          </TabsContent> */}
 
           <TabsContent value="recent">
             <TransactionList 

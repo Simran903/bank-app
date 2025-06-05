@@ -1,10 +1,12 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import axiosClient from "axios";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -12,9 +14,33 @@ export default function SignIn() {
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Sign in form submitted:", formData);
+
+    try{
+      const response = await axiosClient.post(
+        process.env.NEXT_PUBLIC_BASE_URL + "/user/signin",
+        formData,
+        { withCredentials: true }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        const accessToken = response.data?.data.accessToken;
+        localStorage.setItem("accessToken", accessToken);
+        <Navigate to="/dashboard" />
+        setTimeout(() => {
+          toast("Login Successfull.", {
+            description: "Redirecting to dashboard...",
+            duration: 1000,
+          });
+        }, 1000);
+      } else {
+        toast.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      console.error("Sign in error:", error);
+    }
   };
 
   return (
@@ -58,7 +84,7 @@ export default function SignIn() {
           </CardContent>
           
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full financial-gradient hover:opacity-90 transition-opacity">
+            <Button type="submit" className="w-full bg-blue-500 text-white hover:opacity-90 transition-opacity">
               Sign In
             </Button>
             

@@ -1,10 +1,13 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import axiosClient from "axios";
+import { toast } from "sonner";
+
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -14,9 +17,50 @@ export default function SignUp() {
     confirmPassword: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const { fullName, username, password, confirmPassword } = formData;
+    if (!fullName || !username || !password || !confirmPassword) {
+      return "All fields are required.";
+    }
+    if (password.length < 6) {
+      return "Password must be at least 6 characters long.";
+    }
+    if (password !== confirmPassword) {
+      return "Passwords do not match.";
+    }
+    return null;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign up form submitted:", formData);
+    const validationError = validateForm();
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
+
+    try{
+      const response = await axiosClient.post(
+        process.env.NEXT_PUBLIC_BASE_URL + "/user/signup",
+        formData,
+        { withCredentials: true }
+      );
+
+      if (response.status === 200 && response.data.success) {
+        toast.success("Sign up successful.");
+        setTimeout(() => {
+          toast("Redirecting to dashboard...", {
+            duration: 1000,
+          });
+        }, 1000);
+        <Navigate to="/dashboard" />
+      } else {
+        toast.error("Sign up failed. Please try again.");
+      }
+    } catch (error) {
+      toast.error("Sign up failed. Please try again.");
+    }
   };
 
   return (
@@ -86,7 +130,7 @@ export default function SignUp() {
           </CardContent>
           
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full financial-gradient hover:opacity-90 transition-opacity">
+            <Button type="submit" className="w-full bg-blue-500 text-white hover:opacity-90 transition-opacity">
               Create Account
             </Button>
             

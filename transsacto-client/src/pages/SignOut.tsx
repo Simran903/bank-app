@@ -1,11 +1,18 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Navigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function SignOut() {
   const handleSignOut = () => {
-    console.log("User signed out");
-    // Backend logic would handle the actual sign out
+    localStorage.removeItem("accessToken");
+    setTimeout(() => { 
+      toast("Logged out successfully.", {
+        duration: 1000,
+      });
+    }, 1000);
+    <Navigate to="/signin" />
   };
 
   return (
