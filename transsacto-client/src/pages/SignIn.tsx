@@ -1,23 +1,23 @@
-
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import axiosClient from "axios";
 import { toast } from "sonner";
+import { useAuth } from "@/components/AuthContext";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign in form submitted:", formData);
-
     try{
       const response = await axiosClient.post(
         process.env.NEXT_PUBLIC_BASE_URL + "/user/signin",
@@ -27,21 +27,25 @@ export default function SignIn() {
 
       if (response.status === 200 && response.data.success) {
         const accessToken = response.data?.data.accessToken;
-        localStorage.setItem("accessToken", accessToken);
-        <Navigate to="/dashboard" />
+        login(accessToken);
+        toast("Login Successfull.", {
+          description: "Redirecting to dashboard...",
+          duration: 1000,
+        });
         setTimeout(() => {
-          toast("Login Successfull.", {
-            description: "Redirecting to dashboard...",
-            duration: 1000,
-          });
+          navigate("/dashboard");
         }, 1000);
       } else {
         toast.error("Login failed. Please check your credentials.");
       }
     } catch (error) {
-      console.error("Sign in error:", error);
+      toast.error("Sign in error. Please try again.");
     }
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
