@@ -1,5 +1,5 @@
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Send, ArrowRight, ArrowLeft } from "lucide-react";
-import axiosClient from "axios";
-import { toast } from "sonner";
 
 export default function Transfer() {
   const [formData, setFormData] = useState({
@@ -30,25 +28,15 @@ export default function Transfer() {
   const [showFilterDialog, setShowFilterDialog] = useState(false);
   const [selectedTransfer, setSelectedTransfer] = useState(null);
 
-  const handleTransfer = async (e: FormEvent) => {
+  const handleTransfer = (e: React.FormEvent) => {
     e.preventDefault();
-
-
-    try {
-      await axiosClient.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/transfer/transfer`,
-        {
-          amount: Number(formData.amount),
-          toUsername: formData.recipient,
-          description: formData.description,
-        },
-        { withCredentials: true }
-      );
-      toast.success("Transfer successful!");
-    } catch (error: any) {
-      console.error("Transfer failed:", error);
-      toast.error(error.response?.data?.message || "Transfer failed. Please try again.");
-    }
+    console.log("Transfer initiated:", formData);
+    // In a real app, this would call the API
+    setFormData({
+      recipient: "",
+      amount: "",
+      description: "",
+    });
   };
 
   const getTransferTypeStyles = (type: string) => {
@@ -103,7 +91,7 @@ export default function Transfer() {
                   value={formData.recipient}
                   onChange={(e) => setFormData({ ...formData, recipient: e.target.value })}
                   placeholder="Enter username"
-                  className="bg-slate-900 border-slate-700 text-slate-100 placeholder:text-white"
+                  className="bg-slate-900 border-slate-700 text-slate-100"
                   required
                 />
               </div>
@@ -120,7 +108,7 @@ export default function Transfer() {
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     placeholder="0.00"
-                    className="pl-8 bg-slate-900 border-slate-700 text-slate-100 placeholder:text-white"
+                    className="pl-8 bg-slate-900 border-slate-700 text-slate-100"
                     required
                   />
                 </div>
@@ -133,12 +121,12 @@ export default function Transfer() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="What's this transfer for?"
-                  className="bg-slate-900 border-slate-700 text-slate-100 placeholder:text-white"
+                  className="bg-slate-900 border-slate-700 text-slate-100"
                   rows={3}
                 />
               </div>
 
-              <Button type="submit" className="w-full text-white bg-blue-500">
+              <Button type="submit" className="w-full financial-gradient">
                 Send Money
               </Button>
             </form>
@@ -146,7 +134,7 @@ export default function Transfer() {
         </Card>
 
         {/* Transactions Tabs */}
-        {/* <Card className="dark-card">
+        <Card className="dark-card">
           <CardHeader>
             <div className="flex justify-between items-center">
               <CardTitle className="text-slate-100">Transaction History</CardTitle>
@@ -154,7 +142,7 @@ export default function Transfer() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowFilterDialog(true)}
-                className="dark:border-slate-700 dark:hover:bg-slate-800 text-white bg-blue-500"
+                className="dark:border-slate-700 dark:hover:bg-slate-800"
               >
                 Filter
               </Button>
@@ -162,11 +150,11 @@ export default function Transfer() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="all">
-              <TabsList className="grid grid-cols-4 mb-4 bg-slate-800 ">
-                <TabsTrigger value="all" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">All</TabsTrigger>
-                <TabsTrigger value="sent" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">Sent</TabsTrigger>
-                <TabsTrigger value="received" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">Received</TabsTrigger>
-                <TabsTrigger value="recent" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">Recent</TabsTrigger>
+              <TabsList className="grid grid-cols-4 mb-4 bg-slate-800">
+                <TabsTrigger value="all" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">All</TabsTrigger>
+                <TabsTrigger value="sent" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">Sent</TabsTrigger>
+                <TabsTrigger value="received" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">Received</TabsTrigger>
+                <TabsTrigger value="recent" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-100">Recent</TabsTrigger>
               </TabsList>
 
               <TabsContent value="all" className="space-y-4">
@@ -298,10 +286,10 @@ export default function Transfer() {
               </TabsContent>
             </Tabs>
           </CardContent>
-        </Card> */}
+        </Card>
 
         {/* Filter Dialog */}
-        {/* <Dialog open={showFilterDialog} onOpenChange={setShowFilterDialog}>
+        <Dialog open={showFilterDialog} onOpenChange={setShowFilterDialog}>
           <DialogContent className="bg-slate-800 border-slate-700">
             <DialogHeader>
               <DialogTitle className="text-slate-100">Filter Transactions</DialogTitle>
@@ -375,10 +363,10 @@ export default function Transfer() {
               </div>
             </div>
           </DialogContent>
-        </Dialog> */}
+        </Dialog>
 
         {/* Transfer Details Dialog */}
-        {/* {selectedTransfer && (
+        {selectedTransfer && (
           <Dialog open={!!selectedTransfer} onOpenChange={() => setSelectedTransfer(null)}>
             <DialogContent className="bg-slate-800 border-slate-700">
               <DialogHeader>
@@ -423,7 +411,7 @@ export default function Transfer() {
               </div>
             </DialogContent>
           </Dialog>
-        )} */}
+        )}
       </div>
     </Layout>
   );

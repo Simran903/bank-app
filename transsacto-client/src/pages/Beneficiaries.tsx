@@ -1,89 +1,36 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
-import axiosClient from "axios";
-import { toast } from "sonner";
-import axios from "axios";
-
-interface Beneficiary {
-  id: number;
-  name: string;
-  accountNumber: string;
-  bankName: string;
-  ifscCode: string;
-  email: string;
-  phone: string;
-  accountId: number;
-}
-interface AddBeneficiaries {
-  name: string;
-  accountNumber: string;
-  bankName: string;
-  ifscCode: string;
-  email: string;
-  phone: string;
-  accountId: number;
-}
 
 export default function Beneficiaries() {
-  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
+  const [beneficiaries] = useState([
+    { id: 1, name: "Alice Smith", username: "alice_smith", accountNumber: "1234567890", relationship: "Friend", addedDate: "2024-01-15" },
+    { id: 2, name: "Bob Johnson", username: "bob_j", accountNumber: "0987654321", relationship: "Family", addedDate: "2024-02-20" },
+    { id: 3, name: "Carol Wilson", username: "carol_w", accountNumber: "1122334455", relationship: "Business", addedDate: "2024-03-10" },
+  ]);
 
-  const [newBeneficiary, setNewBeneficiary] = useState<AddBeneficiaries>({
+  const [newBeneficiary, setNewBeneficiary] = useState({
     name: "",
+    username: "",
     accountNumber: "",
-    bankName: "",
-    ifscCode: "",
-    email: "",
-    phone: "",
-    accountId: 0,
+    relationship: "",
   });
 
-  useEffect(() => {
-    const fetchBeneficiaries = async () => {
-      try {
-        const response = await axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/beneficiary/beneficiaries`, {
-          withCredentials: true,
-        });
-        setBeneficiaries(response?.data?.data);
-      } catch (error) {
-        toast.error("Failed to fetch beneficiaries. Please try again.");
-      }
-    };
-
-    fetchBeneficiaries();
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await axiosClient.post(
-        process.env.NEXT_PUBLIC_BASE_URL + "/beneficiary/beneficiaries",
-        newBeneficiary,
-        { withCredentials: true }
-      );
-      console.log("Success Response:", response.data);
-      toast.success("Beneficiary added successfully!");
-    } catch (err) {
-      let errorMessage = "Failed to add new beneficiary. Please try again.";
-      if (axios.isAxiosError(err)) {
-        errorMessage = err.response?.data?.message || errorMessage;
-      } else {
-        console.error("Unexpected error:", err);
-      }
-
-      console.error("Error Response:", err);
-      toast.error(errorMessage);
-    }
-  };
-
   const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
+
+  const handleAddBeneficiary = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Adding beneficiary:", newBeneficiary);
+    setNewBeneficiary({ name: "", username: "", accountNumber: "", relationship: "" });
+  };
 
   const getRelationshipColor = (relationship: string) => {
     switch (relationship.toLowerCase()) {
@@ -107,16 +54,16 @@ export default function Beneficiaries() {
           {/* Add Beneficiary Dialog */}
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="text-white bg-blue-500">Add Beneficiary</Button>
+              <Button className="financial-gradient">Add Beneficiary</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md bg-slate-800 border-blue-500">
+            <DialogContent className="sm:max-w-md bg-slate-800 border-slate-700">
               <DialogHeader>
-                <DialogTitle className="text-white">Add New Beneficiary</DialogTitle>
-                <DialogDescription className="text-white">
+                <DialogTitle className="text-slate-100">Add New Beneficiary</DialogTitle>
+                <DialogDescription className="text-slate-400">
                   Add a new person to your beneficiaries list for easy transfers.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleAddBeneficiary}>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-slate-300">Full Name</Label>
@@ -125,7 +72,18 @@ export default function Beneficiaries() {
                       placeholder="Enter full name"
                       value={newBeneficiary.name}
                       onChange={(e) => setNewBeneficiary({ ...newBeneficiary, name: e.target.value })}
-                      className="bg-slate-900 text-white border-blue-500 border-2 placeholder:text-white"
+                      className="bg-slate-900 border-slate-700 text-slate-100"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="username" className="text-slate-300">Username</Label>
+                    <Input
+                      id="username"
+                      placeholder="Enter username"
+                      value={newBeneficiary.username}
+                      onChange={(e) => setNewBeneficiary({ ...newBeneficiary, username: e.target.value })}
+                      className="bg-slate-900 border-slate-700 text-slate-100"
                       required
                     />
                   </div>
@@ -136,35 +94,24 @@ export default function Beneficiaries() {
                       placeholder="Enter account number"
                       value={newBeneficiary.accountNumber}
                       onChange={(e) => setNewBeneficiary({ ...newBeneficiary, accountNumber: e.target.value })}
-                      className="bg-slate-900 text-white border-blue-500 border-2 placeholder:text-white"
+                      className="bg-slate-900 border-slate-700 text-slate-100"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="bankName" className="text-slate-300">Bank Name</Label>
+                    <Label htmlFor="relationship" className="text-slate-300">Relationship</Label>
                     <Input
-                      id="bankName"
-                      placeholder="Enter bank name"
-                      value={newBeneficiary.bankName}
-                      onChange={(e) => setNewBeneficiary({ ...newBeneficiary, bankName: e.target.value })}
-                      className="bg-slate-900  text-white border-blue-500 border-2 placeholder:text-white"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ifscCode" className="text-slate-300">IFSC Code</Label>
-                    <Input
-                      id="ifscCode"
-                      placeholder="Enter IFSC code"
-                      value={newBeneficiary.ifscCode}
-                      onChange={(e) => setNewBeneficiary({ ...newBeneficiary, ifscCode: e.target.value })}
-                      className="bg-slate-900  text-white border-blue-500 border-2 placeholder:text-white"
+                      id="relationship"
+                      placeholder="e.g., Friend, Family, Business"
+                      value={newBeneficiary.relationship}
+                      onChange={(e) => setNewBeneficiary({ ...newBeneficiary, relationship: e.target.value })}
+                      className="bg-slate-900 border-slate-700 text-slate-100"
                       required
                     />
                   </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit" className="text-white bg-blue-500">Add Beneficiary</Button>
+                  <Button type="submit" className="financial-gradient">Add Beneficiary</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -182,9 +129,14 @@ export default function Beneficiaries() {
                   </AvatarFallback>
                 </Avatar>
                 <CardTitle className="text-lg text-slate-100">{beneficiary.name}</CardTitle>
-
+                <CardDescription className="text-slate-400">@{beneficiary.username}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="text-center">
+                  <Badge className={getRelationshipColor(beneficiary.relationship)}>
+                    {beneficiary.relationship}
+                  </Badge>
+                </div>
                 
                 <div className="space-y-2 text-sm text-slate-300">
                   <div>
@@ -192,6 +144,8 @@ export default function Beneficiaries() {
                     <p className="font-mono text-slate-300">{beneficiary.accountNumber}</p>
                   </div>
                   <div>
+                    <span className="font-medium text-slate-400">Added:</span>
+                    <p className="text-slate-300">{new Date(beneficiary.addedDate).toLocaleDateString()}</p>
                   </div>
                 </div>
 
@@ -210,10 +164,21 @@ export default function Beneficiaries() {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
+                            <Label className="text-sm font-medium text-slate-400">Username</Label>
+                            <p className="text-sm text-slate-300">@{beneficiary.username}</p>
+                          </div>
+                          <div>
+                            <Label className="text-sm font-medium text-slate-400">Relationship</Label>
+                            <p className="text-sm text-slate-300">{beneficiary.relationship}</p>
+                          </div>
+                          <div className="col-span-2">
                             <Label className="text-sm font-medium text-slate-400">Account Number</Label>
                             <p className="text-sm font-mono text-slate-300">{beneficiary.accountNumber}</p>
                           </div>
-
+                          <div className="col-span-2">
+                            <Label className="text-sm font-medium text-slate-400">Added Date</Label>
+                            <p className="text-sm text-slate-300">{new Date(beneficiary.addedDate).toLocaleDateString()}</p>
+                          </div>
                         </div>
                       </div>
                       <DialogFooter>
@@ -242,8 +207,13 @@ export default function Beneficiaries() {
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-slate-100">No beneficiaries yet</h3>
-                  <p className="text-white">Add your first beneficiary to start sending money quickly.</p>
+                  <p className="text-slate-400">Add your first beneficiary to start sending money quickly.</p>
                 </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="financial-gradient">Add Your First Beneficiary</Button>
+                  </DialogTrigger>
+                </Dialog>
               </div>
             </CardContent>
           </Card>

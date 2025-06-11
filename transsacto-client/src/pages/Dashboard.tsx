@@ -1,144 +1,46 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
-import axiosClient from "axios";
-
-interface Transfer {
-  id: string;
-  amount: number;
-  description: string;
-  timestamp: string;
-  status: string;
-}
-
-interface Transaction {
-  id: string;
-  type: "credit" | "debit";
-  amount: number;
-  description: string;
-  date: string;
-  status: "completed" | "pending" | "failed";
-}
-
-interface AccountBalance {
-  available: number;
-  pending: number;
-  total: number;
-}
-
-interface UserData {
-  balance: number;
-  recentTransfers: Transfer[];
-  amountSent: number;
-  amountReceived: number;
-  accountNumber: string;
-  joinDate: string;
-  accountType: string;
-  profilePicture: string;
-  name: string;
-  username: string;
-}
+import { Send, Users, History, Settings, ArrowRight } from "lucide-react";
 
 export default function Dashboard() {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [balance, setBalance] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const [recentTransfers, setRecentTransfers] = useState<Transfer[]>([]);
-  const [amountSent, setAmountSent] = useState<number>(0);
-  const [amountReceived, setAmountReceived] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchDashboardData = async (): Promise<void> => {
-      try {
-        const [
-          balanceRes,
-          transferRes,
-          amountSentRes,
-          amountReceivedRes,
-        ] = await Promise.all([
-          axiosClient.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/get-balance`, {}),
-          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/all`, { withCredentials: true }),
-          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/sent`, { withCredentials: true }),
-          axiosClient.get(`${process.env.NEXT_PUBLIC_BASE_URL}/transfer/received`, { withCredentials: true }),
-        ]);
-
-        // Balance data
-        const fetchedBalance = balanceRes?.data?.data?.totalBalance || 0;
-        setBalance(fetchedBalance);
-
-        // Recent transfers
-        const fetchedTransfers: Transfer[] = transferRes?.data?.data?.allTransfers || [];
-        setRecentTransfers(fetchedTransfers);
-
-        // Amount Sent
-        const sentTransfers = amountSentRes?.data?.data?.sentTransfers || [];
-        const totalAmountSent = sentTransfers.reduce(
-          (acc: number, transfer: { amount: number }) => acc + (transfer.amount || 0),
-          0
-        );
-        setAmountSent(totalAmountSent);
-
-        // Amount Received
-        const receivedTransfers = amountReceivedRes?.data?.data?.receivedTransfers || [];
-        const totalAmountReceived = receivedTransfers.reduce(
-          (acc: number, transfer: { amount: number }) => acc + (transfer.amount || 0),
-          0
-        );
-        setAmountReceived(totalAmountReceived);
-
-        // Consolidate user data
-        setUserData({
-          balance: fetchedBalance,
-          recentTransfers: fetchedTransfers,
-          amountSent: totalAmountSent,
-          amountReceived: totalAmountReceived,
-          accountNumber: userData?.accountNumber || "",
-          joinDate: userData?.joinDate || "",
-          accountType: userData?.accountType || "",
-          profilePicture: userData?.profilePicture || "",
-          name: userData?.name || "",
-          username: userData?.username || "",
-        });
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+  const [user] = useState({
+    name: "John Doe",
+    username: "johndoe",
+    profilePicture: "",
+    balance: 12543.67,
+    accountNumber: "1234567890",
+    accountType: "Savings",
+    joinDate: "January 2024"
+  });
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-slate-800 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-slate-900 dark:to-slate-800">
         <div className="container mx-auto px-4 py-8 space-y-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-300">Welcome back, {userData?.name}</p>
+              <p className="text-gray-600 dark:text-gray-300">Welcome back, {user.name}</p>
             </div>
             <div className="flex gap-3">
-              {/* <Button 
+              <Button 
                 variant="outline" 
                 className="dark:border-slate-700 dark:hover:bg-slate-800 dark:text-white dark:hover:text-white dark:bg-slate-800/50"
               >
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
-              </Button> */}
-              {/* <Button 
-                  onClick={() => <Navigate to="/transfer" />}
+              </Button>
+              <Button 
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 text-white"
               >
                 <Send className="w-4 h-4 mr-2" />
                 New Transfer
-              </Button> */}
+              </Button>
             </div>
           </div>
 
@@ -148,13 +50,13 @@ export default function Dashboard() {
             <Card className="card-hover dark:bg-slate-800/50 border-0 shadow-md">
               <CardHeader className="text-center">
                 <Avatar className="w-20 h-20 mx-auto">
-                  <AvatarImage src={userData?.profilePicture} />
+                  <AvatarImage src={user.profilePicture} />
                   <AvatarFallback className="text-lg bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white">
-                    {userData?.name.split(' ').map(n => n[0]).join('')}
+                    {user.name.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
-                <CardTitle className="text-xl text-gray-900 dark:text-white">{userData?.name}</CardTitle>
-                {/* <CardDescription className="text-gray-600 dark:text-gray-300">@{userData?.username}</CardDescription> */}
+                <CardTitle className="text-xl text-gray-900 dark:text-white">{user.name}</CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-300">@{user.username}</CardDescription>
               </CardHeader>
               <CardContent className="text-center space-y-3">
                 <Button 
@@ -180,21 +82,21 @@ export default function Dashboard() {
                 <CardTitle className="flex items-center justify-between text-gray-900 dark:text-white">
                   Account Balance
                   <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/40">
-                    {userData?.accountType}
+                    {user.accountType}
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-4xl font-bold text-gray-900 dark:text-white">
-                    ${userData?.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    ${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                     <div className="text-gray-600 dark:text-gray-300">
-                      <span className="font-medium text-gray-900 dark:text-white">Account Number:</span> {userData?.accountNumber}
+                      <span className="font-medium text-gray-900 dark:text-white">Account Number:</span> {user.accountNumber}
                     </div>
                     <div className="text-gray-600 dark:text-gray-300">
-                      <span className="font-medium text-gray-900 dark:text-white">Member Since:</span> {userData?.joinDate}
+                      <span className="font-medium text-gray-900 dark:text-white">Member Since:</span> {user.joinDate}
                     </div>
                   </div>
                 </div>
@@ -202,7 +104,7 @@ export default function Dashboard() {
             </Card>
           </div>
 
-          {/* Quick Actions
+          {/* Quick Actions */}
           <Card className="card-hover dark:bg-slate-800/50 border-0 shadow-md">
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-white">Quick Actions</CardTitle>
@@ -239,7 +141,7 @@ export default function Dashboard() {
                 </Button>
               </div>
             </CardContent>
-          </Card> */}
+          </Card>
 
           {/* Recent Activity */}
           <Card className="card-hover dark:bg-slate-800/50 border-0 shadow-md">

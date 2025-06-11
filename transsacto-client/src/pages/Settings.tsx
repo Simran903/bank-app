@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,104 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import axios from "axios";
-
-interface ProfileData {
-  name: string;
-  username: string;
-  email: string;
-}
-
-interface PasswordData {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
 
 export default function Settings() {
-  const [profileData, setProfileData] = useState<ProfileData>({
-    name: "John Doe",
-    username: "johndoe",
-    email: "john.doe@example.com",
-  });
-
-  const [passwordData, setPasswordData] = useState<PasswordData>({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  const [notifications, setNotifications] = useState({
-    email: false,
-    transactions: true,
-    security: true,
-  });
-
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProfileData({
-      ...profileData,
-      [e.target.id]: e.target.value,
-    });
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordData({
-      ...passwordData,
-      [e.target.id]: e.target.value,
-    });
-  };
-
-  const handleNotificationChange = (key: keyof typeof notifications) => {
-    setNotifications(prev => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
-  const handleUpdateProfile = async () => {
-    try {
-      // TODO: Implement profile update API call
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      toast.error("Failed to update profile");
-    }
-  };
-
-  const handleUpdatePassword = async () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error("New passwords do not match");
-      return;
-    }
-
-    try {
-      await axios.post("/api/user/update-password", {
-        oldPassword: passwordData.oldPassword,
-        newPassword: passwordData.newPassword,
-      });
-      
-      toast.success("Password updated successfully");
-      setPasswordData({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      toast.error("Failed to update password");
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      try {
-        // TODO: Implement account deletion API call
-        toast.success("Account deleted successfully");
-      } catch (error) {
-        toast.error("Failed to delete account");
-      }
-    }
-  };
-
   return (
     <Layout>
       <div className="space-y-6 max-w-2xl mx-auto p-6">
@@ -122,40 +26,19 @@ export default function Settings() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-slate-300">Full Name</Label>
-                <Input 
-                  id="name" 
-                  value={profileData.name}
-                  onChange={handleProfileChange}
-                  className="bg-slate-900 border-slate-700 text-slate-100" 
-                />
+                <Label htmlFor="fullName" className="text-slate-300">Full Name</Label>
+                <Input id="fullName" defaultValue="John Doe" className="bg-slate-900 border-slate-700 text-slate-100" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-slate-300">Username</Label>
-                <Input 
-                  id="username" 
-                  value={profileData.username}
-                  onChange={handleProfileChange}
-                  className="bg-slate-900 border-slate-700 text-slate-100" 
-                />
+                <Input id="username" defaultValue="johndoe" className="bg-slate-900 border-slate-700 text-slate-100" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-slate-300">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                value={profileData.email}
-                onChange={handleProfileChange}
-                className="bg-slate-900 border-slate-700 text-slate-100" 
-              />
+              <Input id="email" type="email" defaultValue="john.doe@example.com" className="bg-slate-900 border-slate-700 text-slate-100" />
             </div>
-            <Button 
-              className="financial-gradient"
-              onClick={handleUpdateProfile}
-            >
-              Update Profile
-            </Button>
+            <Button className="financial-gradient">Update Profile</Button>
           </CardContent>
         </Card>
 
@@ -167,41 +50,18 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="oldPassword" className="text-slate-300">Current Password</Label>
-              <Input 
-                id="oldPassword" 
-                type="password" 
-                value={passwordData.oldPassword}
-                onChange={handlePasswordChange}
-                className="bg-slate-900 border-slate-700 text-slate-100" 
-              />
+              <Label htmlFor="currentPassword" className="text-slate-300">Current Password</Label>
+              <Input id="currentPassword" type="password" className="bg-slate-900 border-slate-700 text-slate-100" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="newPassword" className="text-slate-300">New Password</Label>
-              <Input 
-                id="newPassword" 
-                type="password" 
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-                className="bg-slate-900 border-slate-700 text-slate-100" 
-              />
+              <Input id="newPassword" type="password" className="bg-slate-900 border-slate-700 text-slate-100" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirmPassword" className="text-slate-300">Confirm New Password</Label>
-              <Input 
-                id="confirmPassword" 
-                type="password" 
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordChange}
-                className="bg-slate-900 border-slate-700 text-slate-100" 
-              />
+              <Input id="confirmPassword" type="password" className="bg-slate-900 border-slate-700 text-slate-100" />
             </div>
-            <Button 
-              className="financial-gradient"
-              onClick={handleUpdatePassword}
-            >
-              Change Password
-            </Button>
+            <Button className="financial-gradient">Change Password</Button>
           </CardContent>
         </Card>
 
@@ -219,10 +79,7 @@ export default function Settings() {
                   Receive email notifications about your transactions
                 </p>
               </div>
-              <Switch 
-                checked={notifications.email}
-                onCheckedChange={() => handleNotificationChange("email")}
-              />
+              <Switch />
             </div>
             <Separator className="bg-slate-700" />
             <div className="flex items-center justify-between">
@@ -232,10 +89,7 @@ export default function Settings() {
                   Get notified when you send or receive money
                 </p>
               </div>
-              <Switch 
-                checked={notifications.transactions}
-                onCheckedChange={() => handleNotificationChange("transactions")}
-              />
+              <Switch defaultChecked />
             </div>
             <Separator className="bg-slate-700" />
             <div className="flex items-center justify-between">
@@ -245,10 +99,7 @@ export default function Settings() {
                   Important security notifications about your account
                 </p>
               </div>
-              <Switch 
-                checked={notifications.security}
-                onCheckedChange={() => handleNotificationChange("security")}
-              />
+              <Switch defaultChecked />
             </div>
           </CardContent>
         </Card>
@@ -291,12 +142,7 @@ export default function Settings() {
                   Permanently delete your account and all associated data
                 </p>
               </div>
-              <Button 
-                variant="destructive"
-                onClick={handleDeleteAccount}
-              >
-                Delete Account
-              </Button>
+              <Button variant="destructive">Delete Account</Button>
             </div>
           </CardContent>
         </Card>
