@@ -41,19 +41,28 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-          isOpen ? "fixed translate-x-0" : "fixed -translate-x-full lg:translate-x-0 lg:static"
-        }`}
+        className={`inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${isOpen ? "fixed translate-x-0" : "fixed -translate-x-full lg:translate-x-0 lg:static"
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-16 px-4 border-b border-gray-200 dark:border-slate-700">
+          <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-slate-700">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 financial-gradient rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">T</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Transsacto</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                Transsacto
+              </span>
             </div>
+            <Button
+              variant="destructive"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="lg:hidden bg-transparent"
+            >
+              <X className="h-5 w-5" />
+            </Button>
           </div>
 
           {/* Navigation */}
@@ -65,11 +74,10 @@ export default function Sidebar() {
                   key={item.name}
                   to={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive(item.href)
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(item.href)
                       ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-gray-900 dark:hover:text-white"
-                  }`}
+                    }`}
                 >
                   <Icon className="mr-3 h-5 w-5" />
                   {item.name}
@@ -77,17 +85,17 @@ export default function Sidebar() {
               );
             })}
             <div className="p-4 border-t border-gray-200 dark:border-slate-700">
-            <NavLink
-              to="/signout"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
-            >
-              <LogOut className="mr-3 h-5 w-5" />
-              Sign Out
-            </NavLink>
-          </div>
+              <NavLink
+                to="/signout"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                Sign Out
+              </NavLink>
+            </div>
           </nav>
-          
+
         </div>
       </div>
     </>
