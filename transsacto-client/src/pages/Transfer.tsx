@@ -45,8 +45,6 @@ export default function Transfer() {
   const [showFilterDialog, setShowFilterDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const currentUserId = 3;
-
   const fetchTransactions = async () => {
     setLoading(true);
     try {
