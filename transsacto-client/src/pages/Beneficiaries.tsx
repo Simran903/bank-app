@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Users, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import axiosClient from "@/lib/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 interface Beneficiary {
   id: number;
@@ -56,6 +57,8 @@ export default function Beneficiaries() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  const navigate = useNavigate()
 
   const [newBeneficiary, setNewBeneficiary] = useState<NewBeneficiary>({
     name: "",
@@ -510,7 +513,7 @@ export default function Beneficiaries() {
                     <Button
                       variant="soft"
                       size="sm"
-                      className="flex-1 dark:border-slate-700 dark:bg-slate-800"
+                      className="flex-1 dark:border-slate-700 dark:bg-slate-800 py-2"
                       onClick={() => handleViewDetails(beneficiary)}
                     >
                       View Details
@@ -518,7 +521,8 @@ export default function Beneficiaries() {
 
                     <Button
                       size="sm"
-                      className="flex-1 financial-gradient text-white"
+                      className="flex-1 financial-gradient text-white py-2"
+                      onClick={() => navigate('/transfer')}
                     >
                       Send Money
                     </Button>
