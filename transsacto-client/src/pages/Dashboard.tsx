@@ -181,7 +181,8 @@ export default function Dashboard() {
             </div>
             <div className="hidden sm:flex flex-col sm:flex-row gap-3">
               <Button
-                variant="soft"
+                variant="outline"
+                className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent"
                 onClick={() => navigate('/settings')}
               >
                 <Settings className="w-4 h-4 mr-2" />

@@ -245,19 +245,24 @@ export default function Transfer() {
               </CardTitle>
               <div className="flex gap-2">
                 <Button
+                  onClick={fetchTransactions}
                   variant="outline"
                   size="sm"
-                  onClick={fetchTransactions}
                   disabled={loading}
-                  className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent dark:text-accent-foreground"
                 >
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-4 w-4" />
+                  )}
                 </Button>
+
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowFilterDialog(true)}
-                  className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent dark:text-accent-foreground"
                 >
                   Filter
                 </Button>

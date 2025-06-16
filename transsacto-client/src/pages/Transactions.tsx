@@ -375,7 +375,7 @@ export default function Transactions() {
               variant="outline"
               size="sm"
               disabled={refreshing}
-              className="border border-gray-300 dark:text-accent-foreground dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
+              className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent dark:text-accent-foreground"
             >
               {refreshing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -388,7 +388,7 @@ export default function Transactions() {
             <Dialog>
               <DialogTrigger asChild>
                 <Button
-                  className="border border-gray-300 dark:text-accent-foreground dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
+                  className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent dark:text-accent-foreground"
                   variant="outline"
                   size="sm"
                 >
