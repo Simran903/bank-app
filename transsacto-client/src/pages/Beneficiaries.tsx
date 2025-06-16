@@ -529,14 +529,14 @@ export default function Beneficiaries() {
           </div>
         ) : (
           /* Empty State */
-          <Card className="text-center py-8 sm:py-12 dark-card">
+          <Card className="text-center py-8 sm:py-12 dark-card border-slate-200">
             <CardContent>
               <div className="space-y-4">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-slate-800 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto dark:bg-slate-800 bg-slate-100 rounded-full flex items-center justify-center">
                   <Users className="w-6 h-6 sm:w-8 sm:h-8 text-slate-500" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-base sm:text-lg font-medium text-slate-100">
+                  <h3 className="text-base sm:text-lg font-medium dark:text-slate-100 text-slate-600">
                     No beneficiaries yet
                   </h3>
                   <p className="text-sm sm:text-base text-slate-400 px-4">
@@ -548,7 +548,7 @@ export default function Beneficiaries() {
                   onOpenChange={setIsAddDialogOpen}
                 >
                   <DialogTrigger asChild>
-                    <Button className="financial-gradient w-full sm:w-auto">
+                    <Button className="financial-gradient text-white w-full sm:w-auto">
                       Add Your First Beneficiary
                     </Button>
                   </DialogTrigger>
