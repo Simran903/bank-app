@@ -56,10 +56,11 @@ export default function Sidebar() {
               </span>
             </div>
             <Button
-              variant="destructive"
+              variant="outline"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="lg:hidden bg-transparent"
+
+              className="border border-gray-300 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-accent"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -75,8 +76,8 @@ export default function Sidebar() {
                   to={item.href}
                   onClick={() => setIsOpen(false)}
                   className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(item.href)
-                      ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-gray-900 dark:hover:text-white"
+                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-gray-900 dark:hover:text-white"
                     }`}
                 >
                   <Icon className="mr-3 h-5 w-5" />
